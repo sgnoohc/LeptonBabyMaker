@@ -1,16 +1,16 @@
-#include "TROOT.h"
+// #include "TROOT.h"
 
-
-int do(){
-
-  gROOT->ProcessLine(".L ../../CORE/CMS3.cc+");
-  gROOT->ProcessLine(".L ../../CORE/Base.cc+");
-  gROOT->ProcessLine(".L ../../CORE/ElectronSelections.cc+");
-  gROOT->ProcessLine(".L ../../CORE/MuonSelections.cc+");
-  gROOT->ProcessLine(".L ../../CORE/MCSelections.cc+");
-  gROOT->ProcessLine(".L ../../CORE/JetSelections.cc+");
-  gROOT->ProcessLine(".L ../../CORE/IsolationTools.cc+");
-  gROOT->ProcessLine(".L ../../CORE/SSSelections.cc+");
+void runLooper()
+{
+  // gROOT->ProcessLine(".L ../../CORE/CMS3.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/Base.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/ElectronSelections.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/MuonSelections.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/MCSelections.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/JetSelections.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/IsolationTools.cc+");
+  // gROOT->ProcessLine(".L ../../CORE/SSSelections.cc+");
+  gROOT->ProcessLine(".L CORE/CMS3_CORE.so");
   gROOT->ProcessLine(".L fakeratelooper.C++");   //looper.C++
 
   int file = 0;
@@ -71,12 +71,14 @@ int do(){
   TChain *ttbar = new TChain("Events");
   ttbar->Add("/hadoop/cms/store/group/snt/phys14/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
   
-  // mylooper->looper(qcd,"qcd1", -1);
-  mylooper->looper(qcd_MuEnriched,"qcd_MuEnriched", -1);
-  mylooper->looper(qcd_EMEnriched,"qcd_EMEnriched", -1);
+  mylooper->looper(qcd,"qcd1", -1);
+  // mylooper->looper(qcd_MuEnriched,"qcd_MuEnriched", -1);
+  // mylooper->looper(qcd_EMEnriched,"qcd_EMEnriched", -1);
+
   // mylooper->looper(qcd_EMEnriched,"qcd_EMEnriched-noBCtoE", -1);
   // mylooper->looper(qcd_nonEnriched,"qcd_nonEnriched", -1);
   // mylooper->looper(qcd_HT,"qcd_HT", -1);
   // mylooper->looper(ttbar,"ttbar", -1);
 
+  return;
 }
