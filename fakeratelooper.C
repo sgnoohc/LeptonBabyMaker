@@ -16,7 +16,6 @@ typedef vector<pair<const LorentzVector *, double> > jets_with_corr_t;
 using namespace std;
 
 //Switches
-char* path = "./";
 bool verbose = 0;
 unsigned int evt_cut = 74994186;
 
@@ -28,13 +27,17 @@ public:
   void InitBabyNtuple();
   void InitMuonBranches(); //init. Muon variables only.
   void InitElectronBranches(); //init. Electron variables only
-  int looper(TChain* chain, char* output_name, int nEvents = -1, string signal_in = "");
+  int looper(TChain* chain, char* output_name, int nEvents = -1);
+  void SetOutputPath( std::string outputpath ); //init. Electron variables only
 
 protected:
+
   TFile* BabyFile;
   TTree* BabyTree;
 
 private:
+
+  std::string path = "./";
 
   //for tree
   float evt_pfmet;
@@ -127,7 +130,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   //Create Baby
   TDirectory *rootdir = gDirectory->GetDirectory("Rint:");
   rootdir->cd();
-  BabyFile = new TFile(Form("%s/%s", path, output_name), "RECREATE");
+  BabyFile = new TFile(Form("%s/%s", path.c_str(), output_name), "RECREATE");
   BabyFile->cd();
   BabyTree = new TTree("t", "Lepton Baby Ntuple");
 
@@ -427,7 +430,7 @@ float leptonDZ(const int id, const int idx){
 }
 
 //Main function
-int babyMaker::looper(TChain* chain, char* output_name, int nEvents, string signal_in){
+int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
   //Print warning!
   cout << "Careful!! Path is " << path << endl;
@@ -471,9 +474,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, string sign
       //Initialize variables
       InitBabyNtuple();
      
-      //Local variables
-      bool isData = tas::evt_isRealData();
-        
       // Progress
       CMS3::progress(nEventsDone, nEventsToDo);
 
@@ -566,12 +566,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, string sign
 
 	  int count = 0;
 
-	  for(int j = 0; j < tas::mus_p4().size(); j++)
+	  for(size_t j = 0; j < tas::mus_p4().size(); j++)
 	  	{
 	  	  if(isDenominatorLepton(13,j,Standard))
 	  		{count++;}
 	  	}
-	  for(int j = 0; j < tas::els_p4().size(); j++)
+	  for(size_t j = 0; j < tas::els_p4().size(); j++)
 	  	{
 	  	  if(isDenominatorLepton(11,j,Standard))
 	  		{count++;}
@@ -716,4 +716,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents, string sign
 
   return 0;  
 
+}
+
+void babyMaker::SetOutputPath( std::string outputpath )
+{
+  path = outputpath;
 }
