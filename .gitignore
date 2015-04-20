@@ -1,0 +1,4 @@
+*.d
+CORE
+*.root
+fakeratelooper_C.so
