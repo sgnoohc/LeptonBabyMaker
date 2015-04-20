@@ -25,8 +25,7 @@ class babyMaker {
 public:
   void MakeBabyNtuple(const char* output_name);
   void InitBabyNtuple();
-  void InitMuonBranches(); //init. Muon variables only.
-  void InitElectronBranches(); //init. Electron variables only
+  void InitLeptonBranches(); //init. Lepton variables only.
   int looper(TChain* chain, char* output_name, int nEvents = -1);
   void SetOutputPath( std::string outputpath ); //init. Electron variables only
 
@@ -316,7 +315,7 @@ void babyMaker::InitBabyNtuple(){
   //------------------------
 } 
 
-void babyMaker::InitMuonBranches(){
+void babyMaker::InitLeptonBranches(){
 
   //---both---//
   p4 = LorentzVector(0,0,0,0); 
@@ -361,45 +360,6 @@ void babyMaker::InitMuonBranches(){
   numberOfMatchedStations = -1;
   validPixelHits = -1;
   nlayers = -1;
-  //------------------------
-}
-
-void babyMaker::InitElectronBranches(){
-
-  //---both--//
-  p4 = LorentzVector(0,0,0,0);
-  tag_p4 = LorentzVector(0,0,0,0);
-  dilep_p4 = LorentzVector(0,0,0,0);
-  mc_p4 = LorentzVector(0,0,0,0);
-  mc_motherp4 = LorentzVector(0,0,0,0);
-  id = -1; 
-  idx = -1;
-  dxyPV = -1;
-  dZ = -1;
-  dxyPV_err = -1;
-  motherID = -1;
-  mc_id = -1;
-  iso = -1;
-  passes_id = 0;
-  passes_id_ptrel = 0;
-  passes_id_miniiso = 0;
-  passes_id_newminiiso = 0;
-  FO = 0;
-  FO_ptrel = 0;
-  FO_miniiso = 0;
-  FO_newminiiso = 0;
-  FO_NoIso = 0;
-  type = -1;
-  ip3d = -1;
-  ip3derr = -1;
-  mt = -1;
-  ptrelv0 = -1;
-  ptrelv1 = -1;
-  miniiso = -1;
-  jet_close_lep = LorentzVector(0,0,0,0);
-  tag_charge = 0.;
-  dilep_mass = -1.;
-  isRandom = false;
 
   //---els---//
   sigmaIEtaIEta_full5x5 = -1;
@@ -416,7 +376,9 @@ void babyMaker::InitElectronBranches(){
   ckf_charge = -1;
   trk_charge = -1;
   threeChargeAgree_branch = 0;
+  //------------------------
 }
+
 
 double calculateMt(const LorentzVector p4, double met, double met_phi){  //<--MT, MET, MET_PHI ARE ALL FLOATS!!!
   float phi1 = p4.Phi();
@@ -626,6 +588,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  //cout<<"\nBegin Muon looping"<<endl;	  
 	  for(unsigned int i=0; i<tas::mus_p4().size(); i++)  //What RECO and GEN variables are needed?
 		{	
+
 		  // Require tag
 		  bool foundTag = false;
 		  for(unsigned int j=0; j<tas::mus_p4().size(); j++) {
@@ -693,16 +656,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  mc_motherp4 = tas::mus_mc_motherp4().at(i);
 		  
 		  BabyTree->Fill(); 
-		  //InitMuonBranches(); //can put this here to be extra safe between muon interations
-		  //or can put outside loop to protect 1st el interation
+		  InitLeptonBranches(); 
 
 		  // cout<<"\nEnd Muon loop"<<endl;
 		} //close muon loop
-	
-	  //AFTER LAST MUON INTERATION, MUON VARIABLES STILL SET (NOT GARBAGE VALUES).
-	  //SO THEY WILL BE FILLED WITH THE EACH ELECTRON FILL.  NEED TO STOP THIS.
-	  //LEPTON VARIABLES IN COMMON SHOULD BE OVERWRITTEN.
-	  InitMuonBranches();
 	  
       //Electron Loop
 	  //cout<<"\nBegin electron looping"<<endl;	  
@@ -783,7 +740,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  mc_motherp4 = tas::els_mc_motherp4().at(i); 
 
 		  BabyTree->Fill(); 
-		  //InitElectronBranches();  //can put this here to be extra safe between el interation
+		  InitLeptonBranches();
 	  
 	  	  //cout<<"\nEnd electron loop"<<endl;
 	  	} //close electron loop
