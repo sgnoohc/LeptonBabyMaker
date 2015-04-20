@@ -63,11 +63,14 @@ private:
   vector <float> jets_disc; 
   TString sample;
   int nFOs;
+  int nvtx;
   //-------------------//
   //------MINE---------//
 
   //---both--//
   LorentzVector p4;
+  LorentzVector tag_p4;
+  LorentzVector dilep_p4;
   LorentzVector mc_p4;
   LorentzVector mc_motherp4;
   int id; 
@@ -95,7 +98,9 @@ private:
   float ptrelv1;
   float miniiso;
   LorentzVector jet_close_lep;
-
+  int tag_charge;
+  float dilep_mass;
+  bool isRandom;
   //---els---//
   float sigmaIEtaIEta_full5x5;
   float etaSC;
@@ -158,10 +163,13 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jets_disc", &jets_disc);
   BabyTree->Branch("sample", &sample);
   BabyTree->Branch("nFOs", &nFOs);
+  BabyTree->Branch("nvtx", &nvtx);
 
   //--------------------MINE----------------------------
   //---both--//
   BabyTree->Branch("p4", &p4);
+  BabyTree->Branch("tag_p4", &tag_p4);
+  BabyTree->Branch("dilep_p4", &dilep_p4);
   BabyTree->Branch("mc_p4", &mc_p4);
   BabyTree->Branch("mc_motherp4", &mc_motherp4);
   BabyTree->Branch("id", &id);
@@ -189,6 +197,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ptrelv1", &ptrelv1);
   BabyTree->Branch("miniiso", &miniiso);
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
+  BabyTree->Branch("tag_charge", &tag_charge);
+  BabyTree->Branch("dilep_mass", &dilep_mass);
 
   //---els---//
   BabyTree->Branch("sigmaIEtaIEta_full5x5", &sigmaIEtaIEta_full5x5);
@@ -241,10 +251,13 @@ void babyMaker::InitBabyNtuple(){
   jets_disc.clear();
   sample = "";
   nFOs = -1;
+  nvtx = -1;
 
   //--------MINE------------
   //---both--//
   p4 = LorentzVector(0,0,0,0); 
+  tag_p4 = LorentzVector(0,0,0,0); 
+  dilep_p4 = LorentzVector(0,0,0,0);
   mc_p4 = LorentzVector(0,0,0,0);
   mc_motherp4 = LorentzVector(0,0,0,0);
   id = -1; 
@@ -272,6 +285,9 @@ void babyMaker::InitBabyNtuple(){
   ptrelv1 = -1;
   miniiso = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
+  tag_charge = 0;
+  dilep_mass = -1;
+  isRandom = false;
 
   //---els---//
   sigmaIEtaIEta_full5x5 = -1;//below
@@ -304,6 +320,8 @@ void babyMaker::InitMuonBranches(){
 
   //---both---//
   p4 = LorentzVector(0,0,0,0); 
+  tag_p4 = LorentzVector(0,0,0,0); 
+  dilep_p4 = LorentzVector(0,0,0,0); 
   mc_p4 = LorentzVector(0,0,0,0);
   mc_motherp4 = LorentzVector(0,0,0,0);
   id = -1; 
@@ -331,6 +349,9 @@ void babyMaker::InitMuonBranches(){
   ptrelv1 = -1;
   miniiso = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
+  tag_charge = 0.;
+  dilep_mass = -1.;
+  isRandom = false;
 
   //---mus---//
   pid_PFMuon = -1;
@@ -347,6 +368,8 @@ void babyMaker::InitElectronBranches(){
 
   //---both--//
   p4 = LorentzVector(0,0,0,0);
+  tag_p4 = LorentzVector(0,0,0,0);
+  dilep_p4 = LorentzVector(0,0,0,0);
   mc_p4 = LorentzVector(0,0,0,0);
   mc_motherp4 = LorentzVector(0,0,0,0);
   id = -1; 
@@ -374,6 +397,9 @@ void babyMaker::InitElectronBranches(){
   ptrelv1 = -1;
   miniiso = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
+  tag_charge = 0.;
+  dilep_mass = -1.;
+  isRandom = false;
 
   //---els---//
   sigmaIEtaIEta_full5x5 = -1;
@@ -497,6 +523,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       gen_metPhi     = tas::gen_metPhi();
       sample         = Form("%s", file->GetName());
 
+      // Vertex selection:
+      int nVert = 0;
+      for(unsigned int ivtx=0; ivtx < tas::evt_nvtxs(); ivtx++){
+	
+	if(tas::vtxs_isFake().at(ivtx)) continue;
+	if(tas::vtxs_ndof().at(ivtx) <= 4) continue;
+	if(fabs(tas::vtxs_position().at(ivtx).z()) > 24) continue;
+	if(tas::vtxs_position().at(ivtx).Rho() > 2) continue;
+	
+	nVert++;
+	
+      }
+      nvtx = nVert;
+      
+      
       //Fill data vs. mc variables
       filt_hbhe = evt_isRealData ? (tas::evt_hbheFilter() &&
 									tas::hcalnoise_isolatedNoiseSumE() < 50.0 &&
@@ -578,13 +619,39 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  	}
 	  nFOs = count;
 
+	  bool used = false;
+	  TRandom r;
+	  float rndm = r.Rndm();
 	  //Muon Loop
 	  //cout<<"\nBegin Muon looping"<<endl;	  
 	  for(unsigned int i=0; i<tas::mus_p4().size(); i++)  //What RECO and GEN variables are needed?
 		{	
-		  if (!isVetoLeptonNoIso(13,i)) continue;
+		  // Require tag
+		  bool foundTag = false;
+		  for(unsigned int j=0; j<tas::mus_p4().size(); j++) {
+		    if (i==j) continue;
+		    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
+		    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
+		    if ( isGoodLepton(13,j,Standard) ) { // OK, we have a tag
+		      tag_p4 = tas::mus_p4().at(j);
+		      tag_charge = tas::mus_charge().at(j);
+		      // Randomize if needed
+		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
+			isRandom = true;
+			used = true;
+		      }
+		      else isRandom = false;
+		      foundTag = true; // The probe we are about to save has a corresponding tag
+		    }
+		  } // End of tag selection
+		  
+		  if (!isVetoLeptonNoIso(13,i) && foundTag==false) continue;
 
 		  p4 = tas::mus_p4().at(i); 
+		  if (foundTag) {
+		    dilep_p4 = p4 + tag_p4;
+		    dilep_mass = dilep_p4.M();
+		  }
 		  mc_p4 = tas::mus_mc_p4().at(i);
 		  id = -13.0*tas::mus_charge().at(i);
 		  idx = i;  
@@ -642,9 +709,32 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  for(unsigned int i=0; i<tas::els_p4().size(); i++)
 	  	{
 		  
-		  if (!isVetoLeptonNoIso(11,i)) continue;
+		  // Require tag
+		  bool foundTag = false;
+		  for(unsigned int j=0; j<tas::els_p4().size(); j++) {
+		    if (i==j) continue;
+		    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
+		    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
+		    if ( isGoodLepton(11,j,Standard) ) { // OK, we have a tag
+		      tag_p4 = tas::els_p4().at(j);
+		      tag_charge = tas::els_charge().at(j);
+		      // Randomize if needed
+		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
+			isRandom = true;
+			used = true;
+		      }
+		      else isRandom = false;
+		      foundTag = true; // The probe we are about to save has a corresponding tag
+		    }
+		  } // End of tag selection
+		  
+		  if (!isVetoLeptonNoIso(11,i) && !foundTag) continue;
 
 		  p4 = tas::els_p4().at(i);    
+		  if (foundTag) {
+		    dilep_p4 = p4 + tag_p4;
+		    dilep_mass = dilep_p4.M();
+		  }
 		  mc_p4 = tas::els_mc_p4().at(i);  
 		  id = -11.0*tas::els_charge().at(i); 
 		  idx = i;

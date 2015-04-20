@@ -70,8 +70,15 @@ void runLooper()
   //ttbar
   TChain *ttbar = new TChain("Events");
   ttbar->Add("/hadoop/cms/store/group/snt/phys14/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
+
+  //DY
+  TChain *dy = new TChain("Events");
+  //  dy->Add("/hadoop/cms/store/group/snt/phys14/DYJetsToLL_M-50_13TeV-madgraph-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
+  dy->Add("/hadoop/cms/store/group/snt/phys14/DYJetsToLL_M-50_13TeV-madgraph-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_1.root");
   
-  mylooper->looper(qcd,"qcd1", -1);
+  
+  //mylooper->looper(qcd,"qcd1", -1);
+  mylooper->looper(dy,"dytest", -1);
   // mylooper->looper(qcd_MuEnriched,"qcd_MuEnriched", -1);
   // mylooper->looper(qcd_EMEnriched,"qcd_EMEnriched", -1);
 
