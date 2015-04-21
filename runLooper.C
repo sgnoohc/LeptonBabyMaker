@@ -12,8 +12,6 @@ void runLooper(){
   gROOT->ProcessLine(".L CORE/CMS3_CORE.so");
   gROOT->ProcessLine(".L fakeratelooper.C++"); 
 
-  int file = 0;
-
   babyMaker *mylooper = new babyMaker();
 
   TChain *chain = (TChain*)getChain(sample);

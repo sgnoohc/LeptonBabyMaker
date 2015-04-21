@@ -48,9 +48,6 @@ sed -i "${lineno}d" runLooper.C
 sed -i "${lineno}d" runLooper.C
 sed -i "s/TChain\ \*chain\ =\ (TChain\*)getChain(sample);/TChain *chain = new TChain(\"Events\");/"  runLooper.C
 sed -i "s/char\*\ title\ =\ (char\*)getTitle(sample);/chain->Add(name);/g" runLooper.C
-lineno=`grep -n "int file = 0" runLooper.C | tr ':' ' ' | awk '{print $1}'`
-sed -i "${lineno}d" runLooper.C
-sed -i "${lineno}d" runLooper.C
 sed -i "s/->looper(chain, title/->looper(chain, Form(\"%s_%i\", title, number)/" runLooper.C
 
 #Zip CORE
