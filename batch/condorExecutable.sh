@@ -18,8 +18,14 @@ pushd /cvmfs/cms.cern.ch/slc6_amd64_gcc481/cms/cmssw/CMSSW_7_2_0/src/
 eval `scramv1 runtime -sh`
 popd
 
+#Show g++ version
+echo " " 
+echo "G++ INFORMATION" 
+g++ --version
+which g++
+
 #This stuff to get output back
-export COPYDIR=/hadoop/cms/store/user/$USER/condor/frbabies
+export COPYDIR=/hadoop/cms/store/user/cgeorge/condor/frbabies
 
 #Untar the zip dir
 tar xzvf CORE.tar.gz
