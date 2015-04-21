@@ -64,3 +64,6 @@ fi
 
 #Shit for Lorentz Vectors, etc.
 sed -i "/struct val_err_t { float value; float error; };/i #include\ \"Math/Vector4D.h\" \n#include\ \"Math/LorentzVector.h\" \n\n\#ifdef\ __MAKECINT__\n\#pragma\ link\ C++\ class\ ROOT::Math::PxPyPzE4D<float>+;\n\#pragma\ link\ C++\ class\ ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float>\ >+;\n\#pragma\ link\ C++\ typedef ROOT::Math::XYZTVectorF;\n\#endif" fakeratelooper.h
+
+#Fix name in condor executable
+sed -i "s,export\ COPYDIR=/hadoop/cms/store/user/.*/condor/frbabies,export COPYDIR=/hadoop/cms/store/user/$USER/condor/frbabies," condorExecutable.sh

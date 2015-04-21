@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#DON'T CHANGE THIS TOP PART!!  The line numbers are matched up.
+
 #samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY
 #Choose the sample you want here:
 sample=QCD_Test
