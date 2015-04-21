@@ -31,3 +31,7 @@ do
   hadd $sname.root ${file1[*]}
 
  done 
+
+#clean up
+rm fileNames.txt &>/dev/null
+rm null &>/dev/null
