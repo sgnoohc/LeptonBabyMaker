@@ -2,7 +2,7 @@
 
 #samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, ALL
 #Choose the sample(s) you want here, separated by commmas
-sampleList=ALL
+sampleList_in=ALL
 #Choose the number of events (per file): 
 nEvents=1000
 #Decide if you want lots of printouts telling you the status
@@ -11,12 +11,16 @@ verbose="true"
 #------HERE THERE BE DRAGONS---------
 
 #Parse sampleList
-sampleList=`echo $sampleList | tr ',' ' ' `
+sampleList=`echo $sampleList_in | tr ',' ' ' `
 nSamples=`echo "$sampleList" | wc -w`
 echo "$sampleList" | grep "ALL" &>/dev/null
 isAll="$?" #note this is opposite
 if [ "$isAll" == "0" ] && [ "$nSamples" -gt "1" ]; then echo "Aborting! You can't have ALL as well as other sampleLists, dumbass!"; return 1; fi  
-if [ "$isAll" == "0" ]; then sampleList="QCD_Test QCD_Mu_Enriched QCD_EM_Enriched QCD_non_Enriched QCD_HT TTBAR DY"; fi
+if [ "$isAll" == "0" ]
+then 
+  sampleList="QCD_Test QCD_Mu_Enriched QCD_EM_Enriched QCD_non_Enriched QCD_HT TTBAR DY"
+  sampleList_in="QCD_Mu_Enriched,QCD_EM_Enriched,QCD_non_Enriched,QCD_HT,TTBAR,DY"
+fi
 
 #nSubmitted (so you know when to quit)
 nSubmitted=0
@@ -97,6 +101,12 @@ done
 rm voms_status.txt &>/dev/null
 rm temp.txt &>/dev/null
 rm fileNames.txt &>/dev/null
+
+#Merge
+if [ "$nSubmitted" == "0" ] 
+then
+  . mergeAll.sh $sampleList_in
+fi
 
 #Return exit code
 if [ "$nSubmitted" == "0" ]
