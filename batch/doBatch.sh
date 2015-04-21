@@ -21,4 +21,5 @@ do
   sed -i "s,ARG2,$title,g" condorFile
   sed -i "s,ARG3,$nEvents,g" condorFile
   sed -i "s,ARG4,$number,g" condorFile
+  condor_submit condorFile
 done
