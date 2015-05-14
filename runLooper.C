@@ -1,4 +1,4 @@
-enum sample_t { QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY };
+enum sample_t { QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, WJets };
 
 char* getTitle(sample_t sample); 
 TChain* getChain(sample_t sample); 
@@ -7,7 +7,8 @@ void runLooper(){
 
   //User-controlled options here (only)
   sample_t sample = QCD_Test;
-  int nEvents = 1000;
+  int nEvents = 100;
+  //int nEvents = -1;
 
   gROOT->ProcessLine(".L CORE/CMS3_CORE.so");
   gROOT->ProcessLine(".L fakeratelooper.C++"); 
@@ -29,6 +30,7 @@ getTitle(sample_t sample){
   if (sample == QCD_HT) return "QCD_HT";
   if (sample == TTBAR) return "TTBAR";
   if (sample == DY) return "DY";
+  if (sample == WJets) return "WJets";
 }
 
 getChain(sample_t sample){
@@ -50,7 +52,7 @@ getChain(sample_t sample){
   //QCD_EM_Enriched
   if (sample == QCD_EM_Enriched){
     result->Add("/hadoop/cms/store/group/snt/phys14/QCD_Pt_20to30_bcToE_Tune4C_13TeV_pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v2/V07-02-08/merged_ntuple_*.root");
-    result->Add("/hadoop/cms/store/group/snt/phys14/QCD_Pt_30to80_bcToE_Tune4C_13TeV_pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
+    //result->Add("/hadoop/cms/store/group/snt/phys14/QCD_Pt_30to80_bcToE_Tune4C_13TeV_pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");  //bad sample. Doesn't exist
     result->Add("/hadoop/cms/store/group/snt/phys14/QCD_Pt_80to170_bcToE_Tune4C_13TeV_pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v2/V07-02-08/merged_ntuple_*.root");
     result->Add("/hadoop/cms/store/group/snt/phys14/QCD_Pt_170toInf_bcToE_Tune4C_13TeV_pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
     result->Add("/hadoop/cms/store/group/snt/phys14/QCD_Pt-5to10_EMEnriched_Tune4C_13TeV_pythia8_Phys14DR-PU20bx25_castor_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
@@ -97,6 +99,10 @@ getChain(sample_t sample){
   //DY
   if (sample == DY){
     result->Add("/hadoop/cms/store/group/snt/phys14/DYJetsToLL_M-50_13TeV-madgraph-pythia8_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
+  }
+  //WJets
+  if (sample == WJets){
+    result->Add("/hadoop/cms/store/group/snt/phys14/WJetsToLNu_13TeV-madgraph-pythia8-tauola_Phys14DR-PU20bx25_PHYS14_25_V1-v1/V07-02-08/merged_ntuple_*.root");
   }
 
   return result;
