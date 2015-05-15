@@ -7,8 +7,8 @@ void runLooper(){
 
   //User-controlled options here (only)
   sample_t sample = QCD_Test;
-  int nEvents = 100;
-  //int nEvents = -1;
+  //int nEvents = 100;
+  int nEvents = -1;
 
   gROOT->ProcessLine(".L CORE/CMS3_CORE.so");
   gROOT->ProcessLine(".L fakeratelooper.C++"); 

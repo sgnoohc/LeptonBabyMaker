@@ -7,7 +7,16 @@
 #include <vector>
 
 #include "CORE/CMS3.h"
-#include "CORE/SSSelections.h"
+#include "CORE/SSSelections.h"  //remove this one eventually!!!
+#include "CORE/ElectronSelections.h"
+#include "CORE/MuonSelections.h"
+#include "CORE/MetSelections.h"
+#include "CORE/JetSelections.h"
+#include "CORE/VertexSelections.h"
+#include "CORE/TriggerSelections.h"
+#include "CORE/MCSelections.h"
+#include "CORE/IsolationTools.h"
+
 #include "fakeratelooper.h" 
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
@@ -84,15 +93,6 @@ private:
   int motherID;
   int mc_id;
   float RelIso; //RelIso03 (EA?)
-  // bool passes_id_SS;
-  // bool passes_id_SS_ptrel;
-  // bool passes_id_SS_miniiso;
-  // bool passes_id_SS_newminiiso;
-  // bool FO_SS;
-  // bool FO_SS_ptrel;
-  // bool FO_SS_miniiso;
-  // bool FO_SS_newminiiso;
-  // bool FO_SS_NoIso;
   bool passes_SS_tight_v3;
   bool passes_SS_tight_noiso_v3;
   bool passes_SS_fo_v3;
@@ -194,15 +194,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("motherID", &motherID);
   BabyTree->Branch("mc_id", &mc_id);
   BabyTree->Branch("RelIso", &RelIso);
-  // BabyTree->Branch("passes_id_SS", &passes_id_SS);
-  // BabyTree->Branch("passes_id_SS_ptrel", &passes_id_SS_ptrel);
-  // BabyTree->Branch("passes_id_SS_miniiso", &passes_id_SS_miniiso);
-  // BabyTree->Branch("passes_id_SS_newminiiso", &passes_id_SS_newminiiso);
-  // BabyTree->Branch("FO_SS", &FO_SS);
-  // BabyTree->Branch("FO_SS_ptrel", &FO_SS_ptrel);
-  // BabyTree->Branch("FO_SS_miniiso", &FO_SS_miniiso);
-  // BabyTree->Branch("FO_SS_newminiiso", &FO_SS_newminiiso);
-  // BabyTree->Branch("FO_SS_NoIso", &FO_SS_NoIso);
   BabyTree->Branch("passes_SS_tight_v3", &passes_SS_tight_v3);
   BabyTree->Branch("passes_SS_tight_noiso_v3", &passes_SS_tight_noiso_v3);
   BabyTree->Branch("passes_SS_fo_v3", &passes_SS_fo_v3);
@@ -293,15 +284,6 @@ void babyMaker::InitBabyNtuple(){
   motherID = -1;
   mc_id = -1;
   RelIso = -1;
-  // passes_id_SS = 0;
-  // passes_id_SS_ptrel = 0;
-  // passes_id_SS_miniiso = 0;
-  // passes_id_SS_newminiiso = 0;
-  // FO_SS = 0;
-  // FO_SS_ptrel = 0;
-  // FO_SS_miniiso = 0;
-  // FO_SS_newminiiso = 0;
-  // FO_SS_NoIso = 0;
   passes_SS_tight_v3 = 0;
   passes_SS_tight_noiso_v3 = 0;
   passes_SS_fo_v3 = 0;
@@ -364,15 +346,6 @@ void babyMaker::InitLeptonBranches(){
   motherID = -1;
   mc_id = -1;
   RelIso = -1;
-  // passes_id_SS = 0;
-  // passes_id_SS_ptrel = 0;
-  // passes_id_SS_miniiso = 0;
-  // passes_id_SS_newminiiso = 0;
-  // FO_SS = 0;
-  // FO_SS_ptrel = 0;
-  // FO_SS_miniiso = 0;
-  // FO_SS_newminiiso = 0;
-  // FO_SS_NoIso = 0;
   passes_SS_tight_v3 = 0;
   passes_SS_tight_noiso_v3 = 0;
   passes_SS_fo_v3 = 0;
@@ -428,14 +401,31 @@ double calculateMt(const LorentzVector p4, double met, double met_phi){  //<--MT
   return sqrt(2*Et1*Et2*(1.0 - cos(phi1-phi2)));
 }
 
-int lepMotherID(Lep lep){
+// int lepMotherID(Lep lep){
+//   if (tas::evt_isRealData()) return 1;
+//   else if (isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
+//     if (sgn(lep.pdgId()) == sgn(lep.mc_id())) return 1;
+//     else return 2;
+//   }
+//   else if (isFromB(lep.pdgId(),lep.idx())) return -1;
+//   else if (isFromC(lep.pdgId(),lep.idx())) return -2;
+//   return 0;
+// }
+
+int sign(int num){
+  if(num > 0) return 1;
+  else if(num < 0) return -1;
+  return 0;
+}
+
+int lepMotherID(int id, int mc_id, int idx){
   if (tas::evt_isRealData()) return 1;
-  else if (isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
-    if (sgn(lep.pdgId()) == sgn(lep.mc_id())) return 1;
+  else if (isFromZ(id, idx) || isFromW(id, idx)){
+    if (sign(id) == sign(mc_id)) return 1;
     else return 2;
   }
-  else if (isFromB(lep.pdgId(),lep.idx())) return -1;
-  else if (isFromC(lep.pdgId(),lep.idx())) return -2;
+  else if (isFromB(id, idx)) return -1;
+  else if (isFromC(id, idx)) return -2;
   return 0;
 }
 
@@ -510,7 +500,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       // //Preliminary stuff
-	  if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  //idk what this is
+	  if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  
 
 	  metStruct myMetStruct =  trackerMET(0.2);
 
@@ -620,13 +610,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  for(size_t j = 0; j < tas::mus_p4().size(); j++)
 	  	{
 	  	  //if(isDenominatorLepton(13,j,Standard))     //relying on SSSelections
-		  if( muonID(j, SS_fo_v3) )                    //Is this the right one?
+		  if( muonID(j, SS_fo_v3) && tas::mus_p4().at(j).pt()>10.)                    //Is this the right one?
 	  		{count_SS++;}
 	  	}
 	  for(size_t j = 0; j < tas::els_p4().size(); j++)
 	  	{
 	  	  //if(isDenominatorLepton(11,j,Standard))     //relying on SSSelections
-		  if( electronID(j, SS_fo_v3) )                //Is this the right one?
+		  if( electronID(j, SS_fo_v3) && tas::els_p4().at(j).pt()>10.)                //Is this the right one?
 	  		{count_SS++;}
 	  	}
 	  nFOs_SS = count_SS;
@@ -659,7 +649,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  } // End of tag selection
 		  
 		  //if (!isVetoLeptonNoIso(13,i) && foundTag==false) continue;           //Relying on SSSelections here!
-		  if (muonID(i, SS_veto_noiso_v3)==0 && foundTag==false) continue;       //other analyses can add vetoes w/ &&
+		  if( (muonID(i, SS_veto_noiso_v3)==0 && foundTag==false) || tas::mus_p4().at(i).pt()<=10. ) continue;    //other analyses can add vetoes w/ &&
 
 		  p4 = tas::mus_p4().at(i); 
 		  if (foundTag) {
@@ -690,32 +680,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		  // //Using SSSelection functions
-		  // passes_id_SS = isGoodLepton(id,i,Standard);   
-		  // passes_id_SS_ptrel = isGoodLepton(id,i,PtRel);
-		  // passes_id_SS_miniiso = isGoodLepton(id,i,MiniIso);
-		  // passes_id_SS_newminiiso = isGoodLepton(id,i,NewMiniIso);
-		  // FO_SS = isDenominatorLepton(id,i,Standard);    
-		  // FO_SS_ptrel = isDenominatorLepton(id,i,PtRel);   
-		  // FO_SS_miniiso = isDenominatorLepton(id,i,MiniIso);   
-		  // FO_SS_newminiiso = isDenominatorLepton(id,i,NewMiniIso);
-		  // FO_SS_NoIso = isDenominatorLeptonNoIso(id,i);
-
-		  //***Worried that all these hard coded values will cause syncing headaches later.***//
-
 		  ////////////
 		  ///  SS  ///
-		  ////////////
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_tight_noiso_v3) && muRelIso03(i, SS) < 0.1 ) passes_id_SS = true;
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_tight_noiso_v3) && (muRelIso03(i, SS) < 0.1 || passPtRel(id,i,ptRelCut,true)==1) ) passes_id_SS_ptrel = true; 
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_tight_noiso_v3) && ((getPtRel(id, i, true)>6. && muMiniRelIso(i) < 0.05) || (getPtRel(id, i, true)<=6. && muRelIso03(i, SS) < 0.1)) ) passes_id_SS_miniiso = true;	
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_tight_noiso_v3) && passMultiIso(id, i, 0.10, 0.70, 7.0) ) passes_id_SS_newminiiso = true; //using level=0!!!
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_fo_noiso_v3) && muRelIso03(i, SS) < 0.5 ) FO_SS = true;
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_fo_noiso_v3) && (muRelIso03(i, SS) < 0.5 || passPtRel(id,i,ptRelCutLoose,true)==1) ) FO_SS_ptrel = true; 
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_fo_noiso_v3) && ((getPtRel(id, i, true)>6. && muMiniRelIso(i) < 0.5) || (getPtRel(id, i, true)<=6. && muRelIso03(i, SS) < 0.5)) ) FO_SS_miniiso = true;	
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_fo_noiso_v3) && muMiniRelIso(i, 0.1, true) < 0.4 ) FO_SS_newminiiso = true;	
-		  // if ( tas::mus_p4().at(i).pt() >= 10. && muonID(i, SS_fo_noiso_v3) ) FO_SS_NoIso = true;	
-
+		  ////////////	
 		  if(muonID(i, SS_tight_v3))              passes_SS_tight_v3 = true;
 		  if(muonID(i, SS_tight_noiso_v3))        passes_SS_tight_noiso_v3 = true;
 		  if(muonID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
@@ -737,8 +704,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  
-		  Lep mu_temp = Lep(id, i);
-		  motherID = lepMotherID(mu_temp);
+		  //Lep mu_temp = Lep(id, i);
+		  //motherID = lepMotherID(mu_temp);
+		  motherID = lepMotherID(id, mc_id, idx);
 		  mc_motherp4 = tas::mus_mc_motherp4().at(i);
 		  
 		  BabyTree->Fill(); 
@@ -772,7 +740,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  } // End of tag selection
 		  
 		  //if (!isVetoLeptonNoIso(11,i) && !foundTag) continue;          //Relying on SSSelections here!
-		  if (electronID(i, SS_veto_noiso_v3)==0 && !foundTag) continue;  //other analyses can add vetoes w/ &&   
+		  if( (electronID(i, SS_veto_noiso_v3)==0 && !foundTag) || tas::els_p4().at(i).pt()<=10. ) continue;  //other analyses can add vetoes w/ &&   
 
 		  p4 = tas::els_p4().at(i);    
 		  if (foundTag) {
@@ -810,38 +778,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		  // //using SSSelections functions
-		  // passes_id_SS = isGoodLepton(id,i,Standard);   
-		  // passes_id_SS_ptrel = isGoodLepton(id,i,PtRel);
-		  // passes_id_SS_miniiso = isGoodLepton(id,i,MiniIso);
-		  // passes_id_SS_newminiiso = isGoodLepton(id,i,NewMiniIso);
-		  // FO_SS = isDenominatorLepton(id,i,Standard);    
-		  // FO_SS_ptrel = isDenominatorLepton(id,i,PtRel); 
-		  // FO_SS_miniiso = isDenominatorLepton(id,i,MiniIso); 
-		  // FO_SS_newminiiso = isDenominatorLepton(id,i,NewMiniIso);
-		  // FO_SS_NoIso = isDenominatorLeptonNoIso(id,i);
-		  
-		  //****Worried that all these hard coded values below will cause syncing headaches later.****//
-
 		  ////////////
 		  ///  SS  ///
 		  ////////////
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_medium_noiso_v3) && eleRelIso03(i, SS) < 0.1 ) passes_id_SS = true;
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_medium_noiso_v3) && (eleRelIso03(i, SS) < 0.1 || passPtRel(id,i,ptRelCut,true)==1) ) passes_id_SS_ptrel = true; 
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_medium_noiso_v3) && ((getPtRel(id, i, true)>6. && elMiniRelIso(i) < 0.05) || (getPtRel(id, i, true)<=6. && eleRelIso03(i, SS) < 0.1)) ) passes_id_SS_miniiso = true;	
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_medium_noiso_v3) && passMultiIso(id, i, 0.075, 0.725, 7.0) ) passes_id_SS_newminiiso = true; //using level=0!!!
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_fo_noiso_v3) && eleRelIso03(i, SS) < 0.5 ) FO_SS = true;
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_fo_noiso_v3) && (eleRelIso03(i, SS) < 0.5 || passPtRel(id,i,ptRelCutLoose,true)==1) ) FO_SS_ptrel = true; 
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_fo_noiso_v3) && ((getPtRel(id, i, true)>6. && elMiniRelIso(i) < 0.5) || (getPtRel(id, i, true)<=6. && eleRelIso03(i, SS) < 0.5)) ) FO_SS_miniiso = true;	
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_fo_noiso_v3) && elMiniRelIso(i, 0.1, true) < 0.4 ) FO_SS_newminiiso = true;	
-		  // if ( tas::els_p4().at(i).pt() >= 10. && electronID(i, SS_fo_noiso_v3) ) FO_SS_NoIso = true;	
-
 		  if(electronID(i, SS_medium_v3))             passes_SS_tight_v3 = true;
 		  if(electronID(i, SS_medium_noiso_v3))       passes_SS_tight_noiso_v3 = true;
 		  if(electronID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
 		  if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
 		  if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
 		  if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+
 		  ////////////
 		  ///  OS  ///
 		  ////////////
@@ -856,8 +802,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 
-		  Lep el_temp = Lep(id, i);
-		  motherID = lepMotherID(el_temp);
+		  //Lep el_temp = Lep(id, i);
+		  //motherID = lepMotherID(el_temp);
+		  motherID = lepMotherID(id, mc_id, idx);
 		  mc_motherp4 = tas::els_mc_motherp4().at(i); 
 
 		  BabyTree->Fill(); 

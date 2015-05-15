@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, ALL
+#samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, WJets, ALL
 #Choose the sample(s) you want here, separated by commmas
 sampleList_in=ALL
 #Choose the number of events (per file): 
@@ -18,8 +18,8 @@ isAll="$?" #note this is opposite
 if [ "$isAll" == "0" ] && [ "$nSamples" -gt "1" ]; then echo "Aborting! You can't have ALL as well as other sampleLists, dumbass!"; return 1; fi  
 if [ "$isAll" == "0" ]
 then 
-  sampleList="QCD_Test QCD_Mu_Enriched QCD_EM_Enriched QCD_non_Enriched QCD_HT TTBAR DY"
-  sampleList_in="QCD_Mu_Enriched,QCD_EM_Enriched,QCD_non_Enriched,QCD_HT,TTBAR,DY"
+  sampleList="QCD_Test QCD_Mu_Enriched QCD_EM_Enriched QCD_non_Enriched QCD_HT TTBAR DY WJets"
+  sampleList_in="QCD_Mu_Enriched,QCD_EM_Enriched,QCD_non_Enriched,QCD_HT,TTBAR,DY,WJets"
 fi
 
 #nSubmitted (so you know when to quit)
