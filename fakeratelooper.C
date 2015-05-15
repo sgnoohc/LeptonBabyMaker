@@ -565,28 +565,28 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  	  //Verbose
 	  	  if (verbose) cout << "Possible jet with pT: " << jet.pt() << endl;
             
-	  	  //Jet cleaning -- electrons
-	  	  bool jetIsLep = false;
-	  	  for (unsigned int eidx = 0; eidx < tas::els_p4().size(); eidx++){
-	  		LorentzVector electron = tas::els_p4().at(eidx);
-	  		if (electron.pt() < 7) continue;
-	  		//if (!isVetoLepton(11,eidx,Standard)) continue;                      //Relying on SSSelections here!
-	  		if ( electronID(eidx, SS_veto_noiso_v3)==0 ) continue;                //Other analyses can add their veto w/ &&
-	  		if (ROOT::Math::VectorUtil::DeltaR(jet, electron) > 0.4) continue;
-	  		jetIsLep = true;
-	  	  }
-	  	  if (jetIsLep == true) continue;
+	  	  // //Jet cleaning -- electrons
+	  	  // bool jetIsLep = false;
+	  	  // for (unsigned int eidx = 0; eidx < tas::els_p4().size(); eidx++){
+	  	  // 	LorentzVector electron = tas::els_p4().at(eidx);
+	  	  // 	if (electron.pt() < 7) continue;
+	  	  // 	//if (!isVetoLepton(11,eidx,Standard)) continue;                      //Relying on SSSelections here!
+	  	  // 	if ( electronID(eidx, SS_veto_noiso_v3)==0 ) continue;                //Other analyses can add their veto w/ &&
+	  	  // 	if (ROOT::Math::VectorUtil::DeltaR(jet, electron) > 0.4) continue;
+	  	  // 	jetIsLep = true;
+	  	  // }
+	  	  // if (jetIsLep == true) continue;
 
-	  	  //Jet cleaning -- muons
-	  	  for (unsigned int muidx = 0; muidx < tas::mus_p4().size(); muidx++){
-	  		LorentzVector muon = tas::mus_p4().at(muidx);
-	  		if (muon.pt() < 5) continue;
-	  		//if (!isVetoLepton(13,muidx,Standard)) continue;                       //Relying on SSSelections here!
-	  		if ( muonID(muidx, SS_veto_noiso_v3)==0 ) continue;                     //Other analyses can add their veto w/ &&
-	  		if (ROOT::Math::VectorUtil::DeltaR(jet, muon) > 0.4) continue;
-	  		jetIsLep = true;
-	  	  }
-	  	  if (jetIsLep == true) continue;
+	  	  // //Jet cleaning -- muons
+	  	  // for (unsigned int muidx = 0; muidx < tas::mus_p4().size(); muidx++){
+	  	  // 	LorentzVector muon = tas::mus_p4().at(muidx);
+	  	  // 	if (muon.pt() < 5) continue;
+	  	  // 	//if (!isVetoLepton(13,muidx,Standard)) continue;                       //Relying on SSSelections here!
+	  	  // 	if ( muonID(muidx, SS_veto_noiso_v3)==0 ) continue;                     //Other analyses can add their veto w/ &&
+	  	  // 	if (ROOT::Math::VectorUtil::DeltaR(jet, muon) > 0.4) continue;
+	  	  // 	jetIsLep = true;
+	  	  // }
+	  	  // if (jetIsLep == true) continue;
 
 	  	  //Save jets that make it this far
 	  	  jets.push_back(jet);
