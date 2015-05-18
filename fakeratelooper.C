@@ -635,7 +635,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if (i==j) continue;
 		    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
 		    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
-		    if ( isGoodLepton(13,j,Standard) ) { // OK, we have a tag        //Relying on SSSelections here!
+		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
 		      tag_p4 = tas::mus_p4().at(j);
 		      tag_charge = tas::mus_charge().at(j);
 		      // Randomize if needed
@@ -726,7 +726,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if (i==j) continue;
 		    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
 		    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-		    if ( isGoodLepton(11,j,Standard) ) { // OK, we have a tag    //Relying on SSSelections here!
+		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   
 		      tag_p4 = tas::els_p4().at(j);
 		      tag_charge = tas::els_charge().at(j);
 		      // Randomize if needed
