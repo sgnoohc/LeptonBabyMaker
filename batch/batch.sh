@@ -51,7 +51,7 @@ do
     number=$(( $i - 2 ))
     
     #Except they've finished
-    if [ -e /hadoop/cms/store/user/cgeorge/condor/frbabies/${title}_${number}.root ] 
+    if [ -e /hadoop/cms/store/user/$USER/condor/frbabies/${title}_${number}.root ] 
     then 
       if [ "$verbose" == "true" ]; then echo "-------------"; echo "${title}_${number} already exists on hadoop, will not resubmit"; fi
       continue
