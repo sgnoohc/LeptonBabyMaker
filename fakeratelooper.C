@@ -92,9 +92,9 @@ private:
   float dxyPV_err;
   int motherID;
   int mc_id;
-  float RelIso03; //RelIso03 (EA?)
-  float RelIso03EA; //RelIso03 (EA?)
-  float RelIso03DB; //RelIso03 (EA?)
+  float RelIso03; //RelIso03 (not corrected)
+  float RelIso03EA; //RelIso03 (EffectiveArea corrected)
+  float RelIso03DB; //RelIso03 (DeltaBeta corrected)
   bool passes_SS_tight_v3;
   bool passes_SS_tight_noiso_v3;
   bool passes_SS_fo_v3;
@@ -671,7 +671,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  dxyPV = leptonD0(id, i);
 		  dxyPV_err = leptonD0err(id, i);
 		  dZ = leptonDZ(id, i);
-		  RelIso03 = muRelIso03(i,SS);
+		  RelIso03 = (mus_isoR03_pf_ChargedHadronPt().at(i)+mus_isoR03_pf_NeutralHadronEt().at(i)+mus_isoR03_pf_PhotonEt().at(i))/mus_p4().at(i).pt();
 		  RelIso03EA = muRelIso03EA(i);
 		  RelIso03DB = muRelIso03DB(i);
 		  pid_PFMuon = tas::mus_pid_PFMuon().at(i);
@@ -710,7 +710,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = muMiniRelIso(idx, 0.1, true);
+		  miniiso = muMiniRelIso(idx, true, 0.5, false, true);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  
@@ -764,9 +764,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  dxyPV = leptonD0(id, i);
 		  dxyPV_err = leptonD0err(id, i);
 		  dZ = leptonDZ(id, i);
-		  RelIso03 = eleRelIso03(i,SS);
+		  RelIso03 = (els_pfChargedHadronIso().at(i)+els_pfNeutralHadronIso().at(i)+els_pfPhotonIso().at(i))/els_p4().at(i).pt();
 		  RelIso03EA = eleRelIso03EA(i);
-		  RelIso03EA = eleRelIso03DB(i);
+		  RelIso03DB = eleRelIso03DB(i);
 		  sigmaIEtaIEta_full5x5 = tas::els_sigmaIEtaIEta_full5x5().at(i);//new below
 		  etaSC = tas::els_etaSC().at(i);
 		  dEtaIn = tas::els_dEtaIn().at(i);
@@ -810,7 +810,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = elMiniRelIso(idx, 0.1, true);
+		  miniiso = elMiniRelIso(idx, true, 0.0, false, true);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 
