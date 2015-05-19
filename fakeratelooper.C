@@ -1,139 +1,21 @@
-#include "TChain.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TRandom.h"
-#include "TF1.h"
-#include "Math/VectorUtil.h"
-#include <vector>
 
-#include "CORE/CMS3.h"
-#include "CORE/SSSelections.h"
+
 #include "fakeratelooper.h" 
 
-typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
-typedef vector<pair<const LorentzVector *, double> > jets_with_corr_t;
 
-using namespace std;
 
 //Switches
 bool verbose = 0;
 unsigned int evt_cut = 74994186;
 
-//Classes
-class babyMaker {
 
-public:
-  void MakeBabyNtuple(const char* output_name);
-  void InitBabyNtuple();
-  void InitLeptonBranches(); //init. Lepton variables only.
-  int looper(TChain* chain, char* output_name, int nEvents = -1);
-  void SetOutputPath( std::string outputpath ); //init. Electron variables only
-
-protected:
-
-  TFile* BabyFile;
-  TTree* BabyTree;
-
-private:
-
-  std::string path = "./";
-
-  //for tree
-  float evt_pfmet;
-  float evt_pfmetPhi;
-  int evt_event;
-  int evt_lumiBlock;
-  int evt_run;
-  bool filt_csc;
-  bool filt_hbhe;
-  bool filt_hcallaser;
-  bool filt_ecaltp;
-  bool filt_trkfail;
-  bool filt_eebadsc;
-  bool evt_isRealData;
-  float scale1fb;     
-  float evt_xsec_incl;         
-  float evt_kfactor;      
-  float gen_met;      
-  float gen_metPhi;  
-  float njets;  
-  float ht;  
-  vector <LorentzVector> jets;
-  vector <float> jets_disc; 
-  TString sample;
-  int nFOs;
-  int nvtx;
-  //-------------------//
-  //------MINE---------//
-
-  //---both--//
-  LorentzVector p4;
-  LorentzVector tag_p4;
-  LorentzVector dilep_p4;
-  LorentzVector mc_p4;
-  LorentzVector mc_motherp4;
-  int id; 
-  int idx;
-  float dxyPV;
-  float dZ;
-  float dxyPV_err;
-  int motherID;
-  int mc_id;
-  float iso; //RelIso03 (EA?)
-  bool passes_id;
-  bool passes_id_ptrel;
-  bool passes_id_miniiso;
-  bool passes_id_newminiiso;
-  bool FO;
-  bool FO_ptrel;
-  bool FO_miniiso;
-  bool FO_newminiiso;
-  bool FO_NoIso;
-  float ip3d;
-  float ip3derr;
-  int type;
-  float mt;
-  float ptrelv0;
-  float ptrelv1;
-  float miniiso;
-  LorentzVector jet_close_lep;
-  int tag_charge;
-  float dilep_mass;
-  bool isRandom;
-  //---els---//
-  float sigmaIEtaIEta_full5x5;
-  float etaSC;
-  float dEtaIn;
-  float dPhiIn;
-  float hOverE;
-  float ecalEnergy;
-  float eOverPIn;
-  bool  conv_vtx_flag;
-  int   exp_innerlayers;
-  int   charge;
-  int   sccharge;
-  int   ckf_charge;
-  int   trk_charge;
-  bool  threeChargeAgree_branch;
-
-  //---mus---//
-  int   pid_PFMuon;
-  float gfit_chi2;
-  float gfit_ndof;
-  int   gfit_validSTAHits;
-  int   numberOfMatchedStations;
-  int   validPixelHits;
-  int   nlayers;
-  //---------------------
-    
-};
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
 
   //Create Baby
-  TDirectory *rootdir = gDirectory->GetDirectory("Rint:");
-  rootdir->cd();
+  //Segfaults in Root6.    TDirectory *rootdir = gDirectory->GetDirectory("Rint:");
+  //Segfaults in Root6.    rootdir->cd();
   BabyFile = new TFile(Form("%s/%s", path.c_str(), output_name), "RECREATE");
   BabyFile->cd();
   BabyTree = new TTree("t", "Lepton Baby Ntuple");
@@ -141,6 +23,10 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   //Define Branches
   BabyTree->Branch("evt_pfmet", &evt_pfmet);
   BabyTree->Branch("evt_pfmetPhi", &evt_pfmetPhi);
+  BabyTree->Branch("evt_trackmet", &evt_trackmet);
+  BabyTree->Branch("evt_trackmetPhi", &evt_trackmetPhi);
+  BabyTree->Branch("evt_pfsumet", &evt_pfsumet);
+  BabyTree->Branch("evt_pfmetSig", &evt_pfmetSig);
   BabyTree->Branch("evt_event", &evt_event);
   BabyTree->Branch("evt_lumiBlock", &evt_lumiBlock);
   BabyTree->Branch("evt_run", &evt_run);
@@ -161,7 +47,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jets", &jets);
   BabyTree->Branch("jets_disc", &jets_disc);
   BabyTree->Branch("sample", &sample);
-  BabyTree->Branch("nFOs", &nFOs);
+  BabyTree->Branch("nFOs_SS", &nFOs_SS);
   BabyTree->Branch("nvtx", &nvtx);
 
   //--------------------MINE----------------------------
@@ -178,16 +64,15 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("dxyPV_err", &dxyPV_err);
   BabyTree->Branch("motherID", &motherID);
   BabyTree->Branch("mc_id", &mc_id);
-  BabyTree->Branch("iso", &iso);
-  BabyTree->Branch("passes_id", &passes_id);
-  BabyTree->Branch("passes_id_ptrel", &passes_id_ptrel);
-  BabyTree->Branch("passes_id_miniiso", &passes_id_miniiso);
-  BabyTree->Branch("passes_id_newminiiso", &passes_id_newminiiso);
-  BabyTree->Branch("FO", &FO);
-  BabyTree->Branch("FO_ptrel", &FO_ptrel);
-  BabyTree->Branch("FO_miniiso", &FO_miniiso);
-  BabyTree->Branch("FO_newminiiso", &FO_newminiiso);
-  BabyTree->Branch("FO_NoIso", &FO_NoIso);
+  BabyTree->Branch("RelIso03", &RelIso03);
+  BabyTree->Branch("RelIso03EA", &RelIso03EA);
+  BabyTree->Branch("RelIso03DB", &RelIso03DB);
+  BabyTree->Branch("passes_SS_tight_v3", &passes_SS_tight_v3);
+  BabyTree->Branch("passes_SS_tight_noiso_v3", &passes_SS_tight_noiso_v3);
+  BabyTree->Branch("passes_SS_fo_v3", &passes_SS_fo_v3);
+  BabyTree->Branch("passes_SS_fo_noiso_v3", &passes_SS_fo_noiso_v3);
+  BabyTree->Branch("passes_SS_fo_looseMVA_v3", &passes_SS_fo_looseMVA_v3);
+  BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v3", &passes_SS_fo_looseMVA_noiso_v3);
   BabyTree->Branch("ip3d", &ip3d);
   BabyTree->Branch("ip3derr", &ip3derr);
   BabyTree->Branch("type", &type);
@@ -196,6 +81,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ptrelv1", &ptrelv1);
   BabyTree->Branch("miniiso", &miniiso);
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
+  BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
   BabyTree->Branch("dilep_mass", &dilep_mass);
 
@@ -228,7 +114,11 @@ void babyMaker::InitBabyNtuple(){
 
   //Gen variables
   evt_pfmet = -1;
-  evt_pfmetPhi = -1;
+  evt_pfmetPhi = -99.;
+  evt_trackmet = -1;
+  evt_trackmetPhi = -99;
+  evt_pfsumet = -1;
+  evt_pfmetSig = -1;
   evt_event = -1;
   evt_lumiBlock = -1;
   evt_run = -1;
@@ -243,13 +133,13 @@ void babyMaker::InitBabyNtuple(){
   evt_xsec_incl = -1;
   evt_kfactor = -1;
   gen_met = -1;
-  gen_metPhi = -1;
+  gen_metPhi = -99;
   njets = -1;
   ht = -1;
   jets.clear();
   jets_disc.clear();
   sample = "";
-  nFOs = -1;
+  nFOs_SS = -1;
   nvtx = -1;
 
   //--------MINE------------
@@ -266,16 +156,15 @@ void babyMaker::InitBabyNtuple(){
   dxyPV_err = -1;
   motherID = -1;
   mc_id = -1;
-  iso = -1;
-  passes_id = 0;
-  passes_id_ptrel = 0;
-  passes_id_miniiso = 0;
-  passes_id_newminiiso = 0;
-  FO = 0;
-  FO_ptrel = 0;
-  FO_miniiso = 0;
-  FO_newminiiso = 0;
-  FO_NoIso = 0;
+  RelIso03 = -1;
+  RelIso03EA = -1;
+  RelIso03DB = -1;
+  passes_SS_tight_v3 = 0;
+  passes_SS_tight_noiso_v3 = 0;
+  passes_SS_fo_v3 = 0;
+  passes_SS_fo_noiso_v3 = 0;
+  passes_SS_fo_looseMVA_v3 = 0;
+  passes_SS_fo_looseMVA_noiso_v3 = 0;
   ip3d = -1;
   ip3derr = -1;
   type = -1;
@@ -284,6 +173,7 @@ void babyMaker::InitBabyNtuple(){
   ptrelv1 = -1;
   miniiso = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
+  ptratio = -1;
   tag_charge = 0;
   dilep_mass = -1;
   isRandom = false;
@@ -292,7 +182,7 @@ void babyMaker::InitBabyNtuple(){
   sigmaIEtaIEta_full5x5 = -1;//below
   etaSC = -1;
   dEtaIn = -1;
-  dPhiIn = -1;
+  dPhiIn = -99;
   hOverE = -1;
   ecalEnergy = -1;
   eOverPIn = -1;
@@ -330,16 +220,15 @@ void babyMaker::InitLeptonBranches(){
   dxyPV_err = -1;
   motherID = -1;
   mc_id = -1;
-  iso = -1;
-  passes_id = 0;
-  passes_id_ptrel = 0;
-  passes_id_miniiso = 0;
-  passes_id_newminiiso = 0;
-  FO = 0;
-  FO_ptrel = 0;
-  FO_miniiso = 0;
-  FO_newminiiso = 0;
-  FO_NoIso = 0;
+  RelIso03 = -1;
+  RelIso03EA = -1;
+  RelIso03DB = -1;
+  passes_SS_tight_v3 = 0;
+  passes_SS_tight_noiso_v3 = 0;
+  passes_SS_fo_v3 = 0;
+  passes_SS_fo_noiso_v3 = 0;
+  passes_SS_fo_looseMVA_v3 = 0;
+  passes_SS_fo_looseMVA_noiso_v3 = 0;
   type = -1;
   ip3d = -1;
   ip3derr = -1;
@@ -348,6 +237,7 @@ void babyMaker::InitLeptonBranches(){
   ptrelv1 = -1;
   miniiso = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
+  ptratio = -1;
   tag_charge = 0.;
   dilep_mass = -1.;
   isRandom = false;
@@ -365,7 +255,7 @@ void babyMaker::InitLeptonBranches(){
   sigmaIEtaIEta_full5x5 = -1;
   etaSC = -1;
   dEtaIn = -1;
-  dPhiIn = -1;
+  dPhiIn = -99;
   hOverE = -1;
   ecalEnergy = -1;
   eOverPIn = -1;
@@ -388,14 +278,31 @@ double calculateMt(const LorentzVector p4, double met, double met_phi){  //<--MT
   return sqrt(2*Et1*Et2*(1.0 - cos(phi1-phi2)));
 }
 
-int lepMotherID(Lep lep){
+// int lepMotherID(Lep lep){
+//   if (tas::evt_isRealData()) return 1;
+//   else if (isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
+//     if (sgn(lep.pdgId()) == sgn(lep.mc_id())) return 1;
+//     else return 2;
+//   }
+//   else if (isFromB(lep.pdgId(),lep.idx())) return -1;
+//   else if (isFromC(lep.pdgId(),lep.idx())) return -2;
+//   return 0;
+// }
+
+int sign(int num){
+  if(num > 0) return 1;
+  else if(num < 0) return -1;
+  return 0;
+}
+
+int lepMotherID(int id, int mc_id, int idx){
   if (tas::evt_isRealData()) return 1;
-  else if (isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
-    if (sgn(lep.pdgId()) == sgn(lep.mc_id())) return 1;
+  else if (isFromZ(id, idx) || isFromW(id, idx)){
+    if (sign(id) == sign(mc_id)) return 1;
     else return 2;
   }
-  else if (isFromB(lep.pdgId(),lep.idx())) return -1;
-  else if (isFromC(lep.pdgId(),lep.idx())) return -2;
+  else if (isFromB(id, idx)) return -1;
+  else if (isFromC(id, idx)) return -2;
   return 0;
 }
 
@@ -470,11 +377,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       // //Preliminary stuff
-	  if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  //idk what this is
+	  if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  
+
+	  metStruct myMetStruct =  trackerMET(0.2);
 
       //Fill Easy Variables
       evt_pfmet      = cms3.evt_pfmet();
       evt_pfmetPhi   = cms3.evt_pfmetPhi();
+	  evt_trackmet   = myMetStruct.met;
+	  evt_trackmetPhi= myMetStruct.metphi;
+      evt_pfsumet    = cms3.evt_pfsumet();
+      evt_pfmetSig   = cms3.evt_pfmetSig();
       evt_event      = tas::evt_event();
       evt_lumiBlock  = tas::evt_lumiBlock();
       evt_run        = tas::evt_run();
@@ -529,26 +442,28 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  	  //Verbose
 	  	  if (verbose) cout << "Possible jet with pT: " << jet.pt() << endl;
             
-	  	  //Jet cleaning -- electrons
-	  	  bool jetIsLep = false;
-	  	  for (unsigned int eidx = 0; eidx < tas::els_p4().size(); eidx++){
-	  		LorentzVector electron = tas::els_p4().at(eidx);
-	  		if (electron.pt() < 7) continue;
-	  		if (!isVetoLepton(11,eidx,Standard)) continue;
-	  		if (ROOT::Math::VectorUtil::DeltaR(jet, electron) > 0.4) continue;
-	  		jetIsLep = true;
-	  	  }
-	  	  if (jetIsLep == true) continue;
+	  	  // //Jet cleaning -- electrons
+	  	  // bool jetIsLep = false;
+	  	  // for (unsigned int eidx = 0; eidx < tas::els_p4().size(); eidx++){
+	  	  // 	LorentzVector electron = tas::els_p4().at(eidx);
+	  	  // 	if (electron.pt() < 7) continue;
+	  	  // 	//if (!isVetoLepton(11,eidx,Standard)) continue;                      //Relying on SSSelections here!
+	  	  // 	if ( electronID(eidx, SS_veto_noiso_v3)==0 ) continue;                //Other analyses can add their veto w/ &&
+	  	  // 	if (ROOT::Math::VectorUtil::DeltaR(jet, electron) > 0.4) continue;
+	  	  // 	jetIsLep = true;
+	  	  // }
+	  	  // if (jetIsLep == true) continue;
 
-	  	  //Jet cleaning -- muons
-	  	  for (unsigned int muidx = 0; muidx < tas::mus_p4().size(); muidx++){
-	  		LorentzVector muon = tas::mus_p4().at(muidx);
-	  		if (muon.pt() < 5) continue;
-	  		if (!isVetoLepton(13,muidx,Standard)) continue;
-	  		if (ROOT::Math::VectorUtil::DeltaR(jet, muon) > 0.4) continue;
-	  		jetIsLep = true;
-	  	  }
-	  	  if (jetIsLep == true) continue;
+	  	  // //Jet cleaning -- muons
+	  	  // for (unsigned int muidx = 0; muidx < tas::mus_p4().size(); muidx++){
+	  	  // 	LorentzVector muon = tas::mus_p4().at(muidx);
+	  	  // 	if (muon.pt() < 5) continue;
+	  	  // 	//if (!isVetoLepton(13,muidx,Standard)) continue;                       //Relying on SSSelections here!
+	  	  // 	if ( muonID(muidx, SS_veto_noiso_v3)==0 ) continue;                     //Other analyses can add their veto w/ &&
+	  	  // 	if (ROOT::Math::VectorUtil::DeltaR(jet, muon) > 0.4) continue;
+	  	  // 	jetIsLep = true;
+	  	  // }
+	  	  // if (jetIsLep == true) continue;
 
 	  	  //Save jets that make it this far
 	  	  jets.push_back(jet);
@@ -567,19 +482,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       } 
 	  //-----------------------------------------------------------------------------------------------------------------------
 
-	  int count = 0;
+	  int count_SS = 0;
 
 	  for(size_t j = 0; j < tas::mus_p4().size(); j++)
 	  	{
-	  	  if(isDenominatorLepton(13,j,Standard))
-	  		{count++;}
+	  	  //if(isDenominatorLepton(13,j,Standard))     //relying on SSSelections
+		  if( muonID(j, SS_fo_v3) && tas::mus_p4().at(j).pt()>10.)                    //Is this the right one?
+	  		{count_SS++;}
 	  	}
 	  for(size_t j = 0; j < tas::els_p4().size(); j++)
 	  	{
-	  	  if(isDenominatorLepton(11,j,Standard))
-	  		{count++;}
+	  	  //if(isDenominatorLepton(11,j,Standard))     //relying on SSSelections
+		  if( electronID(j, SS_fo_v3) && tas::els_p4().at(j).pt()>10.)                //Is this the right one?
+	  		{count_SS++;}
 	  	}
-	  nFOs = count;
+	  nFOs_SS = count_SS;
 
 	  bool used = false;
 	  TRandom r;
@@ -595,7 +512,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if (i==j) continue;
 		    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
 		    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
-		    if ( isGoodLepton(13,j,Standard) ) { // OK, we have a tag
+		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
 		      tag_p4 = tas::mus_p4().at(j);
 		      tag_charge = tas::mus_charge().at(j);
 		      // Randomize if needed
@@ -608,21 +525,24 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    }
 		  } // End of tag selection
 		  
-		  if (!isVetoLeptonNoIso(13,i) && foundTag==false) continue;
+		  //if (!isVetoLeptonNoIso(13,i) && foundTag==false) continue;           //Relying on SSSelections here!
+		  if( (muonID(i, SS_veto_noiso_v3)==0 && foundTag==false) || tas::mus_p4().at(i).pt()<=10. ) continue;    //other analyses can add vetoes w/ &&
 
 		  p4 = tas::mus_p4().at(i); 
 		  if (foundTag) {
 		    dilep_p4 = p4 + tag_p4;
 		    dilep_mass = dilep_p4.M();
 		  }
-		  mc_p4 = tas::mus_mc_p4().at(i);
+		  if (!evt_isRealData) mc_p4 = tas::mus_mc_p4().at(i);
 		  id = -13.0*tas::mus_charge().at(i);
 		  idx = i;  
-		  mc_id = tas::mus_mc_id().at(i);
+		  if (!evt_isRealData) mc_id = tas::mus_mc_id().at(i);
 		  dxyPV = leptonD0(id, i);
 		  dxyPV_err = leptonD0err(id, i);
 		  dZ = leptonDZ(id, i);
-		  iso = muRelIso03(i,SS);
+		  RelIso03 = (tas::mus_isoR03_pf_ChargedHadronPt().at(i)+tas::mus_isoR03_pf_NeutralHadronEt().at(i)+tas::mus_isoR03_pf_PhotonEt().at(i))/tas::mus_p4().at(i).pt();
+		  RelIso03EA = muRelIso03EA(i);
+		  RelIso03DB = muRelIso03DB(i);
 		  pid_PFMuon = tas::mus_pid_PFMuon().at(i);
 		  gfit_chi2 = tas::mus_gfit_chi2().at(i);
 		  gfit_ndof = tas::mus_gfit_ndof().at(i);
@@ -635,25 +555,40 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  type = tas::mus_type().at(i);
 		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
 
-		  passes_id = isGoodLepton(id,i,Standard);   //"fix me" in selection.cc.
-		  passes_id_ptrel = isGoodLepton(id,i,PtRel);   //"fix me" in selection.cc.
-		  passes_id_miniiso = isGoodLepton(id,i,MiniIso);   //"fix me" in selection.cc.
-		  passes_id_newminiiso = isGoodLepton(id,i,NewMiniIso);   //"fix me" in selection.cc.
-		  FO = isDenominatorLepton(id,i,Standard);    //"fix me" in selection.cc
-		  FO_ptrel = isDenominatorLepton(id,i,PtRel);    //"fix me" in selection.cc
-		  FO_miniiso = isDenominatorLepton(id,i,MiniIso);    //"fix me" in selection.cc
-		  FO_newminiiso = isDenominatorLepton(id,i,NewMiniIso);    //"fix me" in selection.cc
-		  FO_NoIso = isDenominatorLeptonNoIso(id,i);
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		  ////////////
+		  ///  SS  ///
+		  ////////////	
+		  if(muonID(i, SS_tight_v3))              passes_SS_tight_v3 = true;
+		  if(muonID(i, SS_tight_noiso_v3))        passes_SS_tight_noiso_v3 = true;
+		  if(muonID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
+		  if(muonID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
+		  //if(muonID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;        //Doesn't make sense for muons
+		  //if(muonID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;  //Doesn't make sense for muons
+
+		  ////////////
+		  ///  OS  ///
+		  ////////////
+
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+		  
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
-
-		  miniiso = muMiniRelIso(idx, 0.1, true);
-		  jet_close_lep = closestJet(p4);
+		  miniiso = muMiniRelIso(idx, true, 0.5, false, true);
+		  jet_close_lep = closestJet(p4,0.4,2.4);
+		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  
-		  Lep mu_temp = Lep(id, i);
-		  motherID = lepMotherID(mu_temp);
-		  mc_motherp4 = tas::mus_mc_motherp4().at(i);
+		  //Lep mu_temp = Lep(id, i);
+		  //motherID = lepMotherID(mu_temp);
+		  if (!evt_isRealData) {
+		    motherID = lepMotherID(id, mc_id, idx);
+		    mc_motherp4 = tas::mus_mc_motherp4().at(i);
+		  }
 		  
 		  BabyTree->Fill(); 
 		  InitLeptonBranches(); 
@@ -672,7 +607,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if (i==j) continue;
 		    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
 		    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-		    if ( isGoodLepton(11,j,Standard) ) { // OK, we have a tag
+		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   
 		      tag_p4 = tas::els_p4().at(j);
 		      tag_charge = tas::els_charge().at(j);
 		      // Randomize if needed
@@ -685,21 +620,24 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    }
 		  } // End of tag selection
 		  
-		  if (!isVetoLeptonNoIso(11,i) && !foundTag) continue;
+		  //if (!isVetoLeptonNoIso(11,i) && !foundTag) continue;          //Relying on SSSelections here!
+		  if( (electronID(i, SS_veto_noiso_v3)==0 && !foundTag) || tas::els_p4().at(i).pt()<=10. ) continue;  //other analyses can add vetoes w/ &&   
 
 		  p4 = tas::els_p4().at(i);    
 		  if (foundTag) {
 		    dilep_p4 = p4 + tag_p4;
 		    dilep_mass = dilep_p4.M();
 		  }
-		  mc_p4 = tas::els_mc_p4().at(i);  
+		  if (!evt_isRealData) mc_p4 = tas::els_mc_p4().at(i);  
 		  id = -11.0*tas::els_charge().at(i); 
 		  idx = i;
-		  mc_id = tas::els_mc_id().at(i);  
+		  if (!evt_isRealData) mc_id = tas::els_mc_id().at(i);  
 		  dxyPV = leptonD0(id, i);
 		  dxyPV_err = leptonD0err(id, i);
 		  dZ = leptonDZ(id, i);
-		  iso = eleRelIso03(i,SS);
+		  RelIso03 = (tas::els_pfChargedHadronIso().at(i)+tas::els_pfNeutralHadronIso().at(i)+tas::els_pfPhotonIso().at(i))/tas::els_p4().at(i).pt();
+		  RelIso03EA = eleRelIso03EA(i);
+		  RelIso03DB = eleRelIso03DB(i);
 		  sigmaIEtaIEta_full5x5 = tas::els_sigmaIEtaIEta_full5x5().at(i);//new below
 		  etaSC = tas::els_etaSC().at(i);
 		  dEtaIn = tas::els_dEtaIn().at(i);
@@ -719,25 +657,40 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  type = tas::els_type().at(i);
 		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
 
-		  passes_id = isGoodLepton(id,i,Standard);   //"fix me" in selection.cc.
-		  passes_id_ptrel = isGoodLepton(id,i,PtRel);   //"fix me" in selection.cc.
-		  passes_id_miniiso = isGoodLepton(id,i,MiniIso);   //"fix me" in selection.cc.
-		  passes_id_newminiiso = isGoodLepton(id,i,NewMiniIso);   //"fix me" in selection.cc.
-		  FO = isDenominatorLepton(id,i,Standard);    //"fix me" in selection.cc
-		  FO_ptrel = isDenominatorLepton(id,i,PtRel);    //"fix me" in selection.cc
-		  FO_miniiso = isDenominatorLepton(id,i,MiniIso);    //"fix me" in selection.cc
-		  FO_newminiiso = isDenominatorLepton(id,i,NewMiniIso);    //"fix me" in selection.cc
-		  FO_NoIso = isDenominatorLeptonNoIso(id,i);
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		  ////////////
+		  ///  SS  ///
+		  ////////////
+		  if(electronID(i, SS_medium_v3))             passes_SS_tight_v3 = true;
+		  if(electronID(i, SS_medium_noiso_v3))       passes_SS_tight_noiso_v3 = true;
+		  if(electronID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
+		  if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
+		  if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
+		  if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+
+		  ////////////
+		  ///  OS  ///
+		  ////////////
+
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+		  
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
- 
-		  miniiso = elMiniRelIso(idx, 0.1, true);
-		  jet_close_lep = closestJet(p4);
+		  miniiso = elMiniRelIso(idx, true, 0.0, false, true);
+		  jet_close_lep = closestJet(p4,0.4,2.4);
+		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 
-		  Lep el_temp = Lep(id, i);
-		  motherID = lepMotherID(el_temp);
-		  mc_motherp4 = tas::els_mc_motherp4().at(i); 
+		  //Lep el_temp = Lep(id, i);
+		  //motherID = lepMotherID(el_temp);
+		  if (!evt_isRealData ) {
+		    motherID = lepMotherID(id, mc_id, idx);
+		    mc_motherp4 = tas::els_mc_motherp4().at(i); 
+		  }
 
 		  BabyTree->Fill(); 
 		  InitLeptonBranches();

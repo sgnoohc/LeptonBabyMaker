@@ -1,6 +1,9 @@
 #!/bin/bash
 
-path2="/hadoop/cms/store/user/cgeorge/condor/frbabies"
+path0="/hadoop/cms/store/user/"
+path1="/condor/frbabies"
+#path2="/hadoop/cms/store/user/iandyckes/condor/frbabies"
+path2=$path0$USER$path1
 
 samples=$1
 samples=`echo $samples | tr ',' ' '`
