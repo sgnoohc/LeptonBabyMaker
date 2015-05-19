@@ -8,4 +8,5 @@ else
   cd CORE
   make -j 8
   cd ..
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
 fi
