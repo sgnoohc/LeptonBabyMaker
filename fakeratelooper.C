@@ -92,7 +92,9 @@ private:
   float dxyPV_err;
   int motherID;
   int mc_id;
-  float RelIso; //RelIso03 (EA?)
+  float RelIso03; //RelIso03 (EA?)
+  float RelIso03EA; //RelIso03 (EA?)
+  float RelIso03DB; //RelIso03 (EA?)
   bool passes_SS_tight_v3;
   bool passes_SS_tight_noiso_v3;
   bool passes_SS_fo_v3;
@@ -193,7 +195,9 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("dxyPV_err", &dxyPV_err);
   BabyTree->Branch("motherID", &motherID);
   BabyTree->Branch("mc_id", &mc_id);
-  BabyTree->Branch("RelIso", &RelIso);
+  BabyTree->Branch("RelIso03", &RelIso03);
+  BabyTree->Branch("RelIso03EA", &RelIso03EA);
+  BabyTree->Branch("RelIso03DB", &RelIso03DB);
   BabyTree->Branch("passes_SS_tight_v3", &passes_SS_tight_v3);
   BabyTree->Branch("passes_SS_tight_noiso_v3", &passes_SS_tight_noiso_v3);
   BabyTree->Branch("passes_SS_fo_v3", &passes_SS_fo_v3);
@@ -283,7 +287,9 @@ void babyMaker::InitBabyNtuple(){
   dxyPV_err = -1;
   motherID = -1;
   mc_id = -1;
-  RelIso = -1;
+  RelIso03 = -1;
+  RelIso03EA = -1;
+  RelIso03DB = -1;
   passes_SS_tight_v3 = 0;
   passes_SS_tight_noiso_v3 = 0;
   passes_SS_fo_v3 = 0;
@@ -345,7 +351,9 @@ void babyMaker::InitLeptonBranches(){
   dxyPV_err = -1;
   motherID = -1;
   mc_id = -1;
-  RelIso = -1;
+  RelIso03 = -1;
+  RelIso03EA = -1;
+  RelIso03DB = -1;
   passes_SS_tight_v3 = 0;
   passes_SS_tight_noiso_v3 = 0;
   passes_SS_fo_v3 = 0;
@@ -663,7 +671,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  dxyPV = leptonD0(id, i);
 		  dxyPV_err = leptonD0err(id, i);
 		  dZ = leptonDZ(id, i);
-		  RelIso = muRelIso03(i,SS);
+		  RelIso03 = muRelIso03(i,SS);
+		  RelIso03EA = muRelIso03EA(i);
+		  RelIso03DB = muRelIso03DB(i);
 		  pid_PFMuon = tas::mus_pid_PFMuon().at(i);
 		  gfit_chi2 = tas::mus_gfit_chi2().at(i);
 		  gfit_ndof = tas::mus_gfit_ndof().at(i);
@@ -754,7 +764,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  dxyPV = leptonD0(id, i);
 		  dxyPV_err = leptonD0err(id, i);
 		  dZ = leptonDZ(id, i);
-		  RelIso = eleRelIso03(i,SS);
+		  RelIso03 = eleRelIso03(i,SS);
+		  RelIso03EA = eleRelIso03EA(i);
+		  RelIso03EA = eleRelIso03DB(i);
 		  sigmaIEtaIEta_full5x5 = tas::els_sigmaIEtaIEta_full5x5().at(i);//new below
 		  etaSC = tas::els_etaSC().at(i);
 		  dEtaIn = tas::els_dEtaIn().at(i);
