@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     if (argc < 2) {
       sample = "default";
       cout<<"Using default file. "<<endl;
-      result->Add("/hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0_pre9_ROOT6-GR_R_74_V8_1Apr_RelVal_zEl2012D-v1/cmssw_74x/merged/merged_ntuple_1.root");
+      result->Add("/hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0_pre9_ROOT6-GR_R_74_V8_1Apr_RelVal_zEl2012D-v1/CMS3_V07-04-01/merged/merged_ntuple_1.root"); 
     }
     else {
       sample = (TString) argv[1];
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
       }
       //2012DoubleEle
       else if (sample == "2012DoubleEle"){
-	result->Add("/hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0_pre9_ROOT6-GR_R_74_V8_1Apr_RelVal_zEl2012D-v1/cmssw_74x/merged/merged_ntuple_1.root");
+	result->Add("/hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0_pre9_ROOT6-GR_R_74_V8_1Apr_RelVal_zEl2012D-v1/CMS3_V07-04-01/merged/merged_ntuple_1.root");
       }
       else {
 	cout<<"Could not find files corresponding to sample "<<sample<<endl;

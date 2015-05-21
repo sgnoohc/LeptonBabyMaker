@@ -24,6 +24,7 @@ CC = g++
 CMSROOT = ./
 INCLUDE = $(shell root-config --cflags) -I$(CMSROOT) -I$(CMSROOT)/CORE
 CFLAGS = -Wall -Wno-unused-function -g -O2 -fPIC $(INCLUDE) $(EXTRACFLAGS)
+#CFLAGS = -Wall -Wno-unused-function -g -fPIC $(INCLUDE) $(EXTRACFLAGS)
 ROOTLIBS = $(shell root-config --ldflags --cflags --libs) -lTMVA #-lEG -lGenVector
 COREDIR = CORE
 
@@ -81,7 +82,7 @@ LinkDef_out.cxx: LinkDef.h
 
 %.exe:  $(LIBS)
 	$(QUIET) echo "Building $@"; \
-	$(CC) -o $@ $(LIBS) $(ROOTLIBS) ${@:.exe=.C} 
+	$(CC) -o $@ $(LIBS) $(ROOTLIBS) ${@:.exe=.C} -Wl,-rpath,./
 
 %.o: 	%.cc %.h
 	$(QUIET) echo "Compiling $<"; \

@@ -83,6 +83,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
   BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
+  BabyTree->Branch("tag_HLTLeadingLeg", &tag_HLTLeadingLeg);
   BabyTree->Branch("dilep_mass", &dilep_mass);
 
   //---els---//
@@ -175,6 +176,7 @@ void babyMaker::InitBabyNtuple(){
   jet_close_lep = LorentzVector(0,0,0,0);
   ptratio = -1;
   tag_charge = 0;
+  tag_HLTLeadingLeg = false;
   dilep_mass = -1;
   isRandom = false;
 
@@ -239,6 +241,7 @@ void babyMaker::InitLeptonBranches(){
   jet_close_lep = LorentzVector(0,0,0,0);
   ptratio = -1;
   tag_charge = 0.;
+  tag_HLTLeadingLeg = false;
   dilep_mass = -1.;
   isRandom = false;
 
@@ -515,6 +518,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
 		      tag_p4 = tas::mus_p4().at(j);
 		      tag_charge = tas::mus_charge().at(j);
+		      tag_HLTLeadingLeg = false;
 		      // Randomize if needed
 		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
 			isRandom = true;
@@ -610,6 +614,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   
 		      tag_p4 = tas::els_p4().at(j);
 		      tag_charge = tas::els_charge().at(j);
+		      tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
+			tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
+			tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );
+			
 		      // Randomize if needed
 		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
 			isRandom = true;

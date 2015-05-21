@@ -112,6 +112,7 @@ private:
   LorentzVector jet_close_lep;
   float ptratio;
   int tag_charge;
+  bool tag_HLTLeadingLeg;
   float dilep_mass;
   bool isRandom;
   //---els---//
