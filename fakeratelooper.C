@@ -88,6 +88,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
 
   //---els---//
   BabyTree->Branch("sigmaIEtaIEta_full5x5", &sigmaIEtaIEta_full5x5);
+  BabyTree->Branch("sigmaIEtaIEta"        , &sigmaIEtaIEta);
   BabyTree->Branch("etaSC"                , &etaSC);
   BabyTree->Branch("dEtaIn"               , &dEtaIn);
   BabyTree->Branch("dPhiIn"               , &dPhiIn);
@@ -100,6 +101,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("sccharge"             , &sccharge);
   BabyTree->Branch("ckf_charge"           , &ckf_charge);
   BabyTree->Branch("threeChargeAgree"     , &threeChargeAgree_branch);
+  BabyTree->Branch("mva"                  , &mva);
+  BabyTree->Branch("tkIso"                , &tkIso);
+  BabyTree->Branch("ecalIso"              , &ecalIso);
+  BabyTree->Branch("hcalIso"              , &hcalIso);
+
 
   //---mus---//
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
@@ -182,6 +188,7 @@ void babyMaker::InitBabyNtuple(){
 
   //---els---//
   sigmaIEtaIEta_full5x5 = -1;//below
+  sigmaIEtaIEta = -1;//below
   etaSC = -1;
   dEtaIn = -1;
   dPhiIn = -99;
@@ -195,6 +202,10 @@ void babyMaker::InitBabyNtuple(){
   ckf_charge = -1;
   trk_charge = -1;
   threeChargeAgree_branch = 0;
+  mva = -999.;
+  tkIso = -1;
+  ecalIso = -1;
+  hcalIso = -1;
 
   //---mus---//
   pid_PFMuon = -1;
@@ -256,6 +267,7 @@ void babyMaker::InitLeptonBranches(){
 
   //---els---//
   sigmaIEtaIEta_full5x5 = -1;
+  sigmaIEtaIEta = -1;
   etaSC = -1;
   dEtaIn = -1;
   dPhiIn = -99;
@@ -269,6 +281,10 @@ void babyMaker::InitLeptonBranches(){
   ckf_charge = -1;
   trk_charge = -1;
   threeChargeAgree_branch = 0;
+  mva = -999.;
+  tkIso = -1;
+  ecalIso = -1;
+  hcalIso = -1;
   //------------------------
 }
 
@@ -334,6 +350,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   cout << "Careful!! Path is " << path << endl;
 
   createAndInitMVA("CORE");
+
+  //readMVA* localEleMVAreader = new readMVA();
+  //localEleMVAreader->InitMVA("CORE"); 
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
@@ -518,7 +537,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
 		      tag_p4 = tas::mus_p4().at(j);
 		      tag_charge = tas::mus_charge().at(j);
-		      tag_HLTLeadingLeg = false;
+		      tag_HLTLeadingLeg = false; 
 		      // Randomize if needed
 		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
 			isRandom = true;
@@ -662,8 +681,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ckf_charge = tas::els_ckf_charge().at(i);    //check on this
 		  trk_charge = tas::els_trk_charge().at(i);
 		  threeChargeAgree_branch = threeChargeAgree(i);
+		  mva = getMVAoutput(i); //localEleMVAreader->MVA(i);
 		  type = tas::els_type().at(i);
 		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
+		  // Some old variables used in skimming and perhaps HLT
+		  tkIso = tas::els_tkIso().at(i);
+		  ecalIso = tas::els_ecalIso().at(i);
+		  hcalIso = tas::els_hcalIso().at(i);
+		  sigmaIEtaIEta = tas::els_sigmaIEtaIEta().at(i);
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////

@@ -117,6 +117,7 @@ private:
   bool isRandom;
   //---els---//
   float sigmaIEtaIEta_full5x5;
+  float sigmaIEtaIEta;
   float etaSC;
   float dEtaIn;
   float dPhiIn;
@@ -130,6 +131,10 @@ private:
   int   ckf_charge;
   int   trk_charge;
   bool  threeChargeAgree_branch;
+  float mva;
+  float tkIso;
+  float ecalIso;
+  float hcalIso;
 
   //---mus---//
   int   pid_PFMuon;
