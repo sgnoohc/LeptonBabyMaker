@@ -4,7 +4,7 @@
 #Choose the sample(s) you want here, separated by commmas
 sampleList_in=ALL
 #Choose the number of events (per file): 
-nEvents=1000
+nEvents=-1
 #Decide if you want lots of printouts telling you the status
 verbose="true"
 
