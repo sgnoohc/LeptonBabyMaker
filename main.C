@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     if (argc < 2) {
       sample = "default";
       cout<<"Using default file. "<<endl;
-      result->Add("/hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0_pre9_ROOT6-GR_R_74_V8_1Apr_RelVal_zEl2012D-v1/CMS3_V07-04-01/merged/merged_ntuple_1.root"); 
+      result->Add("/hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/merged_ntuple_1.root");
     }
     else {
       sample = (TString) argv[1];
