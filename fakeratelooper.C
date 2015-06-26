@@ -602,7 +602,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = muMiniRelIso(idx, true, 0.5, false, true);
+		  miniiso = muMiniRelIsoCMS3_EA(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  
@@ -714,7 +714,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = elMiniRelIso(idx, true, 0.0, false, true);
+		  miniiso = elMiniRelIsoCMS3_EA(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 
