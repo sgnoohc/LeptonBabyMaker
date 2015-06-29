@@ -5,9 +5,9 @@ Instructions for 74X
 
 Setup CMSSW74X (if not already setup):
 ```
-cmsrel CMSSW_7_4_1_patch1;
-cd CMSSW_7_4_1_patch1/src;
-cmsenv;
+cmsrel CMSSW_7_4_1_patch1
+cd CMSSW_7_4_1_patch1/src
+cmsenv
 ```
 
 Then 
