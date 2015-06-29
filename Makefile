@@ -113,6 +113,7 @@ b: build
 loopclean:
 	rm -f \
 	*_out.*	 \
+	*_out_rdict.pcm	 \
 	*.o \
 	*.*~ \
 	$(LIB) \
