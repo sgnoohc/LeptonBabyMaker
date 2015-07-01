@@ -72,6 +72,14 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("passes_SS_fo_noiso_v3", &passes_SS_fo_noiso_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_v3", &passes_SS_fo_looseMVA_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v3", &passes_SS_fo_looseMVA_noiso_v3);
+  BabyTree->Branch("passes_HAD_veto_v3", &passes_HAD_veto_v3);
+  BabyTree->Branch("passes_HAD_veto_noiso_v3", &passes_HAD_veto_noiso_v3);
+  BabyTree->Branch("passes_HAD_loose_v3", &passes_HAD_loose_v3);
+  BabyTree->Branch("passes_HAD_loose_noiso_v3", &passes_HAD_loose_noiso_v3);
+  BabyTree->Branch("passes_POG_vetoID", &passes_POG_vetoID);
+  BabyTree->Branch("passes_POG_looseID", &passes_POG_looseID);
+  BabyTree->Branch("passes_POG_mediumID", &passes_POG_mediumID);
+  BabyTree->Branch("passes_POG_tightID", &passes_POG_tightID);
   BabyTree->Branch("ip3d", &ip3d);
   BabyTree->Branch("ip3derr", &ip3derr);
   BabyTree->Branch("type", &type);
@@ -79,6 +87,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ptrelv0", &ptrelv0);
   BabyTree->Branch("ptrelv1", &ptrelv1);
   BabyTree->Branch("miniiso", &miniiso);
+  BabyTree->Branch("reliso04", &reliso04);
+  BabyTree->Branch("annulus04", &annulus04);
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
   BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
@@ -104,6 +114,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tkIso"                , &tkIso);
   BabyTree->Branch("ecalIso"              , &ecalIso);
   BabyTree->Branch("hcalIso"              , &hcalIso);
+  BabyTree->Branch("ecalPFClusterIso"     , &ecalPFClusterIso);
+  BabyTree->Branch("hcalPFClusterIso"     , &hcalPFClusterIso);
 
   //---mus---//
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
@@ -185,108 +197,8 @@ void babyMaker::InitBabyNtuple(){
   nFOs_SS = -1;
   nvtx = -1;
 
-  //---both el and mu---//
-  p4 = LorentzVector(0,0,0,0); 
-  tag_p4 = LorentzVector(0,0,0,0); 
-  dilep_p4 = LorentzVector(0,0,0,0);
-  mc_p4 = LorentzVector(0,0,0,0);
-  mc_motherp4 = LorentzVector(0,0,0,0);
-  id = -1; 
-  idx = -1;
-  dxyPV = -1;
-  dZ = -1;
-  dxyPV_err = -1;
-  motherID = -1;
-  mc_id = -1;
-  RelIso03 = -1;
-  RelIso03EA = -1;
-  RelIso03DB = -1;
-  passes_SS_tight_v3 = 0;
-  passes_SS_tight_noiso_v3 = 0;
-  passes_SS_fo_v3 = 0;
-  passes_SS_fo_noiso_v3 = 0;
-  passes_SS_fo_looseMVA_v3 = 0;
-  passes_SS_fo_looseMVA_noiso_v3 = 0;
-  ip3d = -1;
-  ip3derr = -1;
-  type = -1;
-  mt = -1;
-  ptrelv0 = -1;
-  ptrelv1 = -1;
-  miniiso = -1;
-  jet_close_lep = LorentzVector(0,0,0,0);
-  ptratio = -1;
-  tag_charge = 0;
-  tag_HLTLeadingLeg = false;
-  dilep_mass = -1;
-  isRandom = false;
+  InitLeptonBranches();
 
-  //---els---//
-  sigmaIEtaIEta_full5x5 = -1;//below
-  sigmaIEtaIEta = -1;//below
-  etaSC = -1;
-  dEtaIn = -1;
-  dPhiIn = -99;
-  hOverE = -1;
-  ecalEnergy = -1;
-  eOverPIn = -1;
-  conv_vtx_flag = 0;
-  exp_innerlayers = -1;
-  charge = -1;
-  sccharge = -1;
-  ckf_charge = -1;
-  trk_charge = -1;
-  threeChargeAgree_branch = 0;
-  mva = -999.;
-  tkIso = -1;
-  ecalIso = -1;
-  hcalIso = -1;
-
-  //---mus---//
-  pid_PFMuon = -1;
-  gfit_chi2 = -1;
-  gfit_ndof = -1;
-  gfit_validSTAHits = -1;
-  numberOfMatchedStations = -1;
-  validPixelHits = -1;
-  nlayers = -1;
-
-  //---single mu trigger---//
-  HLT_Mu8_TrkIsoVVL = -1;
-  HLT_Mu17_TrkIsoVVL = -1;
-  HLT_Mu24_TrkIsoVVL = -1;
-  HLT_Mu34_TrkIsoVVL = -1;
-  HLT_Mu8 = -1;
-  HLT_Mu17 = -1;
-  HLT_Mu24 = -1;
-  HLT_Mu34 = -1;
-  HLT_Mu10_CentralPFJet30_BTagCSV0p5PF = -1;
-
-  //---single el trigger---//
-  HLT_Ele8_CaloIdM_TrackIdM_PFJet30 = -1;
-  HLT_Ele12_CaloIdM_TrackIdM_PFJet30 = -1;
-  HLT_Ele18_CaloIdM_TrackIdM_PFJet30 = -1;
-  HLT_Ele23_CaloIdM_TrackIdM_PFJet30 = -1;
-  HLT_Ele33_CaloIdM_TrackIdM_PFJet30 = -1;
-  HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 = -1;
-  HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30 = -1;
-  HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 = -1;
-  HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30 = -1;
-  HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF = -1;
-
-  //--- mu-el trigger---//
-  HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300 = -1;
-  HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL = -1;
-  HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL = -1;
-
-  //--- double mu trigger---//
-  HLT_DoubleMu8_Mass8_PFHT300 = -1;
-  HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL = -1;
-  HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL = -1;
-
-  //--- double el trigger---//
-  HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300 = -1;
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ = -1;
 } 
 
 void babyMaker::InitLeptonBranches(){
@@ -313,6 +225,14 @@ void babyMaker::InitLeptonBranches(){
   passes_SS_fo_noiso_v3 = 0;
   passes_SS_fo_looseMVA_v3 = 0;
   passes_SS_fo_looseMVA_noiso_v3 = 0;
+  passes_HAD_veto_v3 = 0;
+  passes_HAD_veto_noiso_v3 = 0;
+  passes_HAD_loose_v3 = 0;
+  passes_HAD_loose_noiso_v3 = 0;
+  passes_POG_vetoID = 0;
+  passes_POG_looseID = 0;
+  passes_POG_mediumID = 0;
+  passes_POG_tightID = 0;
   type = -1;
   ip3d = -1;
   ip3derr = -1;
@@ -320,6 +240,8 @@ void babyMaker::InitLeptonBranches(){
   ptrelv0 = -1;
   ptrelv1 = -1;
   miniiso = -1;
+  reliso04 = -1;
+  annulus04 = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
   ptratio = -1;
   tag_charge = 0.;
@@ -356,7 +278,8 @@ void babyMaker::InitLeptonBranches(){
   tkIso = -1;
   ecalIso = -1;
   hcalIso = -1;
-
+  ecalPFClusterIso = -1;
+  hcalPFClusterIso = -1;
 
   //---single mu trigger---//
   HLT_Mu8_TrkIsoVVL = -1;
@@ -637,6 +560,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if (i==j) continue;
 		    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
 		    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
+		    // Will have to add trigger requirements for the Tag
 		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
 		      tag_p4 = tas::mus_p4().at(j);
 		      tag_charge = tas::mus_charge().at(j);
@@ -651,8 +575,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    }
 		  } // End of tag selection
 		  
-		  //if (!isVetoLeptonNoIso(13,i) && foundTag==false) continue;           //Relying on SSSelections here!
-		  if( (muonID(i, SS_veto_noiso_v3)==0 && foundTag==false) || tas::mus_p4().at(i).pt()<=10. ) continue;    //other analyses can add vetoes w/ &&
+		  // Require pT > 10 GeV
+		  if ( tas::mus_p4().at(i).pt()<=10. ) continue; 
+		  // If a muon tag exist, save this muon (we will use them as probe)
+		  // If there is no tag, require some minimal ID before saving (looser than the Fakeable Object)
+		  if( muonID(i, SS_veto_noiso_v3)==0 &&  muonID(i, HAD_loose_v3)==0 && foundTag==false ) continue; //other analyses can add vetoes w/ &&. 
 
 		  p4 = tas::mus_p4().at(i); 
 		  if (foundTag) {
@@ -699,6 +626,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ///  OS  ///
 		  ////////////
 
+		  ////////////
+		  ///  HAD ///
+		  ////////////	
+		  if(muonID(i, HAD_loose_v3))              passes_HAD_loose_v3 = true;
+		  if(muonID(i, HAD_loose_noiso_v3))        passes_HAD_loose_noiso_v3 = true;
+
+
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -708,6 +642,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  miniiso = muMiniRelIsoCMS3_EA(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
+		  reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
+		  annulus04 = reliso04 - miniiso;
 		  
 		  //Lep mu_temp = Lep(id, i);
 		  //motherID = lepMotherID(mu_temp);
@@ -775,8 +711,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    }
 		  } // End of tag selection
 		  
-		  //if (!isVetoLeptonNoIso(11,i) && !foundTag) continue;          //Relying on SSSelections here!
-		  if( (electronID(i, SS_veto_noiso_v3)==0 && !foundTag) || tas::els_p4().at(i).pt()<=10. ) continue;  //other analyses can add vetoes w/ &&   
+		  // Require pT > 10 GeV
+		  if ( tas::els_p4().at(i).pt()<=10. ) continue; 
+		  // If an electron tag exist, save this electron (we will use it as probe)
+		  // If there is no tag, require some minimal ID before saving (looser than the Fakeable Object)
+		  if( electronID(i, SS_veto_noiso_v3)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false ) continue; //other analyses can add vetoes w/ &&. 
 
 		  p4 = tas::els_p4().at(i);    
 		  if (foundTag) {
@@ -817,6 +756,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ecalIso = tas::els_ecalIso().at(i);
 		  hcalIso = tas::els_hcalIso().at(i);
 		  sigmaIEtaIEta = tas::els_sigmaIEtaIEta().at(i);
+		  ecalPFClusterIso = tas::els_ecalPFClusterIso().at(i);
+		  hcalPFClusterIso = tas::els_hcalPFClusterIso().at(i);
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
@@ -836,6 +777,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ///  OS  ///
 		  ////////////
 
+		  ////////////
+		  ///  HAD ///
+		  ////////////	
+		  if(electronID(i, HAD_veto_v3))              passes_HAD_veto_v3 = true;
+		  if(electronID(i, HAD_veto_noiso_v3))        passes_HAD_veto_noiso_v3 = true;
+
+		  ////////////
+		  ///  POG ///
+		  ////////////	
+		  if( tas::els_passVetoId().at(i) )                   passes_POG_vetoID = true;
+		  if( tas::els_passLooseId().at(i) )                  passes_POG_looseID = true;
+		  if( tas::els_passMediumId().at(i) )                 passes_POG_mediumID = true;
+		  if( tas::els_passTightId().at(i) )                  passes_POG_tightID = true;
+
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -845,6 +800,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  miniiso = elMiniRelIsoCMS3_EA(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
+		  reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
+		  annulus04 = reliso04 - miniiso;
 
 		  //Lep el_temp = Lep(id, i);
 		  //motherID = lepMotherID(el_temp);
