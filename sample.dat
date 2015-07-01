@@ -1,0 +1,134 @@
+#########################
+# Collection of samples #
+#########################
+#
+
+#if no file is specified, main.C will use "merged_ntuple_*.root
+#if loading multiple files need to call SAMPLE multiple times, that's something we might want to improve
+
+SAMPLE
+Name default
+Path /hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+SAMPLE
+Name QCD_Test
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-15to20_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-80to120_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-120to170_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-170to300_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-300to470_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-470to600_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-600to800_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-800to1000_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_Mu_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-1000toInf_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_15to20_bcToE_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_20to30_bcToE_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_30to80_bcToE_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_80to170_bcToE_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_170to250_bcToE_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-15to20_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_EM_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_5to10_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_15to30_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_30to50_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_50to80_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+SAMPLE
+Name QCD_non_Enriched
+Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+
+SAMPLE
+Name TTBAR
+Path  /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+
+SAMPLE
+Name 2012DoubleEle
+Path /hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0_pre9_ROOT6-GR_R_74_V8_1Apr_RelVal_zEl2012D-v1/CMS3_V07-04-01/merged/

@@ -22,6 +22,14 @@
 
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
+#include "Math/Vector4D.h" 
+#include "Math/LorentzVector.h" 
+
+#ifdef __MAKECINT__
+#pragma link C++ class ROOT::Math::PxPyPzE4D<float>+;
+#pragma link C++ class ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> >+;
+#pragma link C++ typedef ROOT::Math::XYZTVectorF;
+#endif
 struct val_err_t { float value; float error; };
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;

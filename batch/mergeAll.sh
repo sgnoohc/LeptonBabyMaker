@@ -1,25 +1,22 @@
 #!/bin/bash
 
-path0="/hadoop/cms/store/user/"
-path1="/condor/frbabies"
-#path2="/hadoop/cms/store/user/iandyckes/condor/frbabies"
-path2=$path0$USER$path1
-
-samples=$1
+path2=$1
+samples=$2
 samples=`echo $samples | tr ',' ' '`
+
 
 for sname in $samples
 do
 
-  root -b -q makeList.C\($sname,1\)
-  numberOfFiles=`wc -l < fileNames.txt`
-  numberOfFiles=$(( $numberOfFiles - 2 ))
-  title=`awk "NR==1" fileNames.txt`
-
+  numberOfFiles=0
+  for files in `/bin/ls $path2/$sname*.root`; do
+    numberOfFiles=$((numberOfFiles+1))
+  done
+    
   if [ "$numberOfFiles" == "1" ]
   then
-    cp $path2/${title}_1.root $title.root & 
-    echo "Copying $title.root in background, may be delay even after this program finishes...."
+    cp $path2/${sname}_1.root $sname.root & 
+    echo "Copying $sname.root in background, may be delay even after this program finishes...."
     continue
   fi
 
@@ -28,7 +25,7 @@ do
   #Write array with file names
   for (( counter=1; counter<=$numberOfFiles; counter++ ))
   do
-    file1[$(( $counter - 1 )) ]="$path2/${title}_${counter}.root"
+    file1[$(( $counter - 1 )) ]="$path2/${sname}_${counter}.root"
   done
 
   hadd $sname.root ${file1[*]}
@@ -36,5 +33,4 @@ do
  done 
 
 #clean up
-rm fileNames.txt &>/dev/null
 rm null &>/dev/null
