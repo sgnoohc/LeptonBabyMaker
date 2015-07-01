@@ -81,6 +81,10 @@ int main(int argc, char **argv)
       //DY
       else if (sample == "DY"){
       }
+      //LowMassDY
+      else if (sample == "LowMassDY_50ns"){
+	result->Add("/hadoop/cms/store/group/snt/run2_50ns/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/merged_ntuple_*.root");
+      }
       //WJets
       else if (sample == "WJets"){
       }
