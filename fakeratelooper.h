@@ -101,6 +101,14 @@ private:
   bool passes_SS_fo_noiso_v3;
   bool passes_SS_fo_looseMVA_v3;
   bool passes_SS_fo_looseMVA_noiso_v3;
+  bool passes_HAD_veto_v3;
+  bool passes_HAD_veto_noiso_v3;
+  bool passes_HAD_loose_v3;
+  bool passes_HAD_loose_noiso_v3;
+  bool passes_POG_vetoID;
+  bool passes_POG_looseID;
+  bool passes_POG_mediumID;
+  bool passes_POG_tightID;
   float ip3d;
   float ip3derr;
   int type;
@@ -108,6 +116,8 @@ private:
   float ptrelv0;
   float ptrelv1;
   float miniiso;
+  float reliso04;
+  float annulus04;
   LorentzVector jet_close_lep;
   float ptratio;
   int tag_charge;
@@ -135,6 +145,8 @@ private:
   float tkIso;
   float ecalIso;
   float hcalIso;
+  float ecalPFClusterIso;
+  float hcalPFClusterIso;
 
   //---mus---//
   int   pid_PFMuon;
