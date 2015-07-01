@@ -22,7 +22,7 @@ if [ -d $CONDOR_DIR_NAME ]; then
 fi
 mkdir $CONDOR_DIR_NAME
 
-cp -r $PREV_DIR $CONDOR_DIR_NAME
+cp -rL $PREV_DIR $CONDOR_DIR_NAME
 tar czf $CONDOR_DIR_NAME.tar.gz $CONDOR_DIR_NAME
 
 cd $START_DIR
