@@ -125,6 +125,13 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("numberOfMatchedStations", &numberOfMatchedStations);
   BabyTree->Branch("validPixelHits"         , &validPixelHits);
   BabyTree->Branch("nlayers"                , &nlayers);
+  BabyTree->Branch("chi2LocalPosition"      , &chi2LocalPosition);
+  BabyTree->Branch("trkKink"                , &trkKink);
+  BabyTree->Branch("validHits"              , &validHits);
+  BabyTree->Branch("lostHits"               , &lostHits);
+  BabyTree->Branch("exp_innerlayers_mu"     , &exp_innerlayers_mu);
+  BabyTree->Branch("exp_outerlayers"        , &exp_outerlayers);
+  BabyTree->Branch("segmCompatibility"      , &segmCompatibility);
 
   //---single mu trigger---//
   BabyTree->Branch("HLT_Mu8_TrkIsoVVL", &HLT_Mu8_TrkIsoVVL);
@@ -136,6 +143,12 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Mu24", &HLT_Mu24);
   BabyTree->Branch("HLT_Mu34", &HLT_Mu34);
   BabyTree->Branch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF", &HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
+  BabyTree->Branch("HLT_IsoMu24_eta2p1", &HLT_IsoMu24_eta2p1);
+  BabyTree->Branch("HLT_IsoTkMu24_eta2p1", &HLT_IsoTkMu24_eta2p1);
+  BabyTree->Branch("HLT_IsoMu27", &HLT_IsoMu27);
+  BabyTree->Branch("HLT_IsoTkMu27", &HLT_IsoTkMu27);
+  BabyTree->Branch("HLT_Mu45_eta2p1", &HLT_Mu45_eta2p1);
+  BabyTree->Branch("HLT_Mu50", &HLT_Mu50);
 
   //---single el trigger---//
   BabyTree->Branch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30", &HLT_Ele8_CaloIdM_TrackIdM_PFJet30);
@@ -148,6 +161,13 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30", &HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
   BabyTree->Branch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30", &HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
   BabyTree->Branch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF", &HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF);
+  BabyTree->Branch("HLT_Ele27_eta2p1_WP75_Gsf", &HLT_Ele27_eta2p1_WP75_Gsf);
+  BabyTree->Branch("HLT_Ele27_WP85_Gsf", &HLT_Ele27_WP85_Gsf);
+  BabyTree->Branch("HLT_Ele27_eta2p1_WPLoose_Gsf", &HLT_Ele27_eta2p1_WPLoose_Gsf);
+  BabyTree->Branch("HLT_Ele27_eta2p1_WPTight_Gsf", &HLT_Ele27_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("HLT_Ele32_eta2p1_WP75_Gsf", &HLT_Ele32_eta2p1_WP75_Gsf);
+  BabyTree->Branch("HLT_Ele32_eta2p1_WPLoose_Gsf", &HLT_Ele32_eta2p1_WPLoose_Gsf);
+  BabyTree->Branch("HLT_Ele32_eta2p1_WPTight_Gsf", &HLT_Ele32_eta2p1_WPTight_Gsf);
 
   //--- mu-el trigger---//
   BabyTree->Branch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300", &HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
@@ -158,6 +178,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_DoubleMu8_Mass8_PFHT300", &HLT_DoubleMu8_Mass8_PFHT300);
   BabyTree->Branch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
   BabyTree->Branch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL", &HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL);
+  BabyTree->Branch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
+  BabyTree->Branch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ", &HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ);
 
   //--- double el trigger---//
   BabyTree->Branch("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300", &HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300);
@@ -257,6 +279,13 @@ void babyMaker::InitLeptonBranches(){
   numberOfMatchedStations = -1;
   validPixelHits = -1;
   nlayers = -1;
+  chi2LocalPosition = -99;
+  trkKink = -99;
+  validHits = -99;
+  lostHits = -99;
+  exp_innerlayers_mu = -99;
+  exp_outerlayers = -99;
+  segmCompatibility = -99;
 
   //---els---//
   sigmaIEtaIEta_full5x5 = -1;
@@ -291,6 +320,12 @@ void babyMaker::InitLeptonBranches(){
   HLT_Mu24 = -1;
   HLT_Mu34 = -1;
   HLT_Mu10_CentralPFJet30_BTagCSV0p5PF = -1;
+  HLT_IsoMu24_eta2p1 = -1;
+  HLT_IsoTkMu24_eta2p1 = -1;
+  HLT_IsoMu27 = -1;
+  HLT_IsoTkMu27 = -1;
+  HLT_Mu45_eta2p1 = -1;
+  HLT_Mu50 = -1;
 
   //---single el trigger---//
   HLT_Ele8_CaloIdM_TrackIdM_PFJet30 = -1;
@@ -303,7 +338,14 @@ void babyMaker::InitLeptonBranches(){
   HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 = -1;
   HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30 = -1;
   HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF = -1;
-
+  HLT_Ele27_eta2p1_WP75_Gsf = -1;
+  HLT_Ele27_WP85_Gsf = -1;
+  HLT_Ele27_eta2p1_WPLoose_Gsf = -1;
+  HLT_Ele27_eta2p1_WPTight_Gsf = -1;
+  HLT_Ele32_eta2p1_WP75_Gsf = -1;
+  HLT_Ele32_eta2p1_WPLoose_Gsf = -1;
+  HLT_Ele32_eta2p1_WPTight_Gsf = -1;
+  
   //--- mu-el trigger---//
   HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300 = -1;
   HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL = -1;
@@ -313,6 +355,8 @@ void babyMaker::InitLeptonBranches(){
   HLT_DoubleMu8_Mass8_PFHT300 = -1;
   HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL = -1;
   HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL = -1;
+  HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ = -1;
+  HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = -1;
 
   //--- double el trigger---//
   HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300 = -1;
@@ -606,7 +650,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ip3d = tas::mus_ip3d().at(i);
 		  ip3derr = tas::mus_ip3derr().at(i);
 		  type = tas::mus_type().at(i);
-		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
+		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi);
+
+		  chi2LocalPosition = tas::mus_chi2LocalPosition().at(i);
+		  trkKink = tas::mus_trkKink().at(i);
+		  validHits = tas::mus_validHits().at(i);
+		  lostHits = tas::mus_lostHits().at(i);
+		  exp_innerlayers_mu = tas::mus_exp_innerlayers().at(i);
+		  exp_outerlayers = tas::mus_exp_outerlayers().at(i);
+		  segmCompatibility = tas::mus_segmCompatibility().at(i);
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
@@ -664,7 +716,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  setHLTBranch("HLT_Mu24_TrkIsoVVL_v", p4, HLT_Mu24_TrkIsoVVL);
 		  setHLTBranch("HLT_Mu34_TrkIsoVVL_v", p4, HLT_Mu34_TrkIsoVVL);
 		  setHLTBranch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF_v", p4, HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
-
+		  setHLTBranch("HLT_IsoMu24_eta2p1_v",  p4, HLT_IsoMu24_eta2p1);
+		  setHLTBranch("HLT_IsoTkMu24_eta2p1_v",  p4, HLT_IsoTkMu24_eta2p1);
+		  setHLTBranch("HLT_IsoMu27_v",  p4, HLT_IsoMu27);
+		  setHLTBranch("HLT_IsoTkMu27_v",  p4, HLT_IsoTkMu27);
+		  setHLTBranch("HLT_Mu45_eta2p1_v",  p4, HLT_Mu45_eta2p1);
+		  setHLTBranch("HLT_Mu50_v",  p4, HLT_Mu50);
+  
 		  //--- mu-el trigger---//
 		  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
 		  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
@@ -674,6 +732,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  setHLTBranch("HLT_DoubleMu8_Mass8_PFHT300_v",  p4, HLT_DoubleMu8_Mass8_PFHT300);
 		  setHLTBranch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v",  p4, HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
 		  setHLTBranch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v",  p4, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL);
+		  setHLTBranch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",  p4, HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
+		  setHLTBranch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",  p4, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ);
 
 		  ///////////////////////////////////////// End Triggers ////////////////////////////////////////////////
 		  
@@ -824,6 +884,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
 		  setHLTBranch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF_v",  p4,	  HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF);
 
+		  setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  p4, HLT_Ele27_eta2p1_WP75_Gsf);
+		  setHLTBranch("HLT_Ele27_WP85_Gsf_v",  p4, HLT_Ele27_WP85_Gsf);
+		  setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele27_eta2p1_WPLoose_Gsf);
+		  setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele27_eta2p1_WPTight_Gsf);
+		  setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
+		  setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
+		  setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
+  
 		  //--- mu-el trigger---//
 		  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
 		  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
