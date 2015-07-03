@@ -130,7 +130,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("trkKink"                , &trkKink);
   BabyTree->Branch("validHits"              , &validHits);
   BabyTree->Branch("lostHits"               , &lostHits);
-  BabyTree->Branch("exp_innerlayers_mu"     , &exp_innerlayers_mu);
   BabyTree->Branch("exp_outerlayers"        , &exp_outerlayers);
   BabyTree->Branch("segmCompatibility"      , &segmCompatibility);
 
@@ -285,7 +284,6 @@ void babyMaker::InitLeptonBranches(){
   trkKink = -99;
   validHits = -99;
   lostHits = -99;
-  exp_innerlayers_mu = -99;
   exp_outerlayers = -99;
   segmCompatibility = -99;
 
@@ -661,7 +659,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  trkKink = tas::mus_trkKink().at(i);
 		  validHits = tas::mus_validHits().at(i);
 		  lostHits = tas::mus_lostHits().at(i);
-		  exp_innerlayers_mu = tas::mus_exp_innerlayers().at(i);
+		  exp_innerlayers = tas::mus_exp_innerlayers().at(i);
 		  exp_outerlayers = tas::mus_exp_outerlayers().at(i);
 		  segmCompatibility = tas::mus_segmCompatibility().at(i);
 
@@ -810,6 +808,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  eOverPIn = tas::els_eOverPIn().at(i);
 		  conv_vtx_flag = tas::els_conv_vtx_flag().at(i);
 		  exp_innerlayers = tas::els_exp_innerlayers().at(i);
+		  exp_outerlayers = tas::els_exp_outerlayers().at(i);
 		  charge = tas::els_charge().at(i);    //check on this
 		  sccharge = tas::els_sccharge().at(i);    //check on this
 		  ckf_charge = tas::els_ckf_charge().at(i);    //check on this
@@ -892,13 +891,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
 		  setHLTBranch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF_v",  p4,	  HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF);
 
-		  setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  p4, HLT_Ele27_eta2p1_WP75_Gsf);
-		  setHLTBranch("HLT_Ele27_WP85_Gsf_v",  p4, HLT_Ele27_WP85_Gsf);
-		  setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele27_eta2p1_WPLoose_Gsf);
-		  setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele27_eta2p1_WPTight_Gsf);
-		  setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
-		  setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
-		  setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
+		  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  p4, HLT_Ele27_eta2p1_WP75_Gsf);
+		  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_WP85_Gsf_v",  p4, HLT_Ele27_WP85_Gsf);
+		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele27_eta2p1_WPLoose_Gsf);
+		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele27_eta2p1_WPTight_Gsf);
+		  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
+		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
+		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
   
 		  //--- mu-el trigger---//
 		  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
