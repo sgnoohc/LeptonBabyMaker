@@ -23,13 +23,8 @@
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
 #include "Math/Vector4D.h" 
-#include "Math/LorentzVector.h" 
+#include "Math/LorentzVector.h"
 
-#ifdef __MAKECINT__
-#pragma link C++ class ROOT::Math::PxPyPzE4D<float>+;
-#pragma link C++ class ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> >+;
-#pragma link C++ typedef ROOT::Math::XYZTVectorF;
-#endif
 struct val_err_t { float value; float error; };
 
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LorentzVector;
@@ -124,6 +119,7 @@ private:
   float ptrelv0;
   float ptrelv1;
   float miniiso;
+  float miniisoDB;
   float reliso04;
   float annulus04;
   LorentzVector jet_close_lep;
@@ -164,6 +160,13 @@ private:
   int   numberOfMatchedStations;
   int   validPixelHits;
   int   nlayers;
+  float chi2LocalPosition;
+  float trkKink;
+  int   validHits;
+  int   lostHits;
+  int   exp_innerlayers_mu;
+  int   exp_outerlayers;
+  float segmCompatibility;
 
   //---single mu trigger---//
   int HLT_Mu8_TrkIsoVVL;
@@ -175,7 +178,13 @@ private:
   int HLT_Mu24;
   int HLT_Mu34;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p5PF;
-
+  int HLT_IsoMu24_eta2p1;
+  int HLT_IsoTkMu24_eta2p1;
+  int HLT_IsoMu27;
+  int HLT_IsoTkMu27;
+  int HLT_Mu45_eta2p1;
+  int HLT_Mu50;
+  
   //---single el trigger---//
   int HLT_Ele8_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele12_CaloIdM_TrackIdM_PFJet30;
@@ -187,6 +196,13 @@ private:
   int HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF;
+  int HLT_Ele27_eta2p1_WP75_Gsf;//used in MC xxx
+  int HLT_Ele27_WP85_Gsf;//used in MC
+  int HLT_Ele27_eta2p1_WPLoose_Gsf;//used in data
+  int HLT_Ele27_eta2p1_WPTight_Gsf;//used in data
+  int HLT_Ele32_eta2p1_WP75_Gsf;//used in MC
+  int HLT_Ele32_eta2p1_WPLoose_Gsf;//used in data
+  int HLT_Ele32_eta2p1_WPTight_Gsf;//used in data
 
   //--- mu-el trigger---//
   int HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300;
@@ -197,6 +213,8 @@ private:
   int HLT_DoubleMu8_Mass8_PFHT300;
   int HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL;
   int HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL;
+  int HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ;//xxx
+  int HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ;//xxx
 
   //--- double el trigger---//
   int HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300;
