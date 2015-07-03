@@ -365,7 +365,8 @@ float leptonDZ(const int id, const int idx){
 
 void setHLTBranch(const char* pattern, const LorentzVector& p4, int& HLTbranch) {
   TString name_HLT = triggerName(pattern);
-  if (passHLTTrigger(name_HLT,p4)) HLTbranch = HLT_prescale(name_HLT);
+  //if (passHLTTrigger(name_HLT,p4)) HLTbranch = HLT_prescale(name_HLT);//p4 matching not working for some triggers?
+  if (cms3.passHLTTrigger(name_HLT)) HLTbranch = HLT_prescale(name_HLT);
   else HLTbranch = 0;
 }
 
@@ -554,6 +555,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  for(unsigned int i=0; i<tas::mus_p4().size(); i++)  //What RECO and GEN variables are needed?
 		{	
 
+		  InitLeptonBranches(); 
+
 		  // Require tag
 		  bool foundTag = false;
 		  for(unsigned int j=0; j<tas::mus_p4().size(); j++) {
@@ -678,15 +681,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ///////////////////////////////////////// End Triggers ////////////////////////////////////////////////
 		  
 		  BabyTree->Fill(); 
-		  InitLeptonBranches(); 
 
 		  // cout<<"\nEnd Muon loop"<<endl;
 		} //close muon loop
 	  
-      //Electron Loop
+	  //Electron Loop
 	  //cout<<"\nBegin electron looping"<<endl;	  
 	  for(unsigned int i=0; i<tas::els_p4().size(); i++)
 	  	{
+
+		  InitLeptonBranches(); 
 		  
 		  // Require tag
 		  bool foundTag = false;
@@ -694,8 +698,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		    if (i==j) continue;
 		    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
 		    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   
-		      tag_p4 = tas::els_p4().at(j);
+		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   //add also other IDs!
+ 		      tag_p4 = tas::els_p4().at(j);
 		      tag_charge = tas::els_charge().at(j);
 		      tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
 			tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
