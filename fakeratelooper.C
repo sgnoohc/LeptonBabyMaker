@@ -912,7 +912,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ///////////////////////////////////////// End Triggers ////////////////////////////////////////////////
 
 		  BabyTree->Fill(); 
-		  InitLeptonBranches();
 	  
 	  	  //cout<<"\nEnd electron loop"<<endl;
 	  	} //close electron loop
