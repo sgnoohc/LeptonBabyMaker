@@ -87,6 +87,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ptrelv0", &ptrelv0);
   BabyTree->Branch("ptrelv1", &ptrelv1);
   BabyTree->Branch("miniiso", &miniiso);
+  BabyTree->Branch("miniisoDB", &miniisoDB);
   BabyTree->Branch("reliso04", &reliso04);
   BabyTree->Branch("annulus04", &annulus04);
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
@@ -262,6 +263,7 @@ void babyMaker::InitLeptonBranches(){
   ptrelv0 = -1;
   ptrelv1 = -1;
   miniiso = -1;
+  miniisoDB = -1;
   reliso04 = -1;
   annulus04 = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
@@ -692,6 +694,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
 		  miniiso = muMiniRelIsoCMS3_EA(idx);
+		  miniisoDB = muMiniRelIsoCMS3_DB(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
@@ -858,6 +861,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
 		  miniiso = elMiniRelIsoCMS3_EA(idx);
+		  miniisoDB = elMiniRelIsoCMS3_DB(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);

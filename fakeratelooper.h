@@ -119,6 +119,7 @@ private:
   float ptrelv0;
   float ptrelv1;
   float miniiso;
+  float miniisoDB;
   float reliso04;
   float annulus04;
   LorentzVector jet_close_lep;
