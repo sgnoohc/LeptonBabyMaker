@@ -164,7 +164,6 @@ private:
   float trkKink;
   int   validHits;
   int   lostHits;
-  int   exp_innerlayers_mu;
   int   exp_outerlayers;
   float segmCompatibility;
 
