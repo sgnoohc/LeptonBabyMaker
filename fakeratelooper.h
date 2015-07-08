@@ -151,6 +151,23 @@ private:
   float hcalIso;
   float ecalPFClusterIso;
   float hcalPFClusterIso;
+  int ckf_laywithmeas       ;
+  float sigmaIPhiIPhi_full5x5 ;
+  float e1x5_full5x5          ;
+  float e5x5_full5x5          ;
+  float r9_full5x5            ;
+  float etaSCwidth            ;
+  float phiSCwidth            ;
+  float eSCRaw                ;
+  float eSCPresh              ;
+  float ckf_chi2              ;
+  int ckf_ndof              ;
+  float chi2                  ;
+  int ndof                  ;
+  float fbrem                 ;
+  float eOverPOut             ;
+  float dEtaOut               ;
+
 
   //---mus---//
   int   pid_PFMuon;

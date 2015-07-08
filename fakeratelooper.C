@@ -117,6 +117,23 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("hcalIso"              , &hcalIso);
   BabyTree->Branch("ecalPFClusterIso"     , &ecalPFClusterIso);
   BabyTree->Branch("hcalPFClusterIso"     , &hcalPFClusterIso);
+  BabyTree->Branch("ckf_laywithmeas"      , &ckf_laywithmeas       );
+  BabyTree->Branch("sigmaIPhiIPhi_full5x5", &sigmaIPhiIPhi_full5x5 );
+  BabyTree->Branch("e1x5_full5x5"         , &e1x5_full5x5          );
+  BabyTree->Branch("e5x5_full5x5"         , &e5x5_full5x5          );
+  BabyTree->Branch("r9_full5x5"           , &r9_full5x5            );
+  BabyTree->Branch("etaSCwidth"           , &etaSCwidth            );
+  BabyTree->Branch("phiSCwidth"           , &phiSCwidth            );
+  BabyTree->Branch("eSCRaw"               , &eSCRaw                );
+  BabyTree->Branch("eSCPresh"             , &eSCPresh              );
+  BabyTree->Branch("ckf_chi2"             , &ckf_chi2              );
+  BabyTree->Branch("ckf_ndof"             , &ckf_ndof              );
+  BabyTree->Branch("chi2"                 , &chi2                  );
+  BabyTree->Branch("ndof"                 , &ndof                  );
+  BabyTree->Branch("fbrem"                , &fbrem                 );
+  BabyTree->Branch("eOverPOut"            , &eOverPOut             );
+  BabyTree->Branch("dEtaOut"              , &dEtaOut               );
+               
 
   //---mus---//
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
@@ -309,6 +326,22 @@ void babyMaker::InitLeptonBranches(){
   hcalIso = -1;
   ecalPFClusterIso = -1;
   hcalPFClusterIso = -1;
+  ckf_laywithmeas       = -1;
+  sigmaIPhiIPhi_full5x5 = -1;
+  e1x5_full5x5          = -1;
+  e5x5_full5x5          = -1;
+  r9_full5x5            = -1;
+  etaSCwidth            = -1;
+  phiSCwidth            = -1;
+  eSCRaw                = -1;
+  eSCPresh              = -1;
+  ckf_chi2              = -1;
+  ckf_ndof              = -1;
+  chi2                  = -1;
+  ndof                  = -1;
+  fbrem                 = -1;
+  eOverPOut             = -1;
+  dEtaOut               = -1;
 
   //---single mu trigger---//
   HLT_Mu8_TrkIsoVVL = 0;
@@ -826,6 +859,25 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  sigmaIEtaIEta = tas::els_sigmaIEtaIEta().at(i);
 		  ecalPFClusterIso = tas::els_ecalPFClusterIso().at(i);
 		  hcalPFClusterIso = tas::els_hcalPFClusterIso().at(i);
+		  // Additional variables used in electron MVA
+		  ckf_laywithmeas        = tas::els_ckf_laywithmeas().at(i);
+		  sigmaIPhiIPhi_full5x5  = tas::els_sigmaIPhiIPhi_full5x5().at(i);
+		  e1x5_full5x5           = tas::els_e1x5_full5x5().at(i);
+		  e5x5_full5x5           = tas::els_e5x5_full5x5().at(i);
+		  r9_full5x5             = tas::els_r9_full5x5().at(i);
+		  etaSCwidth             = tas::els_etaSCwidth().at(i);
+		  phiSCwidth             = tas::els_phiSCwidth().at(i);
+		  eSCRaw                 = tas::els_eSCRaw().at(i);
+		  eSCPresh               = tas::els_eSCPresh().at(i);
+		  ckf_chi2               = tas::els_ckf_chi2().at(i);
+		  ckf_ndof               = tas::els_ckf_ndof().at(i);
+		  chi2                   = tas::els_chi2().at(i);
+		  ndof                   = tas::els_ndof().at(i);
+		  fbrem                  = tas::els_fbrem().at(i);
+		  eOverPOut              = tas::els_eOverPOut().at(i);
+		  dEtaOut                = tas::els_dEtaOut().at(i);
+		  
+		    
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
