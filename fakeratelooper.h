@@ -169,6 +169,11 @@ private:
   float segmCompatibility;
 
   //---single mu trigger---//
+  // for trigger branches the following conventions hold:
+  // 0,1,N mean respectively not passes, passed unprescaled, passed with prescale N 
+  // the sign tells if the object matched one of the trigger legs (positive match, negative no match)
+
+  //---single mu trigger---//
   int HLT_Mu8_TrkIsoVVL;
   int HLT_Mu17_TrkIsoVVL;
   int HLT_Mu24_TrkIsoVVL;
