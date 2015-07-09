@@ -88,8 +88,14 @@ int main(int argc, char **argv)
     vector<TString> samplelist = load(sample.Data(), filename, input);//new
     if(samplelist.size()==0) cout<<"Could not find files corresponding to sample "<<sample<<endl;
     for(unsigned int i = 0; i<samplelist.size(); ++i){
-      cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
-      result->Add(samplelist[i].Data());
+
+      std::ifstream infile(samplelist[i].Data());
+      if (infile.good()) {
+	cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
+	result->Add(samplelist[i].Data());
+      } else {
+	cout << "Warning! File: " << samplelist[i] << " does not exist ab exist. Not added to files to be processed." << endl;
+      }
     }
 
     mylooper->SetOutputPath(dirpath);
