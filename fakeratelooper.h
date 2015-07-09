@@ -141,6 +141,19 @@ private:
   float dilep_mass;
   bool isRandom;
 
+  // -- tag HLT match -- // 
+  int tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg;
+  int tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg;
+  int tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
+  int tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
+  int tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
+  int tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
+  int tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
+  int tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
+  int tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
+  int tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
+  int tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
+
   //---els---//
   float sigmaIEtaIEta_full5x5;
   float sigmaIEtaIEta;

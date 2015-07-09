@@ -1,14 +1,8 @@
-
-
 #include "fakeratelooper.h" 
-
-
 
 //Switches
 bool verbose = 0;
 unsigned int evt_cut = 74994186;
-
-
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
@@ -95,6 +89,17 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
   BabyTree->Branch("tag_HLTLeadingLeg", &tag_HLTLeadingLeg);
+  BabyTree->Branch("tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg", &tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg);
+  BabyTree->Branch("tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg", &tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg);
+  BabyTree->Branch("tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
+  BabyTree->Branch("tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
   BabyTree->Branch("dilep_mass", &dilep_mass);
   BabyTree->Branch("isRandom", &isRandom);
 
@@ -288,6 +293,17 @@ void babyMaker::InitLeptonBranches(){
   ptratio = -1;
   tag_charge = 0.;
   tag_HLTLeadingLeg = false;
+  tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = -1;
+  tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = -1;
+  tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
   dilep_mass = -1.;
   isRandom = false;
 
@@ -487,6 +503,20 @@ bool babyMaker::checkElectronTag (unsigned int i) {
       tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
 			   tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
 			   tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );    
+      if (tas::evt_isRealData()) {
+	tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg().at(j);
+	tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_SC4_Mass55_LeadingLeg().at(j);
+	tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+      }
+
       // Randomize if needed
       if (usedEl == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
 	isRandom = true;
