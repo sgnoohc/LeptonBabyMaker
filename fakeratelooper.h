@@ -42,12 +42,23 @@ public:
   int looper(TChain* chain, char* output_name, int nEvents = -1);
   void SetOutputPath( std::string outputpath ); //init. Electron variables only
 
+  bool checkMuonTag (unsigned int i);
+  bool checkElectronTag (unsigned int i);
+  void fillMuonTriggerBranches(LorentzVector &p4);
+  void fillElectronTriggerBranches(LorentzVector &p4);
+
+
+
 protected:
 
   TFile* BabyFile;
   TTree* BabyTree;
 
 private:
+
+  bool usedMu = false;
+  bool usedEl = false;
+  float rndm = 0;
 
   std::string path = "./";
 
@@ -89,6 +100,7 @@ private:
   LorentzVector mc_p4;
   LorentzVector mc_motherp4;
   int id; 
+  bool isPF; 
   int idx;
   float dxyPV;
   float dZ;
