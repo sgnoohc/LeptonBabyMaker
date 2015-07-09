@@ -57,6 +57,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("mc_p4", &mc_p4);
   BabyTree->Branch("mc_motherp4", &mc_motherp4);
   BabyTree->Branch("id", &id);
+  BabyTree->Branch("isPF", &isPF);
   BabyTree->Branch("idx", &idx);
   BabyTree->Branch("dxyPV", &dxyPV);
   BabyTree->Branch("dZ", &dZ);
@@ -95,6 +96,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_charge", &tag_charge);
   BabyTree->Branch("tag_HLTLeadingLeg", &tag_HLTLeadingLeg);
   BabyTree->Branch("dilep_mass", &dilep_mass);
+  BabyTree->Branch("isRandom", &isRandom);
 
   //---els---//
   BabyTree->Branch("sigmaIEtaIEta_full5x5", &sigmaIEtaIEta_full5x5);
@@ -132,8 +134,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ndof"                 , &ndof                  );
   BabyTree->Branch("fbrem"                , &fbrem                 );
   BabyTree->Branch("eOverPOut"            , &eOverPOut             );
-  BabyTree->Branch("dEtaOut"              , &dEtaOut               );
-               
+  BabyTree->Branch("dEtaOut"              , &dEtaOut               );               
 
   //---mus---//
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
@@ -249,6 +250,7 @@ void babyMaker::InitLeptonBranches(){
   mc_p4 = LorentzVector(0,0,0,0);
   mc_motherp4 = LorentzVector(0,0,0,0);
   id = -1; 
+  isPF = false; 
   idx = -1;
   dxyPV = -1;
   dZ = -1;
@@ -451,6 +453,141 @@ void setHLTBranch(const char* pattern, const LorentzVector& p4, int& HLTbranch) 
   } else HLTbranch = 0;
 }
 
+bool babyMaker::checkMuonTag (unsigned int i) {
+  for(unsigned int j=0; j<tas::mus_p4().size(); j++) {
+    if (i==j) continue;
+    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
+    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
+    // Will have to add trigger requirements for the Tag
+    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
+      tag_p4 = tas::mus_p4().at(j);
+      tag_charge = tas::mus_charge().at(j);
+      tag_HLTLeadingLeg = false; 
+      // Randomize if needed
+      // from: https://github.com/drkovalskyi/Smurf/blob/tnp_V00-00-00/ProcessingAndSkimming/src/LeptonTreeMaker.cc
+      if (usedMu == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
+	isRandom = true;
+	usedMu = true;
+      }
+      else isRandom = false;
+      return true; // The probe we are about to save has a corresponding tag
+    }
+  } // End of tag selection
+  return false;
+}
+
+bool babyMaker::checkElectronTag (unsigned int i) {
+  for(unsigned int j=0; j<tas::els_p4().size(); j++) {
+    if (i==j) continue;
+    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
+    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
+    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   //add also other IDs!
+      tag_p4 = tas::els_p4().at(j);
+      tag_charge = tas::els_charge().at(j);
+      tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
+			   tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
+			   tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );    
+      // Randomize if needed
+      if (usedEl == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
+	isRandom = true;
+	usedEl = true;
+      }
+      else isRandom = false;
+      return true; // The probe we are about to save has a corresponding tag
+    }
+  } // End of tag selection
+  return false;
+}
+
+bool isPFmuon(vector<LorentzVector> &pfP4, vector<bool> &pfmuIsReco, int idx) {
+  for(size_t i = 0; i < pfP4.size(); i++) {
+    float dR2 = ROOT::Math::VectorUtil::DeltaR2(pfP4[i], tas::mus_p4().at(idx));
+    if (dR2 < 0.0025) {
+      pfmuIsReco[i] = true;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx) {
+  for(size_t i = 0; i < pfP4.size(); i++) {
+    float dR2 = ROOT::Math::VectorUtil::DeltaR2(pfP4[i], tas::els_p4().at(idx));
+    if (dR2 < 0.0025) {
+      pfelIsReco[i] = true;
+      return true;
+    }
+  }
+  return false;
+}
+  
+void  babyMaker::fillElectronTriggerBranches(LorentzVector &p4) {
+  
+  //---single el trigger---//
+  setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele8_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF_v",  p4,	  HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF);
+  
+  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  p4, HLT_Ele27_eta2p1_WP75_Gsf);
+  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_WP85_Gsf_v",  p4, HLT_Ele27_WP85_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele27_eta2p1_WPLoose_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele27_eta2p1_WPTight_Gsf);
+  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
+  
+  //--- mu-el trigger---//
+  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
+  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
+  setHLTBranch("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
+  
+  //--- double el trigger---//
+  setHLTBranch("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300);
+  setHLTBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",  p4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  
+}
+
+void babyMaker::fillMuonTriggerBranches(LorentzVector &p4) {
+  
+  //---single mu trigger---//
+  setHLTBranch("HLT_Mu8_v",  p4, HLT_Mu8);
+  setHLTBranch("HLT_Mu17_v", p4, HLT_Mu17);
+  setHLTBranch("HLT_Mu24_v", p4, HLT_Mu24);
+  setHLTBranch("HLT_Mu34_v", p4, HLT_Mu34);
+  setHLTBranch("HLT_Mu8_TrkIsoVVL_v",  p4, HLT_Mu8_TrkIsoVVL);
+  setHLTBranch("HLT_Mu17_TrkIsoVVL_v", p4, HLT_Mu17_TrkIsoVVL);
+  setHLTBranch("HLT_Mu24_TrkIsoVVL_v", p4, HLT_Mu24_TrkIsoVVL);
+  setHLTBranch("HLT_Mu34_TrkIsoVVL_v", p4, HLT_Mu34_TrkIsoVVL);
+  setHLTBranch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF_v", p4, HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
+  setHLTBranch("HLT_IsoMu24_eta2p1_v",  p4, HLT_IsoMu24_eta2p1);
+  setHLTBranch("HLT_IsoTkMu24_eta2p1_v",  p4, HLT_IsoTkMu24_eta2p1);
+  setHLTBranch("HLT_IsoMu27_v",  p4, HLT_IsoMu27);
+  setHLTBranch("HLT_IsoTkMu27_v",  p4, HLT_IsoTkMu27);
+  setHLTBranch("HLT_Mu45_eta2p1_v",  p4, HLT_Mu45_eta2p1);
+  setHLTBranch("HLT_Mu50_v",  p4, HLT_Mu50);
+  
+  //--- mu-el trigger---//
+  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
+  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
+  setHLTBranch("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
+  
+  //--- double mu trigger---//
+  setHLTBranch("HLT_DoubleMu8_Mass8_PFHT300_v",  p4, HLT_DoubleMu8_Mass8_PFHT300);
+  setHLTBranch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v",  p4, HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
+  setHLTBranch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v",  p4, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL);
+  setHLTBranch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",  p4, HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
+  setHLTBranch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",  p4, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ);
+  
+}
+
+
 //Main function
 int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
@@ -628,9 +765,41 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  	}
 	  nFOs_SS = count_SS;
 
-	  bool used = false;
+	  // Variables to keep track of PFElectrons and PFMuons
+	  // We would like to save PFleptons if they don't overlap with something we've already saved.
+	  // If they do overlap, we want to save the fact that they overlap
+	  bool foundMuTag = false;
+	  bool foundElTag = false;
+	  vector<LorentzVector> savedMuP4s; savedMuP4s.clear();
+	  vector<LorentzVector> savedElP4s; savedElP4s.clear();
+	  // Load the pflepton p4's in memory, we'll have to check them on each lepton
+	  vector<int> pfelidx; pfelidx.clear();
+	  vector<int> pfmuidx; pfmuidx.clear();
+	  vector<bool> pfelIsReco; pfelIsReco.clear();
+	  vector<bool> pfmuIsReco; pfmuIsReco.clear();
+	  vector<LorentzVector> pfelP4; pfelP4.clear();
+	  vector<LorentzVector> pfmuP4; pfmuP4.clear();
+	  for(unsigned int i=0; i<tas::isotracks_p4().size(); i++) {
+	    if ( fabs(tas::isotracks_particleId().at(i)) != 11 && fabs(tas::isotracks_particleId().at(i)) != 13 ) continue;
+	    if (  fabs(tas::isotracks_particleId().at(i)) == 11 ) {
+	      pfelidx.push_back(i);
+	      pfelP4.push_back(tas::isotracks_p4().at(i));
+	      pfelIsReco.push_back(false); // default to false, turn to true when found
+	    }
+	    else if ( fabs(tas::isotracks_particleId().at(i)) == 13 ) {
+	      pfmuidx.push_back(i);
+	      pfmuP4.push_back(tas::isotracks_p4().at(i));
+	      pfmuIsReco.push_back(false); // default to false, turn to true when found
+	    }
+	    continue;
+	  }
+
+	  
+
+	  usedMu = false;
+	  usedEl = false;
 	  TRandom r;
-	  float rndm = r.Rndm();
+	  rndm = r.Rndm();
 	  //Muon Loop
 	  //cout<<"\nBegin Muon looping"<<endl;	  
 	  for(unsigned int i=0; i<tas::mus_p4().size(); i++)  //What RECO and GEN variables are needed?
@@ -640,25 +809,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
 		  // Require tag
 		  bool foundTag = false;
-		  for(unsigned int j=0; j<tas::mus_p4().size(); j++) {
-		    if (i==j) continue;
-		    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
-		    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
-		    // Will have to add trigger requirements for the Tag
-		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
-		      tag_p4 = tas::mus_p4().at(j);
-		      tag_charge = tas::mus_charge().at(j);
-		      tag_HLTLeadingLeg = false; 
-		      // Randomize if needed
-		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
-			isRandom = true;
-			used = true;
-		      }
-		      else isRandom = false;
-		      foundTag = true; // The probe we are about to save has a corresponding tag
-		    }
-		  } // End of tag selection
-		  
+		  foundTag = checkMuonTag( i );
+		  if (foundTag) foundMuTag = true; // This one is persistent throughout the event, used for PFlepton saving
+
 		  // Require pT > 10 GeV
 		  if ( tas::mus_p4().at(i).pt()<=10. ) continue; 
 		  // If a muon tag exist, save this muon (we will use them as probe)
@@ -666,6 +819,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if( muonID(i, SS_veto_noiso_v3)==0 &&  muonID(i, HAD_loose_v3)==0 && foundTag==false ) continue; //other analyses can add vetoes w/ &&. 
 
 		  p4 = tas::mus_p4().at(i); 
+		  savedMuP4s.push_back(p4);
 		  if (foundTag) {
 		    dilep_p4 = p4 + tag_p4;
 		    dilep_mass = dilep_p4.M();
@@ -699,6 +853,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  exp_innerlayers = tas::mus_exp_innerlayers().at(i);
 		  exp_outerlayers = tas::mus_exp_outerlayers().at(i);
 		  segmCompatibility = tas::mus_segmCompatibility().at(i);
+
+		  isPF = isPFmuon(pfmuP4, pfmuIsReco, i);
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
@@ -745,34 +901,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
 		  /////////////////////////////////////////// Triggers //////////////////////////////////////////////////
 
-		  //---single mu trigger---//
-		  setHLTBranch("HLT_Mu8_v",  p4, HLT_Mu8);
-		  setHLTBranch("HLT_Mu17_v", p4, HLT_Mu17);
-		  setHLTBranch("HLT_Mu24_v", p4, HLT_Mu24);
-		  setHLTBranch("HLT_Mu34_v", p4, HLT_Mu34);
-		  setHLTBranch("HLT_Mu8_TrkIsoVVL_v",  p4, HLT_Mu8_TrkIsoVVL);
-		  setHLTBranch("HLT_Mu17_TrkIsoVVL_v", p4, HLT_Mu17_TrkIsoVVL);
-		  setHLTBranch("HLT_Mu24_TrkIsoVVL_v", p4, HLT_Mu24_TrkIsoVVL);
-		  setHLTBranch("HLT_Mu34_TrkIsoVVL_v", p4, HLT_Mu34_TrkIsoVVL);
-		  setHLTBranch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF_v", p4, HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
-		  setHLTBranch("HLT_IsoMu24_eta2p1_v",  p4, HLT_IsoMu24_eta2p1);
-		  setHLTBranch("HLT_IsoTkMu24_eta2p1_v",  p4, HLT_IsoTkMu24_eta2p1);
-		  setHLTBranch("HLT_IsoMu27_v",  p4, HLT_IsoMu27);
-		  setHLTBranch("HLT_IsoTkMu27_v",  p4, HLT_IsoTkMu27);
-		  setHLTBranch("HLT_Mu45_eta2p1_v",  p4, HLT_Mu45_eta2p1);
-		  setHLTBranch("HLT_Mu50_v",  p4, HLT_Mu50);
-  
-		  //--- mu-el trigger---//
-		  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
-		  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
-		  setHLTBranch("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
-
-		  //--- double mu trigger---//
-		  setHLTBranch("HLT_DoubleMu8_Mass8_PFHT300_v",  p4, HLT_DoubleMu8_Mass8_PFHT300);
-		  setHLTBranch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v",  p4, HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
-		  setHLTBranch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v",  p4, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL);
-		  setHLTBranch("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",  p4, HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
-		  setHLTBranch("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",  p4, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ);
+		  fillMuonTriggerBranches(p4);
 
 		  ///////////////////////////////////////// End Triggers ////////////////////////////////////////////////
 		  
@@ -790,26 +919,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  // Require tag
 		  bool foundTag = false;
-		  for(unsigned int j=0; j<tas::els_p4().size(); j++) {
-		    if (i==j) continue;
-		    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
-		    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   //add also other IDs!
- 		      tag_p4 = tas::els_p4().at(j);
-		      tag_charge = tas::els_charge().at(j);
-		      tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
-			tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
-			tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );
-			
-		      // Randomize if needed
-		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
-			isRandom = true;
-			used = true;
-		      }
-		      else isRandom = false;
-		      foundTag = true; // The probe we are about to save has a corresponding tag
-		    }
-		  } // End of tag selection
+		  foundTag = checkElectronTag( i );
+		  if (foundTag) foundElTag = true; // This one is persistent for entire event, used later for PFLeptons
 		  
 		  // Require pT > 10 GeV
 		  if ( tas::els_p4().at(i).pt()<=10. ) continue; 
@@ -818,6 +929,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if( electronID(i, SS_veto_noiso_v3)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false ) continue; //other analyses can add vetoes w/ &&. 
 
 		  p4 = tas::els_p4().at(i);    
+		  savedElP4s.push_back(p4);
 		  if (foundTag) {
 		    dilep_p4 = p4 + tag_p4;
 		    dilep_mass = dilep_p4.M();
@@ -877,6 +989,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  eOverPOut              = tas::els_eOverPOut().at(i);
 		  dEtaOut                = tas::els_dEtaOut().at(i);
 		  
+		  isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
 		    
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -932,35 +1045,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  }
 
 		  /////////////////////////////////////////// Triggers //////////////////////////////////////////////////
-
-		  //---single el trigger---//
-		  setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele8_CaloIdM_TrackIdM_PFJet30);
-		  setHLTBranch("HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
-		  setHLTBranch("HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
-		  setHLTBranch("HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
-		  setHLTBranch("HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
-		  setHLTBranch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
-		  setHLTBranch("HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
-		  setHLTBranch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
-		  setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
-		  setHLTBranch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF_v",  p4,	  HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF);
-
-		  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  p4, HLT_Ele27_eta2p1_WP75_Gsf);
-		  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_WP85_Gsf_v",  p4, HLT_Ele27_WP85_Gsf);
-		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele27_eta2p1_WPLoose_Gsf);
-		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele27_eta2p1_WPTight_Gsf);
-		  if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
-		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
-		  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
-  
-		  //--- mu-el trigger---//
-		  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
-		  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
-		  setHLTBranch("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
-
-		  //--- double el trigger---//
-		  setHLTBranch("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  p4, HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300);
-		  setHLTBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",  p4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+		  
+		  fillElectronTriggerBranches(p4);
 
 		  ///////////////////////////////////////// End Triggers ////////////////////////////////////////////////
 
@@ -969,6 +1055,72 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  	  //cout<<"\nEnd electron loop"<<endl;
 	  	} //close electron loop
 	  
+
+	  ////////// Addition of PF LEPTONS that were not included before //////////////////
+	  // check if anything needs to be done: 
+	  //    - compare size of pfelp4 with probeelp4, and same for muons
+	  //    - check whether there is a muon/electron tag
+	  // if something to be done, then we need to save the pflepton as well as tag properties and triggers...
+
+	  bool addPFel = false;
+	  bool addPFmu = false;
+	  if ( foundElTag && savedElP4s.size() != pfelP4.size() ) addPFel = true;
+	  if ( foundMuTag && savedMuP4s.size() != pfmuP4.size() ) addPFmu = true;
+	  
+	  if ( addPFel ) {
+	    for (unsigned int i=0; i<pfelP4.size(); i++) {
+	      if (pfelIsReco[i]) continue;
+	      InitLeptonBranches(); 
+	      // set the tag branches (-1 means we are happy if any reco electron is a tag)
+	      checkElectronTag( -1 );
+	      // now let's look at our electron
+	      int pfidx = pfelidx[i];
+	      p4 = pfelP4[i];
+	      id = tas::isotracks_particleId().at(pfidx);
+	      isPF = true; // that's why we're here!
+	      if (id > 0) id = 1011; 
+	      else id = -1011;
+	      dZ = tas::isotracks_dz().at(pfidx);
+	      charge = tas::isotracks_charge().at(pfidx);
+	      RelIso03 = tas::isotracks_relIso().at(pfidx);
+
+	      dilep_p4 = p4 + tag_p4;
+	      dilep_mass = dilep_p4.M();
+
+	      fillElectronTriggerBranches(p4);
+
+	      BabyTree->Fill(); 
+	    }
+	  } // addPFel
+	  
+	  if ( addPFmu ) {
+	    for (unsigned int i=0; i<pfmuP4.size(); i++) {
+	      if (pfmuIsReco[i]) continue;
+	      InitLeptonBranches(); 
+	      // set the tag branches (-1 means we are happy if any reco electron is a tag)
+	      checkMuonTag( -1 );
+	      // now let's look at our electron
+	      int pfidx = pfmuidx[i];
+	      p4 = pfmuP4[i];
+	      id = tas::isotracks_particleId().at(pfidx);
+	      isPF = true; // that's why we're here!
+	      if (id > 0) id = 1013; 
+	      else id = -1013;
+	      dZ = tas::isotracks_dz().at(pfidx); 
+	      charge = tas::isotracks_charge().at(pfidx);
+	      RelIso03 = tas::isotracks_relIso().at(pfidx);
+	      
+	      dilep_p4 = p4 + tag_p4;
+	      dilep_mass = dilep_p4.M();
+
+	      fillMuonTriggerBranches(p4);
+
+	      BabyTree->Fill(); 		  
+	    }	    
+	  } // addPFmu
+
+
+
 	  
     }//close event loop
     
