@@ -463,6 +463,7 @@ float leptonDZ(const int id, const int idx){
 // the sign tells if the object matched one of the trigger legs (positive match, negative no match)
 void setHLTBranch(const char* pattern, const LorentzVector& p4, int& HLTbranch) {
   TString name_HLT = triggerName(pattern);
+  if (name_HLT=="TRIGGER_NOT_FOUND"){HLTbranch=0;return;}
   if (cms3.passHLTTrigger(name_HLT)) {
     HLTbranch = HLT_prescale(name_HLT);
     if (passHLTTrigger(name_HLT,p4)==0) HLTbranch*=-1;
@@ -689,10 +690,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       evt_lumiBlock  = tas::evt_lumiBlock();
       evt_run        = tas::evt_run();
       evt_isRealData = tas::evt_isRealData();
-      evt_xsec_incl  = tas::evt_xsec_incl();
-      evt_kfactor    = tas::evt_kfactor();
-      gen_met        = tas::gen_met();
-      gen_metPhi     = tas::gen_metPhi();
+      if (!evt_isRealData) {
+	evt_xsec_incl  = tas::evt_xsec_incl();
+	evt_kfactor    = tas::evt_kfactor();
+	gen_met        = tas::gen_met();
+	gen_metPhi     = tas::gen_metPhi();
+      }
       sample         = Form("%s", file->GetName());
 
       // Vertex selection:
