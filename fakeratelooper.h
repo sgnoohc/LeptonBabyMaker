@@ -44,8 +44,8 @@ public:
 
   bool checkMuonTag (unsigned int i);
   bool checkElectronTag (unsigned int i);
-  void fillMuonTriggerBranches(LorentzVector &p4);
-  void fillElectronTriggerBranches(LorentzVector &p4);
+  void fillMuonTriggerBranches(LorentzVector &p4, int idx);
+  void fillElectronTriggerBranches(LorentzVector &p4, int idx);
 
 
 
@@ -224,6 +224,7 @@ private:
   int HLT_Mu24;
   int HLT_Mu34;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p5PF;
+  int HLT_Mu10_CentralPFJet30_BTagCSV0p54PF;
   int HLT_IsoMu24_eta2p1;
   int HLT_IsoTkMu24_eta2p1;
   int HLT_IsoMu27;
@@ -242,6 +243,7 @@ private:
   int HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF;
+  int HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF;
   int HLT_Ele27_eta2p1_WP75_Gsf;//used in MC xxx
   int HLT_Ele27_WP85_Gsf;//used in MC
   int HLT_Ele27_eta2p1_WPLoose_Gsf;//used in data
