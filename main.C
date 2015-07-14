@@ -8,7 +8,7 @@
 
 //usage: ./main.exe QCD_Test 1000 1 ./
 
-vector<TString> load(const char *type, const char *filename, char *input){
+vector<TString> load(const char *type, char *input){
 
   vector<TString> output;
   char buffer[200];
@@ -29,9 +29,6 @@ vector<TString> load(const char *type, const char *filename, char *input){
       if(add){
 	std::ostringstream addStream;
 	addStream << StringValue;
-	string tester = ".root";
-	string totest = addStream.str();
-	if (totest.find(tester) == string::npos) addStream << filename;//add filename only if not specified
 	TString addString = addStream.str().c_str();
 	output.push_back(addString);
       }
@@ -85,12 +82,12 @@ int main(int argc, char **argv)
       cout<<"Output directory is" << dirpath <<endl;
     }
     
-    vector<TString> samplelist = load(sample.Data(), filename, input);//new
+    vector<TString> samplelist = load(sample.Data(), input);//new
     if(samplelist.size()==0) cout<<"Could not find files corresponding to sample "<<sample<<endl;
     for(unsigned int i = 0; i<samplelist.size(); ++i){
-
       std::ifstream infile(samplelist[i].Data());
       if (infile.good()) {
+	if(!(samplelist[i].Contains(".root"))) samplelist[i] = samplelist[i] + filename;
 	cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
 	result->Add(samplelist[i].Data());
       } else {

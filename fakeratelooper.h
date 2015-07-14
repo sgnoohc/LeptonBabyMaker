@@ -140,6 +140,9 @@ private:
   bool tag_HLTLeadingLeg;
   float dilep_mass;
   bool isRandom;
+  float iso03sumPt;
+  float iso03emEt;
+  float iso03hadEt;
 
   // -- tag HLT match -- // 
   int tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg;
@@ -153,7 +156,14 @@ private:
   int tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
   int tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
   int tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-
+  int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
+  int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
+  int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
+  int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
+  int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
+  int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
+  int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
+  int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
   //---els---//
   float sigmaIEtaIEta_full5x5;
   float sigmaIEtaIEta;
@@ -225,6 +235,7 @@ private:
   int HLT_Mu34;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p5PF;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p54PF;
+  int HLT_IsoMu20;
   int HLT_IsoMu24_eta2p1;
   int HLT_IsoTkMu24_eta2p1;
   int HLT_IsoMu27;
