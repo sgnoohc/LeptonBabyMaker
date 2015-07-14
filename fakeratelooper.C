@@ -178,6 +178,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Mu34", &HLT_Mu34);
   BabyTree->Branch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF", &HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
   BabyTree->Branch("HLT_IsoMu20", &HLT_IsoMu20);
+  BabyTree->Branch("HLT_IsoTkMu20", &HLT_IsoTkMu20);
   BabyTree->Branch("HLT_Mu10_CentralPFJet30_BTagCSV0p54PF", &HLT_Mu10_CentralPFJet30_BTagCSV0p54PF);
   BabyTree->Branch("HLT_IsoMu24_eta2p1", &HLT_IsoMu24_eta2p1);
   BabyTree->Branch("HLT_IsoTkMu24_eta2p1", &HLT_IsoTkMu24_eta2p1);
@@ -398,6 +399,7 @@ void babyMaker::InitLeptonBranches(){
   HLT_Mu10_CentralPFJet30_BTagCSV0p5PF = 0;
   HLT_Mu10_CentralPFJet30_BTagCSV0p54PF = 0;
   HLT_IsoMu20 = 0;
+  HLT_IsoTkMu20 = 0;
   HLT_IsoMu24_eta2p1 = 0;
   HLT_IsoTkMu24_eta2p1 = 0;
   HLT_IsoMu27 = 0;
@@ -648,6 +650,7 @@ void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx) {
   setHLTBranch("HLT_Mu24_TrkIsoVVL_v", p4, HLT_Mu24_TrkIsoVVL);
   setHLTBranch("HLT_Mu34_TrkIsoVVL_v", p4, HLT_Mu34_TrkIsoVVL);
   setHLTBranch("HLT_IsoMu20_v",  p4, HLT_IsoMu20);
+  setHLTBranch("HLT_IsoTkMu20_v",  p4, HLT_IsoTkMu20);
   if (tas::evt_isRealData()) setHLTBranch("HLT_Mu10_CentralPFJet30_BTagCSV0p54PF_v", (idx>=0 ? tas::mus_HLT_Mu10_CentralPFJet30_BTagCSV0p54PF_MuonLeg().at(idx) : 0), HLT_Mu10_CentralPFJet30_BTagCSV0p54PF);
   else setHLTBranch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF_v", (idx>=0 ? tas::mus_HLT_Mu10_CentralPFJet30_BTagCSV0p5PF_MuonLeg().at(idx) : 0), HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
   setHLTBranch("HLT_IsoMu24_eta2p1_v",  p4, HLT_IsoMu24_eta2p1);

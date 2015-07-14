@@ -236,6 +236,7 @@ private:
   int HLT_Mu10_CentralPFJet30_BTagCSV0p5PF;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p54PF;
   int HLT_IsoMu20;
+  int HLT_IsoTkMu20;
   int HLT_IsoMu24_eta2p1;
   int HLT_IsoTkMu24_eta2p1;
   int HLT_IsoMu27;
