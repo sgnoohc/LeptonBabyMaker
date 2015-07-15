@@ -62,12 +62,25 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("RelIso03", &RelIso03);
   BabyTree->Branch("RelIso03EA", &RelIso03EA);
   BabyTree->Branch("RelIso03DB", &RelIso03DB);
+  BabyTree->Branch("pfChargedHadronIso", &pfChargedHadronIso);
+  BabyTree->Branch("pfPhotonIso", &pfPhotonIso);
+  BabyTree->Branch("pfNeutralHadronIso", &pfNeutralHadronIso);
+  BabyTree->Branch("tkIso"                , &tkIso);
+  BabyTree->Branch("sumPUPt"                , &sumPUPt);
   BabyTree->Branch("passes_SS_tight_v3", &passes_SS_tight_v3);
   BabyTree->Branch("passes_SS_tight_noiso_v3", &passes_SS_tight_noiso_v3);
   BabyTree->Branch("passes_SS_fo_v3", &passes_SS_fo_v3);
   BabyTree->Branch("passes_SS_fo_noiso_v3", &passes_SS_fo_noiso_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_v3", &passes_SS_fo_looseMVA_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v3", &passes_SS_fo_looseMVA_noiso_v3);
+  BabyTree->Branch("passes_WW_medium_v1", &passes_WW_medium_v1);
+  BabyTree->Branch("passes_WW_medium_noiso_v1", &passes_WW_medium_noiso_v1);
+  BabyTree->Branch("passes_WW_fo_v1", &passes_WW_fo_v1);
+  BabyTree->Branch("passes_WW_fo_noiso_v1", &passes_WW_fo_noiso_v1);
+  BabyTree->Branch("passes_WW_fo_looseMVA_v1", &passes_WW_fo_looseMVA_v1);
+  BabyTree->Branch("passes_WW_fo_looseMVA_noiso_v1", &passes_WW_fo_looseMVA_noiso_v1);
+  BabyTree->Branch("passes_WW_veto_v1", &passes_WW_veto_v1);
+  BabyTree->Branch("passes_WW_veto_noiso_v1", &passes_WW_veto_noiso_v1);
   BabyTree->Branch("passes_HAD_veto_v3", &passes_HAD_veto_v3);
   BabyTree->Branch("passes_HAD_veto_noiso_v3", &passes_HAD_veto_noiso_v3);
   BabyTree->Branch("passes_HAD_loose_v3", &passes_HAD_loose_v3);
@@ -110,6 +123,18 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
   BabyTree->Branch("tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
 
+  BabyTree->Branch("tag_HLT_Ele27_eta2p1_WP75_Gsf", &tag_HLT_Ele27_eta2p1_WP75_Gsf);
+  BabyTree->Branch("tag_HLT_Ele27_WP85_Gsf", &tag_HLT_Ele27_WP85_Gsf);
+  BabyTree->Branch("tag_HLT_Ele27_eta2p1_WPLoose_Gsf", &tag_HLT_Ele27_eta2p1_WPLoose_Gsf);
+  BabyTree->Branch("tag_HLT_Ele27_eta2p1_WPTight_Gsf", &tag_HLT_Ele27_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("tag_HLT_Ele32_eta2p1_WP75_Gsf", &tag_HLT_Ele32_eta2p1_WP75_Gsf);
+  BabyTree->Branch("tag_HLT_Ele32_eta2p1_WPLoose_Gsf", &tag_HLT_Ele32_eta2p1_WPLoose_Gsf);
+  BabyTree->Branch("tag_HLT_Ele32_eta2p1_WPTight_Gsf", &tag_HLT_Ele32_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("tag_HLT_Ele22_eta2p1_WPLoose_Gsf", &tag_HLT_Ele22_eta2p1_WPLoose_Gsf);
+  BabyTree->Branch("tag_HLT_Ele22_eta2p1_WPTight_Gsf", &tag_HLT_Ele22_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("tag_HLT_Ele23_WPLoose_Gsf", &tag_HLT_Ele23_WPLoose_Gsf);
+  BabyTree->Branch("tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg", &tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg);
+     
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg", &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg);
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg", &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg);
 
@@ -132,6 +157,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("dEtaIn"               , &dEtaIn);
   BabyTree->Branch("dPhiIn"               , &dPhiIn);
   BabyTree->Branch("hOverE"               , &hOverE);
+  BabyTree->Branch("eSeed"                , &eSeed);
   BabyTree->Branch("ecalEnergy"           , &ecalEnergy);
   BabyTree->Branch("eOverPIn"             , &eOverPIn);
   BabyTree->Branch("conv_vtx_flag"        , &conv_vtx_flag);
@@ -141,7 +167,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ckf_charge"           , &ckf_charge);
   BabyTree->Branch("threeChargeAgree"     , &threeChargeAgree_branch);
   BabyTree->Branch("mva"                  , &mva);
-  BabyTree->Branch("tkIso"                , &tkIso);
   BabyTree->Branch("ecalIso"              , &ecalIso);
   BabyTree->Branch("hcalIso"              , &hcalIso);
   BabyTree->Branch("ecalPFClusterIso"     , &ecalPFClusterIso);
@@ -161,7 +186,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ndof"                 , &ndof                  );
   BabyTree->Branch("fbrem"                , &fbrem                 );
   BabyTree->Branch("eOverPOut"            , &eOverPOut             );
-  BabyTree->Branch("dEtaOut"              , &dEtaOut               );               
+  BabyTree->Branch("dEtaOut"              , &dEtaOut               );    
+  BabyTree->Branch("dPhiOut"              , &dPhiOut               );                
 
   //---mus---//
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
@@ -217,7 +243,10 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Ele32_eta2p1_WP75_Gsf", &HLT_Ele32_eta2p1_WP75_Gsf);
   BabyTree->Branch("HLT_Ele32_eta2p1_WPLoose_Gsf", &HLT_Ele32_eta2p1_WPLoose_Gsf);
   BabyTree->Branch("HLT_Ele32_eta2p1_WPTight_Gsf", &HLT_Ele32_eta2p1_WPTight_Gsf);
-
+  BabyTree->Branch("HLT_Ele22_eta2p1_WPLoose_Gsf", &HLT_Ele22_eta2p1_WPLoose_Gsf);
+  BabyTree->Branch("HLT_Ele22_eta2p1_WPTight_Gsf", &HLT_Ele22_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("HLT_Ele23_WPLoose_Gsf", &HLT_Ele23_WPLoose_Gsf);
+  
   //--- mu-el trigger---//
   BabyTree->Branch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300", &HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
   BabyTree->Branch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL", &HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
@@ -291,12 +320,25 @@ void babyMaker::InitLeptonBranches(){
   RelIso03 = -1;
   RelIso03EA = -1;
   RelIso03DB = -1;
+  pfChargedHadronIso = -1;
+  pfPhotonIso = -1;
+  pfNeutralHadronIso = -1;
+  tkIso = -1;
+  sumPUPt = -1;
   passes_SS_tight_v3 = 0;
   passes_SS_tight_noiso_v3 = 0;
   passes_SS_fo_v3 = 0;
   passes_SS_fo_noiso_v3 = 0;
   passes_SS_fo_looseMVA_v3 = 0;
   passes_SS_fo_looseMVA_noiso_v3 = 0;
+  passes_WW_medium_v1 = 0;
+  passes_WW_medium_noiso_v1 = 0;
+  passes_WW_fo_v1 = 0;
+  passes_WW_fo_noiso_v1 = 0;
+  passes_WW_fo_looseMVA_v1 = 0;
+  passes_WW_fo_looseMVA_noiso_v1 = 0;
+  passes_WW_veto_v1 = 0;
+  passes_WW_veto_noiso_v1 = 0;
   passes_HAD_veto_v3 = 0;
   passes_HAD_veto_noiso_v3 = 0;
   passes_HAD_loose_v3 = 0;
@@ -334,6 +376,18 @@ void babyMaker::InitLeptonBranches(){
   tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
   tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
 
+  tag_HLT_Ele27_eta2p1_WP75_Gsf = -1;
+  tag_HLT_Ele27_WP85_Gsf = -1;
+  tag_HLT_Ele27_eta2p1_WPLoose_Gsf = -1;
+  tag_HLT_Ele27_eta2p1_WPTight_Gsf = -1;
+  tag_HLT_Ele32_eta2p1_WP75_Gsf = -1;
+  tag_HLT_Ele32_eta2p1_WPLoose_Gsf = -1;
+  tag_HLT_Ele32_eta2p1_WPTight_Gsf = -1;
+  tag_HLT_Ele22_eta2p1_WPLoose_Gsf = -1;
+  tag_HLT_Ele22_eta2p1_WPTight_Gsf = -1;
+  tag_HLT_Ele23_WPLoose_Gsf = -1;
+  tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = -1;
+     
   tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = 1;
   tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = -1;
   tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg = -1;
@@ -371,6 +425,7 @@ void babyMaker::InitLeptonBranches(){
   dEtaIn = -1;
   dPhiIn = -99;
   hOverE = -1;
+  eSeed = -1;
   ecalEnergy = -1;
   eOverPIn = -1;
   conv_vtx_flag = 0;
@@ -381,7 +436,6 @@ void babyMaker::InitLeptonBranches(){
   trk_charge = -1;
   threeChargeAgree_branch = 0;
   mva = -999.;
-  tkIso = -1;
   ecalIso = -1;
   hcalIso = -1;
   ecalPFClusterIso = -1;
@@ -402,6 +456,7 @@ void babyMaker::InitLeptonBranches(){
   fbrem                 = -1;
   eOverPOut             = -1;
   dEtaOut               = -1;
+  dPhiOut               = -1;
 
   //---single mu trigger---//
   HLT_Mu8_TrkIsoVVL = 0;
@@ -442,6 +497,9 @@ void babyMaker::InitLeptonBranches(){
   HLT_Ele32_eta2p1_WP75_Gsf = 0;
   HLT_Ele32_eta2p1_WPLoose_Gsf = 0;
   HLT_Ele32_eta2p1_WPTight_Gsf = 0;
+  HLT_Ele22_eta2p1_WPLoose_Gsf = 0;
+  HLT_Ele22_eta2p1_WPTight_Gsf = 0;
+  HLT_Ele23_WPLoose_Gsf = 0;
   
   //--- mu-el trigger---//
   HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300 = 0;
@@ -578,6 +636,18 @@ bool babyMaker::checkElectronTag (unsigned int i) {
 	tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
 	tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
 	tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+
+	if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WP75_Gsf);
+	if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_WP85_Gsf_v",  tag_p4, tag_HLT_Ele27_WP85_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPLoose_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPTight_Gsf);
+	if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WP75_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPLoose_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPTight_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPLoose_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPTight_Gsf);
+	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele23_WPLoose_Gsf);
+	tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(j);
       }
 
       // Randomize if needed
@@ -639,6 +709,9 @@ void  babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx) {
   if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
   if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
   if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele22_eta2p1_WPLoose_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele22_eta2p1_WPTight_Gsf);
+  if(tas::evt_isRealData()) setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  p4, HLT_Ele23_WPLoose_Gsf);
 
 
   if (tas::evt_isRealData()) {
@@ -954,6 +1027,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  RelIso03 = (tas::mus_isoR03_pf_ChargedHadronPt().at(i)+tas::mus_isoR03_pf_NeutralHadronEt().at(i)+tas::mus_isoR03_pf_PhotonEt().at(i))/tas::mus_p4().at(i).pt();
 		  RelIso03EA = muRelIso03EA(i);
 		  RelIso03DB = muRelIso03DB(i);
+		  pfChargedHadronIso = tas::mus_isoR03_pf_ChargedHadronPt().at(i);
+		  pfPhotonIso = tas::mus_isoR03_pf_PhotonEt().at(i);
+		  pfNeutralHadronIso = tas::mus_isoR03_pf_NeutralHadronEt().at(i);
+		  tkIso = tas::mus_iso03_sumPt().at(i);
+		  sumPUPt = tas::mus_isoR03_pf_PUPt().at(i);
 		  iso03sumPt = tas::mus_iso03_sumPt().at(i);
 		  iso03emEt  = tas::mus_iso03_emEt().at(i);
 		  iso03hadEt = tas::mus_iso03_hadEt().at(i);
@@ -990,6 +1068,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if(muonID(i, SS_tight_noiso_v3))        passes_SS_tight_noiso_v3 = true;
 		  if(muonID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
 		  if(muonID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
+
+		  ////////////
+		  ///  WW  ///
+		  ////////////	
+		  if(muonID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
+		  if(muonID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
+		  if(muonID(i, WW_fo_v1))                 passes_WW_fo_v1 = true;
+		  if(muonID(i, WW_fo_noiso_v1))           passes_WW_fo_noiso_v1 = true;
+		  if(muonID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
+		  if(muonID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
   
 		  ////////////
 		  ///  OS  ///
@@ -1074,6 +1162,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  RelIso03 = (tas::els_pfChargedHadronIso().at(i)+tas::els_pfNeutralHadronIso().at(i)+tas::els_pfPhotonIso().at(i))/tas::els_p4().at(i).pt();
 		  RelIso03EA = eleRelIso03EA(i);
 		  RelIso03DB = eleRelIso03DB(i);
+		  pfChargedHadronIso = tas::els_pfChargedHadronIso().at(i);
+		  pfPhotonIso = tas::els_pfPhotonIso().at(i);
+		  pfNeutralHadronIso = tas::els_pfNeutralHadronIso().at(i);
+		  tkIso = tas::els_tkIso().at(i);
+		  sumPUPt = tas::els_pfPUIso().at(i);
 		  sigmaIEtaIEta_full5x5 = tas::els_sigmaIEtaIEta_full5x5().at(i);//new below
 		  etaSC = tas::els_etaSC().at(i);
 		  dEtaIn = tas::els_dEtaIn().at(i);
@@ -1095,7 +1188,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  type = tas::els_type().at(i);
 		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
 		  // Some old variables used in skimming and perhaps HLT
-		  tkIso = tas::els_tkIso().at(i);
 		  ecalIso = tas::els_ecalIso().at(i);
 		  hcalIso = tas::els_hcalIso().at(i);
 		  sigmaIEtaIEta = tas::els_sigmaIEtaIEta().at(i);
@@ -1109,6 +1201,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  r9_full5x5             = tas::els_r9_full5x5().at(i);
 		  etaSCwidth             = tas::els_etaSCwidth().at(i);
 		  phiSCwidth             = tas::els_phiSCwidth().at(i);
+		  eSeed                  = tas::els_eSeed().at(i);
 		  eSCRaw                 = tas::els_eSCRaw().at(i);
 		  eSCPresh               = tas::els_eSCPresh().at(i);
 		  ckf_chi2               = tas::els_ckf_chi2().at(i);
@@ -1118,6 +1211,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  fbrem                  = tas::els_fbrem().at(i);
 		  eOverPOut              = tas::els_eOverPOut().at(i);
 		  dEtaOut                = tas::els_dEtaOut().at(i);
+		  dPhiOut                = tas::els_dPhiOut().at(i);
 		  
 		  if (!doFast) isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
 
@@ -1135,6 +1229,18 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
 		  if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
 		  if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+
+		  ////////////
+		  ///  WW  ///
+		  ////////////
+		  if(electronID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
+		  if(electronID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
+		  if(electronID(i, WW_fo_v1))                 passes_WW_fo_v1 = true;
+		  if(electronID(i, WW_fo_noiso_v1))           passes_WW_fo_noiso_v1 = true;
+		  if(electronID(i, WW_fo_looseMVA_v1))        passes_WW_fo_looseMVA_v1 = true;
+		  if(electronID(i, WW_fo_looseMVA_noiso_v1))  passes_WW_fo_looseMVA_noiso_v1 = true;
+		  if(electronID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
+		  if(electronID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
 
 		  ////////////
 		  ///  OS  ///
