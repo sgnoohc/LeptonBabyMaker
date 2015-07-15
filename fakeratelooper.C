@@ -109,25 +109,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
   BabyTree->Branch("tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
 
-  //////////////////////////////////
-  // The probe is almost anything // 
-  //////////////////////////////////
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg", &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg);
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg", &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg);
-  BabyTree->Branch("probe_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_ElectronLeg", &probe_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_ElectronLeg", &probe_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_ElectronLeg);
-  BabyTree->Branch("probe_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg", &probe_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg", &probe_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &probe_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &probe_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg", &probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg", &probe_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &probe_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &probe_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &probe_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &probe_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
-  BabyTree->Branch("probe_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg", &probe_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg);
 
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg", &tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg);
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg", &tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg);
@@ -357,20 +340,6 @@ void babyMaker::InitLeptonBranches(){
 
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = -1;
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = -1;
-  probe_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_ElectronLeg = -1;
-  probe_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_ElectronLeg = -1;
-  probe_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg = -1;
-  probe_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg = -1;
-  probe_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg = -1;
-  probe_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  probe_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
 
   probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = -1;
   probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = -1;
@@ -669,6 +638,13 @@ void  babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx) {
   if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  p4, HLT_Ele32_eta2p1_WP75_Gsf);
   if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele32_eta2p1_WPLoose_Gsf);
   if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
+
+
+  if (evt_isRealData) {
+    probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(idx);
+    probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg().at(idx);
+  }
+
   
   //--- mu-el trigger---//
   setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",     (idx>=0 ? tas::els_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg().at(idx) : 0)    , HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
@@ -1142,24 +1118,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
 
-		  if (evt_isRealData) {
-		    probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(i);
-		    probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg().at(i);
-		    probe_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_ElectronLeg = tas::els_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_ElectronLeg().at(i);
-		    probe_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_ElectronLeg = tas::els_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_ElectronLeg().at(i);
-		    probe_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg = tas::els_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg().at(i);
-		    probe_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg = tas::els_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg().at(i);
-		    probe_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg = tas::els_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg().at(i);
-		    probe_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(i);
-		    probe_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(i);
-		  }
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////

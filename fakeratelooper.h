@@ -166,25 +166,12 @@ private:
 
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
-  int probe_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_ElectronLeg;
-  int probe_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_ElectronLeg;
-  int probe_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg;
-  int probe_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg;
-  int probe_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int probe_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int probe_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg;
-  int probe_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int probe_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int probe_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int probe_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int probe_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
 
   int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
   int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
   int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
   int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
+
   //---els---//
   float sigmaIEtaIEta_full5x5;
   float sigmaIEtaIEta;
