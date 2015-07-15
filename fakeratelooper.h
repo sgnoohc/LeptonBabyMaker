@@ -121,6 +121,14 @@ private:
   bool passes_SS_fo_noiso_v3;
   bool passes_SS_fo_looseMVA_v3;
   bool passes_SS_fo_looseMVA_noiso_v3;
+  bool passes_WW_medium_v1;
+  bool passes_WW_medium_noiso_v1;
+  bool passes_WW_fo_v1;
+  bool passes_WW_fo_noiso_v1;
+  bool passes_WW_fo_looseMVA_v1;
+  bool passes_WW_fo_looseMVA_noiso_v1;
+  bool passes_WW_veto_v1;
+  bool passes_WW_veto_noiso_v1;
   bool passes_HAD_veto_v3;
   bool passes_HAD_veto_noiso_v3;
   bool passes_HAD_loose_v3;

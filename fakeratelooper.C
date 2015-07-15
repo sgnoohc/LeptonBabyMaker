@@ -73,6 +73,14 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("passes_SS_fo_noiso_v3", &passes_SS_fo_noiso_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_v3", &passes_SS_fo_looseMVA_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v3", &passes_SS_fo_looseMVA_noiso_v3);
+  BabyTree->Branch("passes_WW_medium_v1", &passes_WW_medium_v1);
+  BabyTree->Branch("passes_WW_medium_noiso_v1", &passes_WW_medium_noiso_v1);
+  BabyTree->Branch("passes_WW_fo_v1", &passes_WW_fo_v1);
+  BabyTree->Branch("passes_WW_fo_noiso_v1", &passes_WW_fo_noiso_v1);
+  BabyTree->Branch("passes_WW_fo_looseMVA_v1", &passes_WW_fo_looseMVA_v1);
+  BabyTree->Branch("passes_WW_fo_looseMVA_noiso_v1", &passes_WW_fo_looseMVA_noiso_v1);
+  BabyTree->Branch("passes_WW_veto_v1", &passes_WW_veto_v1);
+  BabyTree->Branch("passes_WW_veto_noiso_v1", &passes_WW_veto_noiso_v1);
   BabyTree->Branch("passes_HAD_veto_v3", &passes_HAD_veto_v3);
   BabyTree->Branch("passes_HAD_veto_noiso_v3", &passes_HAD_veto_noiso_v3);
   BabyTree->Branch("passes_HAD_loose_v3", &passes_HAD_loose_v3);
@@ -311,6 +319,14 @@ void babyMaker::InitLeptonBranches(){
   passes_SS_fo_noiso_v3 = 0;
   passes_SS_fo_looseMVA_v3 = 0;
   passes_SS_fo_looseMVA_noiso_v3 = 0;
+  passes_WW_medium_v1 = 0;
+  passes_WW_medium_noiso_v1 = 0;
+  passes_WW_fo_v1 = 0;
+  passes_WW_fo_noiso_v1 = 0;
+  passes_WW_fo_looseMVA_v1 = 0;
+  passes_WW_fo_looseMVA_noiso_v1 = 0;
+  passes_WW_veto_v1 = 0;
+  passes_WW_veto_noiso_v1 = 0;
   passes_HAD_veto_v3 = 0;
   passes_HAD_veto_noiso_v3 = 0;
   passes_HAD_loose_v3 = 0;
@@ -1016,6 +1032,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if(muonID(i, SS_tight_noiso_v3))        passes_SS_tight_noiso_v3 = true;
 		  if(muonID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
 		  if(muonID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
+
+		  ////////////
+		  ///  WW  ///
+		  ////////////	
+		  if(muonID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
+		  if(muonID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
+		  if(muonID(i, WW_fo_v1))                 passes_WW_fo_v1 = true;
+		  if(muonID(i, WW_fo_noiso_v1))           passes_WW_fo_noiso_v1 = true;
+		  if(muonID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
+		  if(muonID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
   
 		  ////////////
 		  ///  OS  ///
@@ -1167,6 +1193,18 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
 		  if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
 		  if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+
+		  ////////////
+		  ///  WW  ///
+		  ////////////
+		  if(electronID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
+		  if(electronID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
+		  if(electronID(i, WW_fo_v1))                 passes_WW_fo_v1 = true;
+		  if(electronID(i, WW_fo_noiso_v1))           passes_WW_fo_noiso_v1 = true;
+		  if(electronID(i, WW_fo_looseMVA_v1))        passes_WW_fo_looseMVA_v1 = true;
+		  if(electronID(i, WW_fo_looseMVA_noiso_v1))  passes_WW_fo_looseMVA_noiso_v1 = true;
+		  if(electronID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
+		  if(electronID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
 
 		  ////////////
 		  ///  OS  ///
