@@ -3,6 +3,7 @@
 //Switches
 bool verbose = 0;
 unsigned int evt_cut = 74994186;
+bool doFast = 0;
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
@@ -976,7 +977,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  exp_outerlayers = tas::mus_exp_outerlayers().at(i);
 		  segmCompatibility = tas::mus_segmCompatibility().at(i);
 
-		  isPF = isPFmuon(pfmuP4, pfmuIsReco, i);
+		  if (!doFast) isPF = isPFmuon(pfmuP4, pfmuIsReco, i);
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
@@ -1016,8 +1017,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  miniisoDB = muMiniRelIsoCMS3_DB(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-		  reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
-		  annulus04 = reliso04 - miniiso;
+		  if (!doFast){
+		    reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
+		    annulus04 = reliso04 - miniiso;
+		  }
 		  
 		  //Lep mu_temp = Lep(id, i);
 		  //motherID = lepMotherID(mu_temp);
@@ -1116,7 +1119,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  eOverPOut              = tas::els_eOverPOut().at(i);
 		  dEtaOut                = tas::els_dEtaOut().at(i);
 		  
-		  isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
+		  if (!doFast) isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
 
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1161,9 +1164,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  miniisoDB = elMiniRelIsoCMS3_DB(idx);
 		  jet_close_lep = closestJet(p4,0.4,2.4);
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-		  reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
-		  annulus04 = reliso04 - miniiso;
-
+		  if (!doFast){
+		    reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
+		    annulus04 = reliso04 - miniiso;
+		  }
+		  
 		  //Lep el_temp = Lep(id, i);
 		  //motherID = lepMotherID(el_temp);
 		  if (!evt_isRealData ) {
@@ -1194,7 +1199,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  if ( foundElTag && savedElP4s.size() != pfelP4.size() ) addPFel = true;
 	  if ( foundMuTag && savedMuP4s.size() != pfmuP4.size() ) addPFmu = true;
 	  
-	  if ( addPFel ) {
+	  if ( addPFel && !doFast ) {
 	    for (unsigned int i=0; i<pfelP4.size(); i++) {
 	      if (pfelIsReco[i]) continue;
 	      InitLeptonBranches(); 
@@ -1220,7 +1225,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	    }
 	  } // addPFel
 	  
-	  if ( addPFmu ) {
+	  if ( addPFmu && !doFast ) {
 	    for (unsigned int i=0; i<pfmuP4.size(); i++) {
 	      if (pfmuIsReco[i]) continue;
 	      InitLeptonBranches(); 
