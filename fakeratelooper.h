@@ -110,6 +110,11 @@ private:
   float RelIso03; //RelIso03 (not corrected)
   float RelIso03EA; //RelIso03 (EffectiveArea corrected)
   float RelIso03DB; //RelIso03 (DeltaBeta corrected)
+  float pfChargedHadronIso;
+  float pfPhotonIso;
+  float pfNeutralHadronIso;
+  float tkIso;
+  float sumPUPt;
   bool passes_SS_tight_v3;
   bool passes_SS_tight_noiso_v3;
   bool passes_SS_fo_v3;
@@ -179,6 +184,7 @@ private:
   float dEtaIn;
   float dPhiIn;
   float hOverE;
+  float eSeed;
   float ecalEnergy;
   float eOverPIn;
   bool  conv_vtx_flag;
@@ -189,7 +195,6 @@ private:
   int   trk_charge;
   bool  threeChargeAgree_branch;
   float mva;
-  float tkIso;
   float ecalIso;
   float hcalIso;
   float ecalPFClusterIso;
@@ -210,6 +215,7 @@ private:
   float fbrem                 ;
   float eOverPOut             ;
   float dEtaOut               ;
+  float dPhiOut               ;
 
 
   //---mus---//
@@ -271,6 +277,9 @@ private:
   int HLT_Ele32_eta2p1_WP75_Gsf;//used in MC
   int HLT_Ele32_eta2p1_WPLoose_Gsf;//used in data
   int HLT_Ele32_eta2p1_WPTight_Gsf;//used in data
+  int HLT_Ele22_eta2p1_WPLoose_Gsf;//used in data
+  int HLT_Ele22_eta2p1_WPTight_Gsf;//used in data
+  int HLT_Ele23_WPLoose_Gsf;//used in data
 
   //--- mu-el trigger---//
   int HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300;
