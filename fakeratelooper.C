@@ -757,9 +757,9 @@ void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx) {
   setHLTBranch("HLT_Mu50_v",  p4, HLT_Mu50);
   
   //--- mu-el trigger---//
-  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  (idx>=0 ? tas::mus_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_MuonLeg().at(idx) : 0), HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
-  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
-  setHLTBranch("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
+  setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v"    , (idx>=0 ? tas::mus_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_MuonLeg().at(idx)     : 0), HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
+  setHLTBranch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v", (idx>=0 ? tas::mus_HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_MuonLeg().at(idx) : 0), HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
+  setHLTBranch("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v" , (idx>=0 ? tas::mus_HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_MuonLeg().at(idx)  : 0), HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
   
   //--- double mu trigger---//
   setHLTBranch("HLT_DoubleMu8_Mass8_PFHT300_v",  (idx>=0 ? tas::mus_HLT_DoubleMu8_Mass8_PFHT300_MuonLeg().at(idx) : 0), HLT_DoubleMu8_Mass8_PFHT300);
