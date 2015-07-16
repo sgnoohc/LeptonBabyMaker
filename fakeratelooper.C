@@ -1059,9 +1059,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
 		  if (!doFast) isPF = isPFmuon(pfmuP4, pfmuIsReco, i);
 
+		  ptrelv0 = getPtRel(id, idx, false);
+		  ptrelv1 = getPtRel(id, idx, true);
+		  miniiso = muMiniRelIsoCMS3_EA(idx);
+		  miniisoDB = muMiniRelIsoCMS3_DB(idx);
+		  jet_close_lep = closestJet(p4,0.4,2.4);
+		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
+		  if (!doFast){
+		    reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
+		    annulus04 = reliso04 - miniiso;
+		  }
+
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		  muID::setCache(idx,miniiso,ptratio,ptrelv1);
 
 		  ////////////
 		  ///  SS  ///
@@ -1097,20 +1110,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if( isLooseMuonPOG(i) )                  passes_POG_looseID = true;
 		  if( isMediumMuonPOG(i) )                 passes_POG_mediumID = true;
 		  if( isTightMuonPOG(i) )                  passes_POG_tightID = true;
+
+		  muID::unsetCache();
+
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  
-		  ptrelv0 = getPtRel(id, idx, false);
-		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = muMiniRelIsoCMS3_EA(idx);
-		  miniisoDB = muMiniRelIsoCMS3_DB(idx);
-		  jet_close_lep = closestJet(p4,0.4,2.4);
-		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-		  if (!doFast){
-		    reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
-		    annulus04 = reliso04 - miniiso;
-		  }
 		  
 		  //Lep mu_temp = Lep(id, i);
 		  //motherID = lepMotherID(mu_temp);
@@ -1217,10 +1222,22 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  
 		  if (!doFast) isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
 
+		  ptrelv0 = getPtRel(id, idx, false);
+		  ptrelv1 = getPtRel(id, idx, true);
+		  jet_close_lep = closestJet(p4,0.4,2.4);
+		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
+		  miniiso = elMiniRelIsoCMS3_EA(idx);
+		  miniisoDB = elMiniRelIsoCMS3_DB(idx);
+		  if (!doFast){
+		    reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
+		    annulus04 = reliso04 - miniiso;
+		  }
 
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		  elID::setCache(idx,mva,miniiso,ptratio,ptrelv1);
 
 		  ////////////
 		  ///  SS  ///
@@ -1262,20 +1279,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if( tas::els_passMediumId().at(i) )                 passes_POG_mediumID = true;
 		  if( tas::els_passTightId().at(i) )                  passes_POG_tightID = true;
 
+		  elID::unsetCache();
+
 		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  
-		  ptrelv0 = getPtRel(id, idx, false);
-		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = elMiniRelIsoCMS3_EA(idx);
-		  miniisoDB = elMiniRelIsoCMS3_DB(idx);
-		  jet_close_lep = closestJet(p4,0.4,2.4);
-		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-		  if (!doFast){
-		    reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
-		    annulus04 = reliso04 - miniiso;
-		  }
+		  ///////////////////////////////////////////////////////////////////////////////////////////////////////		  
 		  
 		  //Lep el_temp = Lep(id, i);
 		  //motherID = lepMotherID(el_temp);
