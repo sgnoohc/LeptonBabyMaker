@@ -153,3 +153,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleEG_MINIAOD_PromptReco-
 SAMPLE
 Name 2015SingleEl
 Path /hadoop/cms/store/group/snt/run2_data/Run2015B_SingleElectron_MINIAOD_PromptReco-v1/merged/V07-04-04/
+
+SAMPLE
+Name 2015DoubleMuon
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleMuon_MINIAOD_PromptReco-v1/merged/V07-04-04/

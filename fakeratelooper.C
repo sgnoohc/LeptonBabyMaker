@@ -1,5 +1,7 @@
 #include "fakeratelooper.h" 
 
+#include "Tools/goodrun.h"
+
 //Switches
 bool verbose = 0;
 unsigned int evt_cut = 74994186;
@@ -782,6 +784,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //readMVA* localEleMVAreader = new readMVA();
   //localEleMVAreader->InitMVA("CORE"); 
 
+  //Add good run list
+  set_goodrun_file("goodRunList/private_json_and_DCS_150716_snt.txt");
+
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
   
@@ -815,6 +820,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if(nEventsDone >= nEventsToDo) continue;   
       cms3.GetEntry(evt);
       nEventsDone++;
+
+      //If data, check good run list
+      if (tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 
 
       //Initialize variables
       InitBabyNtuple();

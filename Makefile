@@ -27,6 +27,7 @@ CFLAGS = -Wall -Wno-unused-function -g -O2 -fPIC $(INCLUDE) $(EXTRACFLAGS)
 #CFLAGS = -Wall -Wno-unused-function -g -fPIC $(INCLUDE) $(EXTRACFLAGS)
 ROOTLIBS = $(shell root-config --ldflags --cflags --libs) -lTMVA #-lEG -lGenVector
 COREDIR = CORE
+TOOLSDIR = Tools
 
 DICTINCLUDE = $(ROOTSYS)/include/Math/QuantFuncMathCore.h $(ROOTSYS)/include/TLorentzVector.h $(ROOTSYS)/include/Math/Vector4D.h
 
@@ -46,7 +47,8 @@ CORESOURCES=$(DIR)/$(COREDIR)/CMS3.cc \
  $(DIR)/$(COREDIR)/TriggerSelections.cc \
  $(DIR)/$(COREDIR)/MCSelections.cc \
  $(DIR)/$(COREDIR)/IsolationTools.cc \
- $(DIR)/$(COREDIR)/SSSelections.cc
+ $(DIR)/$(COREDIR)/SSSelections.cc \
+ $(DIR)/$(TOOLSDIR)/goodrun.cc
 COREOBJECTS=$(CORESOURCES:.cc=.o)
 CORELIB=libCMS3CORE.so
 
