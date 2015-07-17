@@ -2,3 +2,9 @@
 CORE
 *.root
 fakeratelooper_C.so
+*.png
+*.o
+*.exe
+LinkDef*
+Tools
+*.so
