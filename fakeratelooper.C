@@ -107,6 +107,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
   BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
+  BabyTree->Branch("tag_eSeed", &tag_eSeed);
+  BabyTree->Branch("tag_eSCraw", &tag_eSCraw);
   BabyTree->Branch("tag_HLTLeadingLeg", &tag_HLTLeadingLeg);
 
   //////////////////////////////////////////////////////////////////
@@ -365,6 +367,8 @@ void babyMaker::InitLeptonBranches(){
   jet_close_lep = LorentzVector(0,0,0,0);
   ptratio = -1;
   tag_charge = 0.;
+  tag_eSeed = -1;
+  tag_eSCraw = -1;
   tag_HLTLeadingLeg = false;
   tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = -1;
   tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = -1;
@@ -620,9 +624,11 @@ bool babyMaker::checkElectronTag (unsigned int i) {
     if (i==j) continue;
     if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
     if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   //add also other IDs!
+    if ( tas::els_passTightId().at(j) ) { // switched to POG tight for electron commish
       tag_p4 = tas::els_p4().at(j);
-      tag_charge = tas::els_charge().at(j);
+      tag_charge = tas::els_charge().at(j); 
+      tag_eSeed = tas::els_eSeed().at(j); 
+      tag_eSCraw = tas::els_eSCRaw().at(j);      
       tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
 			   tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
 			   tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );    
