@@ -87,7 +87,14 @@ int main(int argc, char **argv)
     for(unsigned int i = 0; i<samplelist.size(); ++i){
       std::ifstream infile(samplelist[i].Data());
       if (infile.good()) {
-	if(!(samplelist[i].Contains(".root"))) samplelist[i] = samplelist[i] + filename;
+	if(!(samplelist[i].Contains(".root"))) {
+	  samplelist[i] = samplelist[i] + filename;
+	  std::ifstream infile2(samplelist[i].Data());
+	  if (infile2.good()==0) {
+	    cout << "Warning! File: " << samplelist[i] << " does not exist ab exist. Not added to files to be processed." << endl;
+	    continue;
+	  }
+	}
 	cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
 	result->Add(samplelist[i].Data());
       } else {
