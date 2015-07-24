@@ -635,20 +635,23 @@ bool babyMaker::checkElectronTag (unsigned int i) {
 
       //both data and MC triggers
       tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg().at(j);
-      tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_SC4_Mass55_LeadingLeg().at(j);      
-      tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(j);
-      tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
-      tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+      tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_SC4_Mass55_LeadingLeg().at(j);
       
       //only data triggers
       if (tas::evt_isRealData()) {
+
+	//not currently in MC
+	tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(j);
+	tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);      
+	tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+	tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
+
 	setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPLoose_Gsf);
 	setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPTight_Gsf);
 	setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPLoose_Gsf);
