@@ -107,6 +107,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
   BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
+  BabyTree->Branch("tag_eSeed", &tag_eSeed);
+  BabyTree->Branch("tag_eSCraw", &tag_eSCraw);
   BabyTree->Branch("tag_HLTLeadingLeg", &tag_HLTLeadingLeg);
 
   //////////////////////////////////////////////////////////////////
@@ -365,43 +367,45 @@ void babyMaker::InitLeptonBranches(){
   jet_close_lep = LorentzVector(0,0,0,0);
   ptratio = -1;
   tag_charge = 0.;
+  tag_eSeed = -1;
+  tag_eSCraw = -1;
   tag_HLTLeadingLeg = false;
-  tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = -1;
-  tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = -1;
-  tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
-  tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = -1;
+  tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = 0;
+  tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = 0;
+  tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = 0;
+  tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = 0;
 
-  tag_HLT_Ele27_eta2p1_WP75_Gsf = -1;
-  tag_HLT_Ele27_WP85_Gsf = -1;
-  tag_HLT_Ele27_eta2p1_WPLoose_Gsf = -1;
-  tag_HLT_Ele27_eta2p1_WPTight_Gsf = -1;
-  tag_HLT_Ele32_eta2p1_WP75_Gsf = -1;
-  tag_HLT_Ele32_eta2p1_WPLoose_Gsf = -1;
-  tag_HLT_Ele32_eta2p1_WPTight_Gsf = -1;
-  tag_HLT_Ele22_eta2p1_WPLoose_Gsf = -1;
-  tag_HLT_Ele22_eta2p1_WPTight_Gsf = -1;
-  tag_HLT_Ele23_WPLoose_Gsf = -1;
-  tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = -1;
+  tag_HLT_Ele27_eta2p1_WP75_Gsf = 0;
+  tag_HLT_Ele27_WP85_Gsf = 0;
+  tag_HLT_Ele27_eta2p1_WPLoose_Gsf = 0;
+  tag_HLT_Ele27_eta2p1_WPTight_Gsf = 0;
+  tag_HLT_Ele32_eta2p1_WP75_Gsf = 0;
+  tag_HLT_Ele32_eta2p1_WPLoose_Gsf = 0;
+  tag_HLT_Ele32_eta2p1_WPTight_Gsf = 0;
+  tag_HLT_Ele22_eta2p1_WPLoose_Gsf = 0;
+  tag_HLT_Ele22_eta2p1_WPTight_Gsf = 0;
+  tag_HLT_Ele23_WPLoose_Gsf = 0;
+  tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = 0;
      
-  tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = 1;
-  tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = -1;
-  tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg = -1;
-  tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg = -1;
+  tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = 0;
+  tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = 0;
+  tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg = 0;
+  tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg = 0;
 
-  probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = -1;
-  probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = -1;
+  probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = 0;
+  probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = 0;
 
-  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = -1;
-  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = -1;
-  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg = -1;
-  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg = -1;
+  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = 0;
+  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = 0;
+  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg = 0;
+  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg = 0;
   dilep_mass = -1.;
   isRandom = false;
 
@@ -620,16 +624,25 @@ bool babyMaker::checkElectronTag (unsigned int i) {
     if (i==j) continue;
     if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
     if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   //add also other IDs!
+    if ( tas::els_passTightId().at(j) ) { // switched to POG tight for electron commish
       tag_p4 = tas::els_p4().at(j);
-      tag_charge = tas::els_charge().at(j);
+      tag_charge = tas::els_charge().at(j); 
+      tag_eSeed = tas::els_eSeed().at(j); 
+      tag_eSCraw = tas::els_eSCRaw().at(j);      
       tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
 			   tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
 			   tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );    
+
+      //both data and MC triggers
+      tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg().at(j);
+      tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_SC4_Mass55_LeadingLeg().at(j);
+      
+      //only data triggers
       if (tas::evt_isRealData()) {
-	tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg().at(j);
-	tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_SC4_Mass55_LeadingLeg().at(j);
-	tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
+
+	//not currently in MC
+	tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(j);
+	tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);      
 	tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
 	tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
 	tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(j);
@@ -639,19 +652,22 @@ bool babyMaker::checkElectronTag (unsigned int i) {
 	tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
 	tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg = tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(j);
 
-	if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WP75_Gsf);
-	if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_WP85_Gsf_v",  tag_p4, tag_HLT_Ele27_WP85_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPLoose_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPTight_Gsf);
-	if(!(tas::evt_isRealData())) setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WP75_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPLoose_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPTight_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPLoose_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPTight_Gsf);
-	if(tas::evt_isRealData()) setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele23_WPLoose_Gsf);
-	tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(j);
-      }
+	setHLTBranch("HLT_Ele27_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPLoose_Gsf);
+	setHLTBranch("HLT_Ele27_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WPTight_Gsf);
+	setHLTBranch("HLT_Ele32_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPLoose_Gsf);
+	setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPTight_Gsf);
+	setHLTBranch("HLT_Ele22_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPLoose_Gsf);
+	setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPTight_Gsf);
+	setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele23_WPLoose_Gsf);	
+      }    
 
+      //only MC triggers
+      if(!(tas::evt_isRealData())) {
+	setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  tag_p4, tag_HLT_Ele27_eta2p1_WP75_Gsf);
+	setHLTBranch("HLT_Ele27_WP85_Gsf_v",  tag_p4, tag_HLT_Ele27_WP85_Gsf);
+	setHLTBranch("HLT_Ele32_eta2p1_WP75_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WP75_Gsf);
+      }
+      
       // Randomize if needed
       if (usedEl == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
 	isRandom = true;
