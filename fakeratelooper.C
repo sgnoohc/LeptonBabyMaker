@@ -571,7 +571,7 @@ void setHLTBranch(const char* pattern, const LorentzVector& p4, int& HLTbranch) 
   TString name_HLT = triggerName(pattern);
   if (name_HLT=="TRIGGER_NOT_FOUND"){HLTbranch=0;return;}
   if (cms3.passHLTTrigger(name_HLT)) {
-    HLTbranch = HLT_prescale(name_HLT);
+    HLTbranch = (tas::evt_isRealData() ? HLT_prescale(name_HLT) : 1);
     if (passHLTTrigger(name_HLT,p4)==0) HLTbranch*=-1;
   } else HLTbranch = 0;
 }
@@ -579,7 +579,7 @@ void setHLTBranch(const char* pattern, bool legMatch, int& HLTbranch) {
   TString name_HLT = triggerName(pattern);
   if (name_HLT=="TRIGGER_NOT_FOUND"){HLTbranch=0;return;}
   if (cms3.passHLTTrigger(name_HLT)) {
-    HLTbranch = HLT_prescale(name_HLT);
+    HLTbranch = (tas::evt_isRealData() ? HLT_prescale(name_HLT) : 1);
     if (legMatch==0) HLTbranch*=-1;
   } else HLTbranch = 0;
 }
@@ -785,7 +785,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //localEleMVAreader->InitMVA("CORE"); 
 
   //Add good run list
-  set_goodrun_file("goodRunList/private_json_and_DCS_150716_snt.txt");
+  set_goodrun_file("goodRunList/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
