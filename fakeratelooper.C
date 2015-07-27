@@ -146,6 +146,13 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg", &tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg);
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg", &tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg);
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg", &tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg);
+  BabyTree->Branch("tag_HLT_IsoMu20", &tag_HLT_IsoMu20);
+  BabyTree->Branch("tag_HLT_IsoTkMu20", &tag_HLT_IsoTkMu20);
+  BabyTree->Branch("tag_HLT_IsoMu24_eta2p1", &tag_HLT_IsoMu24_eta2p1);
+  BabyTree->Branch("tag_HLT_IsoTkMu24_eta2p1", &tag_HLT_IsoTkMu24_eta2p1);
+  BabyTree->Branch("tag_HLT_IsoMu27", &tag_HLT_IsoMu27);
+  BabyTree->Branch("tag_HLT_IsoTkMu27", &tag_HLT_IsoTkMu27);
+
 
   BabyTree->Branch("probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg", &probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg);
   BabyTree->Branch("probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg", &probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg);
@@ -398,6 +405,12 @@ void babyMaker::InitLeptonBranches(){
   tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg = 0;
   tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg = 0;
   tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg = 0;
+  tag_HLT_IsoMu20 = 0;
+  tag_HLT_IsoTkMu20 = 0;
+  tag_HLT_IsoMu24_eta2p1 = 0;
+  tag_HLT_IsoTkMu24_eta2p1 = 0;
+  tag_HLT_IsoMu27 = 0;
+  tag_HLT_IsoTkMu27 = 0;
 
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = 0;
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = 0;
@@ -594,7 +607,7 @@ bool babyMaker::checkMuonTag (unsigned int i) {
     if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
     if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
     // Will have to add trigger requirements for the Tag
-    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
+    if (fabs(tas::mus_dxyPV().at(j)) < 0.05&&fabs(tas::mus_dzPV().at(j)) < 0.1&&isTightMuonPOG(j) ) { // OK, we have a tag - tight ID with tighter dxy dZ cuts
       tag_p4 = tas::mus_p4().at(j);
       tag_charge = tas::mus_charge().at(j);
       tag_HLTLeadingLeg = false;
@@ -605,6 +618,14 @@ bool babyMaker::checkMuonTag (unsigned int i) {
 	tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(j);
 	tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg         = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(j);
 	tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg          = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(j);
+
+	setHLTBranch("HLT_IsoMu20_v",  tag_p4, tag_HLT_IsoMu20);
+	setHLTBranch("HLT_IsoTkMu20_v",  tag_p4, tag_HLT_IsoTkMu20);
+	setHLTBranch("HLT_IsoMu24_eta2p1_v",  tag_p4, tag_HLT_IsoMu24_eta2p1);
+	setHLTBranch("HLT_IsoTkMu24_eta2p1_v",  tag_p4, tag_HLT_IsoTkMu24_eta2p1);
+	setHLTBranch("HLT_IsoMu27_v",  tag_p4, tag_HLT_IsoMu27);
+	setHLTBranch("HLT_IsoTkMu27_v",  tag_p4, tag_HLT_IsoTkMu27);
+
       }
       // Randomize if needed
       // from: https://github.com/drkovalskyi/Smurf/blob/tnp_V00-00-00/ProcessingAndSkimming/src/LeptonTreeMaker.cc
@@ -801,7 +822,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //localEleMVAreader->InitMVA("CORE"); 
 
   //Add good run list
-  set_goodrun_file("goodRunList/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON_snt.txt");
+  set_goodrun_file("goodRunList/json_Golden_246908-251883_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );

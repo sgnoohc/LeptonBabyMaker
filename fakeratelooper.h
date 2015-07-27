@@ -188,6 +188,12 @@ private:
   int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
   int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
   int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
+  int tag_HLT_IsoMu20;
+  int tag_HLT_IsoTkMu20;
+  int tag_HLT_IsoMu24_eta2p1;
+  int tag_HLT_IsoTkMu24_eta2p1;
+  int tag_HLT_IsoMu27;
+  int tag_HLT_IsoTkMu27;
 
   // -- probe HLT match -- // 
 
