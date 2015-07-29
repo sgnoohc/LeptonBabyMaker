@@ -183,6 +183,8 @@ private:
   int tag_HLT_Ele22_eta2p1_WPTight_Gsf;
   int tag_HLT_Ele23_WPLoose_Gsf;
   int tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg;
+  int tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL;
+  int tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL;
 	
   int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
   int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
@@ -308,6 +310,8 @@ private:
   int HLT_Ele22_eta2p1_WPLoose_Gsf;//used in data
   int HLT_Ele22_eta2p1_WPTight_Gsf;//used in data
   int HLT_Ele23_WPLoose_Gsf;//used in data
+  int HLT_Ele23_CaloIdL_TrackIdL_IsoVL;
+  int HLT_Ele12_CaloIdL_TrackIdL_IsoVL;
 
   //--- mu-el trigger---//
   int HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300;
@@ -324,6 +328,7 @@ private:
   //--- double el trigger---//
   int HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300;
   int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
+  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
     
 };
 
