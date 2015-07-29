@@ -726,7 +726,7 @@ bool isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx
 void  babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx) {
 
   //temporary until we run on mc with the new tag
-  if (tas::evt_isRealData()==0) idx=-1;
+  //if (tas::evt_isRealData()==0) idx=-1;
 
   //---single el trigger---//
   setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v" ,  (idx>=0 ? tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx)  : 0), HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
@@ -752,12 +752,8 @@ void  babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx) {
   if(tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele22_eta2p1_WPTight_Gsf);
   if(tas::evt_isRealData()) setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  p4, HLT_Ele23_WPLoose_Gsf);
 
-
-  if (tas::evt_isRealData()) {
-    probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg =  (idx>=0 ? tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(idx) : 0);
-    probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg =  (idx>=0 ? tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg().at(idx) : 0);
-  }
-
+  probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg =  (idx>=0 ? tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg().at(idx) : 0);
+  probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg =  (idx>=0 ? tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg().at(idx) : 0);
   
   //--- mu-el trigger---//
   setHLTBranch("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v",     (idx>=0 ? tas::els_HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg().at(idx) : 0)    , HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300);
