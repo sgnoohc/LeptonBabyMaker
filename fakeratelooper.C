@@ -1,6 +1,6 @@
 #include "fakeratelooper.h" 
 
-#include "Tools/goodrun.h"
+#include "CORE/Tools/goodrun.h"
 
 //Switches
 bool verbose = 0;
@@ -53,6 +53,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("dilep_p4", &dilep_p4);
   BabyTree->Branch("mc_p4", &mc_p4);
   BabyTree->Branch("mc_motherp4", &mc_motherp4);
+  BabyTree->Branch("mc_motherid", &mc_motherid);
   BabyTree->Branch("id", &id);
   BabyTree->Branch("isPF", &isPF);
   BabyTree->Branch("idx", &idx);
@@ -325,6 +326,7 @@ void babyMaker::InitLeptonBranches(){
   dilep_p4 = LorentzVector(0,0,0,0); 
   mc_p4 = LorentzVector(0,0,0,0);
   mc_motherp4 = LorentzVector(0,0,0,0);
+  mc_motherid = -1;
   id = -1; 
   isPF = false; 
   idx = -1;
@@ -1180,6 +1182,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if (!evt_isRealData) {
 		    motherID = lepMotherID(id, mc_id, idx);
 		    mc_motherp4 = tas::mus_mc_motherp4().at(i);
+		    mc_motherid = tas::mus_mc_motherid().at(i);
 		  }
 
 		  /////////////////////////////////////////// Triggers //////////////////////////////////////////////////
@@ -1348,6 +1351,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  if (!evt_isRealData ) {
 		    motherID = lepMotherID(id, mc_id, idx);
 		    mc_motherp4 = tas::els_mc_motherp4().at(i); 
+		    mc_motherid = tas::els_mc_motherid().at(i); 
 		  }
 
 		  /////////////////////////////////////////// Triggers //////////////////////////////////////////////////

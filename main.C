@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     
     int file=0;
     if (argc < 4) {
-      cout<<"Number of events not specified. Running over "<<nevents<<" events"<<endl;
+      cout<<"File number not specified. Running over all files "<<endl;
     }
     else {
       file = atoi(argv[3]);

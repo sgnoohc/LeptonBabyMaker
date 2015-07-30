@@ -99,6 +99,7 @@ private:
   LorentzVector dilep_p4;
   LorentzVector mc_p4;
   LorentzVector mc_motherp4;
+  int mc_motherid;
   int id; 
   bool isPF; 
   int idx;

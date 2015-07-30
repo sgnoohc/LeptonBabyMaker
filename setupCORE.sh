@@ -9,5 +9,5 @@ else
   git checkout cmssw74x
   make -j 8
   cd ..
-  git clone git@github.com:cmstas/Tools.git
+#  git clone git@github.com:cmstas/Tools.git
 fi
