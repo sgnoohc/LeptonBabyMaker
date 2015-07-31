@@ -68,6 +68,8 @@ private:
   float evt_pfmetPhi;
   float evt_trackmet;  //not CMS3
   float evt_trackmetPhi; //not CMS3
+  float evt_met3p0;
+  float evt_met3p0Phi;
   float evt_pfsumet;
   float evt_pfmetSig;
   int evt_event;

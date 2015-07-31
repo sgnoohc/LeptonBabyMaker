@@ -22,6 +22,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("evt_pfmetPhi", &evt_pfmetPhi);
   BabyTree->Branch("evt_trackmet", &evt_trackmet);
   BabyTree->Branch("evt_trackmetPhi", &evt_trackmetPhi);
+  BabyTree->Branch("evt_met3p0", &evt_met3p0);
+  BabyTree->Branch("evt_met3p0Phi", &evt_met3p0Phi);
   BabyTree->Branch("evt_pfsumet", &evt_pfsumet);
   BabyTree->Branch("evt_pfmetSig", &evt_pfmetSig);
   BabyTree->Branch("evt_event", &evt_event);
@@ -289,6 +291,8 @@ void babyMaker::InitBabyNtuple(){
   evt_pfmetPhi = -99.;
   evt_trackmet = -1;
   evt_trackmetPhi = -99;
+  evt_met3p0 = -1;
+  evt_met3p0Phi = -99.;
   evt_pfsumet = -1;
   evt_pfmetSig = -1;
   evt_event = -1;
@@ -889,13 +893,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       // //Preliminary stuff
       if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  
 
-      metStruct myMetStruct =  trackerMET(0.2);
+      metStruct trackMetStruct =  trackerMET(0.2);
+      pair<float,float> met3p0Pair = MET3p0();
 
       //Fill Easy Variables
       evt_pfmet      = cms3.evt_pfmet();
       evt_pfmetPhi   = cms3.evt_pfmetPhi();
-      evt_trackmet   = myMetStruct.met;
-      evt_trackmetPhi= myMetStruct.metphi;
+      evt_trackmet   = trackMetStruct.met;
+      evt_trackmetPhi= trackMetStruct.metphi;
+      evt_met3p0     = met3p0Pair.first;
+      evt_met3p0Phi  = met3p0Pair.second;
       evt_pfsumet    = cms3.evt_pfsumet();
       evt_pfmetSig   = cms3.evt_pfmetSig();
       evt_event      = tas::evt_event();
