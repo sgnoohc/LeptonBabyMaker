@@ -8,9 +8,10 @@
 #include "TF1.h"
 #include "Math/VectorUtil.h"
 #include <vector>
+#include <iostream>
 
 #include "CORE/CMS3.h"
-#include "CORE/SSSelections.h"  //remove this one eventually!!!
+#include "CORE/SSSelections.h"  
 #include "CORE/ElectronSelections.h"
 #include "CORE/MuonSelections.h"
 #include "CORE/MetSelections.h"
@@ -19,6 +20,7 @@
 #include "CORE/TriggerSelections.h"
 #include "CORE/MCSelections.h"
 #include "CORE/IsolationTools.h"
+#include "CORE/Tools/utils.h"
 
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
