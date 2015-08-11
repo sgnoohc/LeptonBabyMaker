@@ -83,6 +83,7 @@ private:
   bool filt_ecaltp;
   bool filt_trkfail;
   bool filt_eebadsc;
+  bool passes_met_filters;
   bool evt_isRealData;
   float scale1fb;     
   float evt_xsec_incl;         
