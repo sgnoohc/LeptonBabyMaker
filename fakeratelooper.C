@@ -1,26 +1,18 @@
-
-
 #include "fakeratelooper.h" 
-
-
 
 //Switches
 bool verbose = 0;
 unsigned int evt_cut = 74994186;
 
-
-
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
 
   //Create Baby
-  //Segfaults in Root6.    TDirectory *rootdir = gDirectory->GetDirectory("Rint:");
-  //Segfaults in Root6.    rootdir->cd();
   BabyFile = new TFile(Form("%s/%s", path.c_str(), output_name), "RECREATE");
   BabyFile->cd();
   BabyTree = new TTree("t", "Lepton Baby Ntuple");
 
-  //Define Branches
+  //Define Branches -- General
   BabyTree->Branch("evt_pfmet", &evt_pfmet);
   BabyTree->Branch("evt_pfmetPhi", &evt_pfmetPhi);
   BabyTree->Branch("evt_trackmet", &evt_trackmet);
@@ -50,8 +42,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("nFOs_SS", &nFOs_SS);
   BabyTree->Branch("nvtx", &nvtx);
 
-  //--------------------MINE----------------------------
-  //---both--//
+  //Define Branches -- All leptons
   BabyTree->Branch("p4", &p4);
   BabyTree->Branch("tag_p4", &tag_p4);
   BabyTree->Branch("dilep_p4", &dilep_p4);
@@ -86,7 +77,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLTLeadingLeg", &tag_HLTLeadingLeg);
   BabyTree->Branch("dilep_mass", &dilep_mass);
 
-  //---els---//
+  //Define Branches -- Electrons
   BabyTree->Branch("sigmaIEtaIEta_full5x5", &sigmaIEtaIEta_full5x5);
   BabyTree->Branch("sigmaIEtaIEta"        , &sigmaIEtaIEta);
   BabyTree->Branch("etaSC"                , &etaSC);
@@ -106,8 +97,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ecalIso"              , &ecalIso);
   BabyTree->Branch("hcalIso"              , &hcalIso);
 
-
-  //---mus---//
+  //Define Branches -- Muons
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
   BabyTree->Branch("gfit_chi2"              , &gfit_chi2);
   BabyTree->Branch("gfit_ndof"              , &gfit_ndof);
@@ -115,11 +105,12 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("numberOfMatchedStations", &numberOfMatchedStations);
   BabyTree->Branch("validPixelHits"         , &validPixelHits);
   BabyTree->Branch("nlayers"                , &nlayers);
+
 }
 
 void babyMaker::InitBabyNtuple(){
 
-  //Gen variables
+  //General
   evt_pfmet = -1;
   evt_pfmetPhi = -99.;
   evt_trackmet = -1;
@@ -149,8 +140,7 @@ void babyMaker::InitBabyNtuple(){
   nFOs_SS = -1;
   nvtx = -1;
 
-  //--------MINE------------
-  //---both--//
+  //Leptons
   p4 = LorentzVector(0,0,0,0); 
   tag_p4 = LorentzVector(0,0,0,0); 
   dilep_p4 = LorentzVector(0,0,0,0);
@@ -186,9 +176,9 @@ void babyMaker::InitBabyNtuple(){
   dilep_mass = -1;
   isRandom = false;
 
-  //---els---//
-  sigmaIEtaIEta_full5x5 = -1;//below
-  sigmaIEtaIEta = -1;//below
+  //Electrons
+  sigmaIEtaIEta_full5x5 = -1;
+  sigmaIEtaIEta = -1;
   etaSC = -1;
   dEtaIn = -1;
   dPhiIn = -99;
@@ -207,7 +197,7 @@ void babyMaker::InitBabyNtuple(){
   ecalIso = -1;
   hcalIso = -1;
 
-  //---mus---//
+  //Muons
   pid_PFMuon = -1;
   gfit_chi2 = -1;
   gfit_ndof = -1;
@@ -215,12 +205,11 @@ void babyMaker::InitBabyNtuple(){
   numberOfMatchedStations = -1;
   validPixelHits = -1;
   nlayers = -1;
-  //------------------------
 } 
 
 void babyMaker::InitLeptonBranches(){
 
-  //---both---//
+  //Leptons
   p4 = LorentzVector(0,0,0,0); 
   tag_p4 = LorentzVector(0,0,0,0); 
   dilep_p4 = LorentzVector(0,0,0,0); 
@@ -256,16 +245,7 @@ void babyMaker::InitLeptonBranches(){
   dilep_mass = -1.;
   isRandom = false;
 
-  //---mus---//
-  pid_PFMuon = -1;
-  gfit_chi2 = -1;
-  gfit_ndof = -1;
-  gfit_validSTAHits = -1;
-  numberOfMatchedStations = -1;
-  validPixelHits = -1;
-  nlayers = -1;
-
-  //---els---//
+  //Electrons
   sigmaIEtaIEta_full5x5 = -1;
   sigmaIEtaIEta = -1;
   etaSC = -1;
@@ -285,62 +265,16 @@ void babyMaker::InitLeptonBranches(){
   tkIso = -1;
   ecalIso = -1;
   hcalIso = -1;
-  //------------------------
-}
 
+  //Muons
+  pid_PFMuon = -1;
+  gfit_chi2 = -1;
+  gfit_ndof = -1;
+  gfit_validSTAHits = -1;
+  numberOfMatchedStations = -1;
+  validPixelHits = -1;
+  nlayers = -1;
 
-double calculateMt(const LorentzVector p4, double met, double met_phi){  //<--MT, MET, MET_PHI ARE ALL FLOATS!!!
-  float phi1 = p4.Phi();
-  float phi2 = met_phi;
-  float Et1  = p4.Et();
-  float Et2  = met;
-  return sqrt(2*Et1*Et2*(1.0 - cos(phi1-phi2)));
-}
-
-// int lepMotherID(Lep lep){
-//   if (tas::evt_isRealData()) return 1;
-//   else if (isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
-//     if (sgn(lep.pdgId()) == sgn(lep.mc_id())) return 1;
-//     else return 2;
-//   }
-//   else if (isFromB(lep.pdgId(),lep.idx())) return -1;
-//   else if (isFromC(lep.pdgId(),lep.idx())) return -2;
-//   return 0;
-// }
-
-int sign(int num){
-  if(num > 0) return 1;
-  else if(num < 0) return -1;
-  return 0;
-}
-
-int lepMotherID(int id, int mc_id, int idx){
-  if (tas::evt_isRealData()) return 1;
-  else if (isFromZ(id, idx) || isFromW(id, idx)){
-    if (sign(id) == sign(mc_id)) return 1;
-    else return 2;
-  }
-  else if (isFromB(id, idx)) return -1;
-  else if (isFromC(id, idx)) return -2;
-  return 0;
-}
-
-float leptonD0(const int id, const int idx){
-  if (abs(id)==13) return tas::mus_dxyPV().at(idx); 
-  else if (abs(id)==11) return tas::els_dxyPV().at(idx);   
-  return -999999.0;
-}
-
-float leptonD0err(const int id, const int idx){
-  if (abs(id)==13) return tas::mus_d0Err().at(idx); 
-  else if (abs(id)==11) return tas::els_d0Err().at(idx);   
-  return -999999.0;
-}
-
-float leptonDZ(const int id, const int idx){
-  if (abs(id) == 11) return tas::els_dzPV().at(idx);
-  if (abs(id) == 13) return tas::mus_dzPV().at(idx);
-  return -999999.0;
 }
 
 //Main function
@@ -349,14 +283,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //Print warning!
   cout << "Careful!! Path is " << path << endl;
 
+  //Create and init MVA
   createAndInitMVA("CORE");
-
-  //readMVA* localEleMVAreader = new readMVA();
-  //localEleMVAreader->InitMVA("CORE"); 
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
-  
+
   //Initialize Baby Ntuple
   InitBabyNtuple();
 
@@ -367,7 +299,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   TObjArray *listOfFiles = chain->GetListOfFiles();
   TIter fileIter(listOfFiles);
   TFile *currentFile = 0;
- 
+
   // File Loop
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
 
@@ -376,12 +308,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     TFile *file = new TFile( currentFile->GetTitle() );
     TTree *tree = (TTree*)file->Get("Events");
     cms3.Init(tree);
-  
+
     // Loop over Events in current file
     unsigned int nEventsTree = tree->GetEntriesFast();
     for(unsigned int evt = 0; evt < nEventsTree; evt++){
-	  
-	  //cout<<"\nEvent loop again"<<endl;	  
 
       // Get Event Content
       if(nEventsDone >= nEventsToDo) continue;   
@@ -390,7 +320,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
       //Initialize variables
       InitBabyNtuple();
-     
+
       // Progress
       CMS3::progress(nEventsDone, nEventsToDo);
 
@@ -399,102 +329,71 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       // //Preliminary stuff
-	  if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  
+      if (tas::mus_dxyPV().size() != tas::mus_dzPV().size()) continue;  
 
-	  metStruct myMetStruct =  trackerMET(0.2);
+      metStruct myMetStruct = trackerMET(0.2);
 
       //Fill Easy Variables
-      evt_pfmet      = cms3.evt_pfmet();
-      evt_pfmetPhi   = cms3.evt_pfmetPhi();
-	  evt_trackmet   = myMetStruct.met;
-	  evt_trackmetPhi= myMetStruct.metphi;
-      evt_pfsumet    = cms3.evt_pfsumet();
-      evt_pfmetSig   = cms3.evt_pfmetSig();
-      evt_event      = tas::evt_event();
-      evt_lumiBlock  = tas::evt_lumiBlock();
-      evt_run        = tas::evt_run();
-      evt_isRealData = tas::evt_isRealData();
-      evt_xsec_incl  = tas::evt_xsec_incl();
-      evt_kfactor    = tas::evt_kfactor();
-      gen_met        = tas::gen_met();
-      gen_metPhi     = tas::gen_metPhi();
-      sample         = Form("%s", file->GetName());
+      evt_pfmet       = cms3.evt_pfmet();
+      evt_pfmetPhi    = cms3.evt_pfmetPhi();
+      evt_trackmet    = myMetStruct.met;
+      evt_trackmetPhi = myMetStruct.metphi;
+      evt_pfsumet     = cms3.evt_pfsumet();
+      evt_pfmetSig    = cms3.evt_pfmetSig();
+      evt_event       = tas::evt_event();
+      evt_lumiBlock   = tas::evt_lumiBlock();
+      evt_run         = tas::evt_run();
+      evt_isRealData  = tas::evt_isRealData();
+      evt_xsec_incl   = tas::evt_xsec_incl();
+      evt_kfactor     = tas::evt_kfactor();
+      gen_met         = tas::gen_met();
+      gen_metPhi      = tas::gen_metPhi();
+      sample          = Form("%s", file->GetName());
 
-      // Vertex selection:
-      int nVert = 0;
+      //Vertex selection:
+      nvtx = 0;
       for(unsigned int ivtx=0; ivtx < tas::evt_nvtxs(); ivtx++){
-	
-	if(tas::vtxs_isFake().at(ivtx)) continue;
-	if(tas::vtxs_ndof().at(ivtx) <= 4) continue;
-	if(fabs(tas::vtxs_position().at(ivtx).z()) > 24) continue;
-	if(tas::vtxs_position().at(ivtx).Rho() > 2) continue;
-	
-	nVert++;
-	
+        if (!isGoodVertex(ivtx)) continue;
+        nvtx++;
       }
-      nvtx = nVert;
-      
-      
+
       //Fill data vs. mc variables
       filt_hbhe = evt_isRealData ? (tas::evt_hbheFilter() &&
-									tas::hcalnoise_isolatedNoiseSumE() < 50.0 &&
-									tas::hcalnoise_isolatedNoiseSumEt() < 25.0 &&
-									tas::hcalnoise_numIsolatedNoiseChannels() < 10) : 1;
+          tas::hcalnoise_isolatedNoiseSumE() < 50.0 &&
+          tas::hcalnoise_isolatedNoiseSumEt() < 25.0 &&
+          tas::hcalnoise_numIsolatedNoiseChannels() < 10) : 1;
       filt_csc       = evt_isRealData ? tas::evt_cscTightHaloId()   : 1;
       filt_hcallaser = evt_isRealData ? tas::filt_hcalLaser()       : 1;
       filt_ecaltp    = evt_isRealData ? tas::filt_ecalTP()          : 1;
       filt_trkfail   = evt_isRealData ? tas::filt_trackingFailure() : 1;
       filt_eebadsc   = evt_isRealData ? tas::filt_eeBadSc()         : 1;
       scale1fb       = evt_isRealData ? 1                           : tas::evt_scale1fb();
-	  
-	  //-------------------------------------------------------------------------------------------------------------
-	  //Determine and save jet variables
+
+      //Determine and save jet variables
       ht = 0;
-      for (unsigned int i = 0; i < tas::pfjets_p4().size(); i++)
-	  	{
-	  	  LorentzVector jet = tas::pfjets_p4().at(i);
+      for (unsigned int i = 0; i < tas::pfjets_p4().size(); i++){
+        LorentzVector jet = tas::pfjets_p4().at(i);
 
-	  	  //Require loose jet ID
-	  	  if (!isLoosePFJet(i)) continue;
+        //Require loose jet ID
+        if (!isLoosePFJet(i)) continue;
 
-	  	  //Kinematic jet cuts
-	  	  if (jet.pt() < 25) continue;   //<------WHAT CUTS DO WE WANT???
-	  	  //if (fabs(jet.eta()) > 2.4) continue; //want jets of all eta's for fake rate
+        //Kinematic jet cuts
+        if (jet.pt() < 25) continue;
 
-	  	  //Verbose
-	  	  if (verbose) cout << "Possible jet with pT: " << jet.pt() << endl;
-            
-	  	  // //Jet cleaning -- electrons
-	  	  // bool jetIsLep = false;
-	  	  // for (unsigned int eidx = 0; eidx < tas::els_p4().size(); eidx++){
-	  	  // 	LorentzVector electron = tas::els_p4().at(eidx);
-	  	  // 	if (electron.pt() < 7) continue;
-	  	  // 	//if (!isVetoLepton(11,eidx,Standard)) continue;                      //Relying on SSSelections here!
-	  	  // 	if ( electronID(eidx, SS_veto_noiso_v3)==0 ) continue;                //Other analyses can add their veto w/ &&
-	  	  // 	if (ROOT::Math::VectorUtil::DeltaR(jet, electron) > 0.4) continue;
-	  	  // 	jetIsLep = true;
-	  	  // }
-	  	  // if (jetIsLep == true) continue;
+        //Verbose
+        if (verbose) cout << "Possible jet with pT: " << jet.pt() << endl;
 
-	  	  // //Jet cleaning -- muons
-	  	  // for (unsigned int muidx = 0; muidx < tas::mus_p4().size(); muidx++){
-	  	  // 	LorentzVector muon = tas::mus_p4().at(muidx);
-	  	  // 	if (muon.pt() < 5) continue;
-	  	  // 	//if (!isVetoLepton(13,muidx,Standard)) continue;                       //Relying on SSSelections here!
-	  	  // 	if ( muonID(muidx, SS_veto_noiso_v3)==0 ) continue;                     //Other analyses can add their veto w/ &&
-	  	  // 	if (ROOT::Math::VectorUtil::DeltaR(jet, muon) > 0.4) continue;
-	  	  // 	jetIsLep = true;
-	  	  // }
-	  	  // if (jetIsLep == true) continue;
+        //Save jets that make it this far
+        jets.push_back(jet);
 
-	  	  //Save jets that make it this far
-	  	  jets.push_back(jet);
-	  	  //ht += jet.pt();  //want to only use jets w/ pt>40, not 25
-	  	  if(jet.pt() > 40.) ht += jet.pt();  //not implemented for V00-00-05
-		  float disc = tas::pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(i);  //BRANCH DOESNT EXIST in old samples.
-		  jets_disc.push_back(disc);
-	
-		}
+        //HT is sum of jets with pT > 40
+        if(jet.pt() > 40) ht += jet.pt();
+
+        //Save b-tags
+        float disc = tas::pfjets_combinedInclusiveSecondaryVertexV2BJetTag().at(i);  
+        jets_disc.push_back(disc);
+
+      }
       njets = jets.size();
 
       //Verbose for jets
@@ -502,256 +401,232 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         cout << "njets: " << njets << endl;
         for (unsigned int i = 0; i < jets.size(); i++) cout << i << " " << jets[i].pt() << " " << jets[i].eta() << endl;
       } 
-	  //-----------------------------------------------------------------------------------------------------------------------
 
-	  int count_SS = 0;
+      //Determine number of FOs
+      nFOs_SS = 0;
+      for(size_t j = 0; j < tas::mus_p4().size(); j++){
+        if(muonID(j, SS_fo_v3) && tas::mus_p4().at(j).pt() > 10) nFOs_SS++;
+      }
+      for(size_t j = 0; j < tas::els_p4().size(); j++){
+        if(electronID(j, SS_fo_v3) && tas::els_p4().at(j).pt() > 10) nFOs_SS++;
+      }
 
-	  for(size_t j = 0; j < tas::mus_p4().size(); j++)
-	  	{
-	  	  //if(isDenominatorLepton(13,j,Standard))     //relying on SSSelections
-		  if( muonID(j, SS_fo_v3) && tas::mus_p4().at(j).pt()>10.)                    //Is this the right one?
-	  		{count_SS++;}
-	  	}
-	  for(size_t j = 0; j < tas::els_p4().size(); j++)
-	  	{
-	  	  //if(isDenominatorLepton(11,j,Standard))     //relying on SSSelections
-		  if( electronID(j, SS_fo_v3) && tas::els_p4().at(j).pt()>10.)                //Is this the right one?
-	  		{count_SS++;}
-	  	}
-	  nFOs_SS = count_SS;
+      //Muon Tag and Probe -- i is the probe, j is the tag
+      bool used = false;
+      TRandom r;
+      float rndm = r.Rndm();
+      for(unsigned int i = 0; i < tas::mus_p4().size(); i++){
 
-	  bool used = false;
-	  TRandom r;
-	  float rndm = r.Rndm();
-	  //Muon Loop
-	  //cout<<"\nBegin Muon looping"<<endl;	  
-	  for(unsigned int i=0; i<tas::mus_p4().size(); i++)  //What RECO and GEN variables are needed?
-		{	
+        //Require that the probe has pt of 10
+        if (tas::mus_p4().at(i).pt() < 10) continue;
 
-		  // Require tag
-		  bool foundTag = false;
-		  for(unsigned int j=0; j<tas::mus_p4().size(); j++) {
-		    if (i==j) continue;
-		    if ( tas::mus_p4().at(j).pt()           <  20.0 ) continue;
-		    if ( fabs(tas::mus_p4().at(j).eta())    >  2.4  ) continue;
-		    if ( muonID(j,SS_tight_v3) ) { // OK, we have a tag
-		      tag_p4 = tas::mus_p4().at(j);
-		      tag_charge = tas::mus_charge().at(j);
-		      tag_HLTLeadingLeg = false; 
-		      // Randomize if needed
-		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
-			isRandom = true;
-			used = true;
-		      }
-		      else isRandom = false;
-		      foundTag = true; // The probe we are about to save has a corresponding tag
-		    }
-		  } // End of tag selection
-		  
-		  //if (!isVetoLeptonNoIso(13,i) && foundTag==false) continue;           //Relying on SSSelections here!
-		  if( (muonID(i, SS_veto_noiso_v3)==0 && foundTag==false) || tas::mus_p4().at(i).pt()<=10. ) continue;    //other analyses can add vetoes w/ &&
+        //Require tag
+        bool foundTag = false;
+        for(unsigned int j = 0; j < tas::mus_p4().size(); j++){
+          if (i == j) continue;
+          if (tas::mus_p4().at(j).pt() < 20.0) continue;
+          if (fabs(tas::mus_p4().at(j).eta()) > 2.4) continue;
+          if (!muonID(j,SS_tight_v3)) continue; 
+          foundTag = true; 
+          tag_p4 = tas::mus_p4().at(j);
+          tag_charge = tas::mus_charge().at(j);
+          tag_HLTLeadingLeg = false; 
+          //Randomize if needed (??)
+          if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))){
+            isRandom = true;
+            used = true;
+          }
+          else isRandom = false;
+        }
 
-		  p4 = tas::mus_p4().at(i); 
-		  if (foundTag) {
-		    dilep_p4 = p4 + tag_p4;
-		    dilep_mass = dilep_p4.M();
-		  }
-		  if (!evt_isRealData) mc_p4 = tas::mus_mc_p4().at(i);
-		  id = -13.0*tas::mus_charge().at(i);
-		  idx = i;  
-		  if (!evt_isRealData) mc_id = tas::mus_mc_id().at(i);
-		  dxyPV = leptonD0(id, i);
-		  dxyPV_err = leptonD0err(id, i);
-		  dZ = leptonDZ(id, i);
-		  RelIso03 = (tas::mus_isoR03_pf_ChargedHadronPt().at(i)+tas::mus_isoR03_pf_NeutralHadronEt().at(i)+tas::mus_isoR03_pf_PhotonEt().at(i))/tas::mus_p4().at(i).pt();
-		  RelIso03EA = muRelIso03EA(i);
-		  RelIso03DB = muRelIso03DB(i);
-		  pid_PFMuon = tas::mus_pid_PFMuon().at(i);
-		  gfit_chi2 = tas::mus_gfit_chi2().at(i);
-		  gfit_ndof = tas::mus_gfit_ndof().at(i);
-		  gfit_validSTAHits = tas::mus_gfit_validSTAHits().at(i);
-		  numberOfMatchedStations = tas::mus_numberOfMatchedStations().at(i);
-		  validPixelHits = tas::mus_validPixelHits().at(i);
-		  nlayers = tas::mus_nlayers().at(i);
-		  ip3d = tas::mus_ip3d().at(i);
-		  ip3derr = tas::mus_ip3derr().at(i);
-		  type = tas::mus_type().at(i);
-		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
+        //If probe doesn't pass ID AND there is no tag, veto (why?)
+        if(muonID(i, SS_veto_noiso_v3) == 0 && foundTag==false) continue;
 
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        //p4 is the tag of the probe
+        p4 = tas::mus_p4().at(i); 
 
-		  ////////////
-		  ///  SS  ///
-		  ////////////	
-		  if(muonID(i, SS_tight_v3))              passes_SS_tight_v3 = true;
-		  if(muonID(i, SS_tight_noiso_v3))        passes_SS_tight_noiso_v3 = true;
-		  if(muonID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
-		  if(muonID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
-		  //if(muonID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;        //Doesn't make sense for muons
-		  //if(muonID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;  //Doesn't make sense for muons
+        //Calculate dilep mass, etc.  
+        if (foundTag){
+          dilep_p4 = p4 + tag_p4;
+          dilep_mass = dilep_p4.M();
+        }
 
-		  ////////////
-		  ///  OS  ///
-		  ////////////
+        //Probe id and idx
+        id = -13.0*tas::mus_charge().at(i);
+        idx = i;  
 
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  
-		  ptrelv0 = getPtRel(id, idx, false);
-		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = muMiniRelIso(idx, true, 0.5, false, true);
-		  jet_close_lep = closestJet(p4,0.4,2.4);
-		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-		  
-		  //Lep mu_temp = Lep(id, i);
-		  //motherID = lepMotherID(mu_temp);
-		  if (!evt_isRealData) {
-		    motherID = lepMotherID(id, mc_id, idx);
-		    mc_motherp4 = tas::mus_mc_motherp4().at(i);
-		  }
-		  
-		  BabyTree->Fill(); 
-		  InitLeptonBranches(); 
+        //Find probe in MC
+        if (!evt_isRealData){
+          mc_p4       = tas::mus_mc_p4().at(i);
+          mc_id       = tas::mus_mc_id().at(i);
+          motherID    = lepMotherID(Lep(id, idx));
+          mc_motherp4 = tas::mus_mc_motherp4().at(i);
+        }
+  
+        //Impact parameter
+        dxyPV = abs(id) == 11 ? tas::els_dxyPV().at(i) : tas::mus_dxyPV().at(i); 
+        dxyPV_err = abs(id) == 11 ? tas::els_d0Err().at(i) : tas::mus_d0Err().at(i); 
+        dZ = abs(id) == 11 ? tas::els_dzPV().at(i) : tas::mus_dzPV().at(i);
+        ip3d = tas::mus_ip3d().at(i);
+        ip3derr = tas::mus_ip3derr().at(i);
+  
+        //Iso, etc.
+        RelIso03 = muRelIso03_noCorr(i); 
+        RelIso03EA = muRelIso03EA(i);
+        RelIso03DB = muRelIso03DB(i);
+        ptrelv0 = getPtRel(id, idx, false);
+        ptrelv1 = getPtRel(id, idx, true);
+        miniiso = muMiniRelIso(idx, true, 0.5, false, true);
+        jet_close_lep = closestJet(p4, 0.4, 2.4);
+        ptratio = jet_close_lep.pt() > 0 ? p4.pt()/jet_close_lep.pt() : 1; 
+   
+        //MT
+        mt = MT(p4.pt(), p4.phi(), evt_pfmet, evt_pfmetPhi); 
 
-		  // cout<<"\nEnd Muon loop"<<endl;
-		} //close muon loop
-	  
-      //Electron Loop
-	  //cout<<"\nBegin electron looping"<<endl;	  
-	  for(unsigned int i=0; i<tas::els_p4().size(); i++)
-	  	{
-		  
-		  // Require tag
-		  bool foundTag = false;
-		  for(unsigned int j=0; j<tas::els_p4().size(); j++) {
-		    if (i==j) continue;
-		    if ( tas::els_p4().at(j).pt()  <  20.0 ) continue;
-		    if ( fabs(tas::els_etaSC().at(j))    >  2.5  ) continue;
-		    if ( electronID(j,SS_medium_v3) ) { // OK, we have a tag   
-		      tag_p4 = tas::els_p4().at(j);
-		      tag_charge = tas::els_charge().at(j);
-		      tag_HLTLeadingLeg = ( // These are the leading legs of T&P triggers in 2012 Data, 
-			tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || 
-			tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j)  > 0   );
-			
-		      // Randomize if needed
-		      if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))) {
-			isRandom = true;
-			used = true;
-		      }
-		      else isRandom = false;
-		      foundTag = true; // The probe we are about to save has a corresponding tag
-		    }
-		  } // End of tag selection
-		  
-		  //if (!isVetoLeptonNoIso(11,i) && !foundTag) continue;          //Relying on SSSelections here!
-		  if( (electronID(i, SS_veto_noiso_v3)==0 && !foundTag) || tas::els_p4().at(i).pt()<=10. ) continue;  //other analyses can add vetoes w/ &&   
+        //Other Muon ID stuff
+        pid_PFMuon = tas::mus_pid_PFMuon().at(i);
+        gfit_chi2 = tas::mus_gfit_chi2().at(i);
+        gfit_ndof = tas::mus_gfit_ndof().at(i);
+        gfit_validSTAHits = tas::mus_gfit_validSTAHits().at(i);
+        numberOfMatchedStations = tas::mus_numberOfMatchedStations().at(i);
+        validPixelHits = tas::mus_validPixelHits().at(i);
+        nlayers = tas::mus_nlayers().at(i);
+        type = tas::mus_type().at(i);
 
-		  p4 = tas::els_p4().at(i);    
-		  if (foundTag) {
-		    dilep_p4 = p4 + tag_p4;
-		    dilep_mass = dilep_p4.M();
-		  }
-		  if (!evt_isRealData) mc_p4 = tas::els_mc_p4().at(i);  
-		  id = -11.0*tas::els_charge().at(i); 
-		  idx = i;
-		  if (!evt_isRealData) mc_id = tas::els_mc_id().at(i);  
-		  dxyPV = leptonD0(id, i);
-		  dxyPV_err = leptonD0err(id, i);
-		  dZ = leptonDZ(id, i);
-		  RelIso03 = (tas::els_pfChargedHadronIso().at(i)+tas::els_pfNeutralHadronIso().at(i)+tas::els_pfPhotonIso().at(i))/tas::els_p4().at(i).pt();
-		  RelIso03EA = eleRelIso03EA(i);
-		  RelIso03DB = eleRelIso03DB(i);
-		  sigmaIEtaIEta_full5x5 = tas::els_sigmaIEtaIEta_full5x5().at(i);//new below
-		  etaSC = tas::els_etaSC().at(i);
-		  dEtaIn = tas::els_dEtaIn().at(i);
-		  dPhiIn = tas::els_dPhiIn().at(i);
-		  hOverE = tas::els_hOverE().at(i);
-		  ip3d = tas::els_ip3d().at(i);
-		  ip3derr = tas::els_ip3derr().at(i);
-		  ecalEnergy = tas::els_ecalEnergy().at(i);
-		  eOverPIn = tas::els_eOverPIn().at(i);
-		  conv_vtx_flag = tas::els_conv_vtx_flag().at(i);
-		  exp_innerlayers = tas::els_exp_innerlayers().at(i);
-		  charge = tas::els_charge().at(i);    //check on this
-		  sccharge = tas::els_sccharge().at(i);    //check on this
-		  ckf_charge = tas::els_ckf_charge().at(i);    //check on this
-		  trk_charge = tas::els_trk_charge().at(i);
-		  threeChargeAgree_branch = threeChargeAgree(i);
-		  mva = getMVAoutput(i); //localEleMVAreader->MVA(i);
-		  type = tas::els_type().at(i);
-		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
-		  // Some old variables used in skimming and perhaps HLT
-		  tkIso = tas::els_tkIso().at(i);
-		  ecalIso = tas::els_ecalIso().at(i);
-		  hcalIso = tas::els_hcalIso().at(i);
-		  sigmaIEtaIEta = tas::els_sigmaIEtaIEta().at(i);
+        //SS Id bools on probe
+        if(muonID(i, SS_tight_v3))       passes_SS_tight_v3 = true;
+        if(muonID(i, SS_tight_noiso_v3)) passes_SS_tight_noiso_v3 = true;
+        if(muonID(i, SS_fo_v3))          passes_SS_fo_v3 = true;
+        if(muonID(i, SS_fo_noiso_v3))    passes_SS_fo_noiso_v3 = true;
 
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  ///////////////////////////////////// Tight and Loose Bools////////////////////////////////////////////
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Fill tree one entry for every probe
+        BabyTree->Fill(); 
+        InitLeptonBranches(); 
 
-		  ////////////
-		  ///  SS  ///
-		  ////////////
-		  if(electronID(i, SS_medium_v3))             passes_SS_tight_v3 = true;
-		  if(electronID(i, SS_medium_noiso_v3))       passes_SS_tight_noiso_v3 = true;
-		  if(electronID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
-		  if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
-		  if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
-		  if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+      }
 
-		  ////////////
-		  ///  OS  ///
-		  ////////////
+      //Electron Tag and Probe -- i is the probe, j is the tag
+      for(unsigned int i=0; i < tas::els_p4().size(); i++){
 
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  //////////////////////////////////////////////End Bools////////////////////////////////////////////////
-		  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-		  
-		  ptrelv0 = getPtRel(id, idx, false);
-		  ptrelv1 = getPtRel(id, idx, true);
-		  miniiso = elMiniRelIso(idx, true, 0.0, false, true);
-		  jet_close_lep = closestJet(p4,0.4,2.4);
-		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
+        //Require that the probe has pt of 10
+        if (tas::els_p4().at(i).pt() < 10) continue;
 
-		  //Lep el_temp = Lep(id, i);
-		  //motherID = lepMotherID(el_temp);
-		  if (!evt_isRealData ) {
-		    motherID = lepMotherID(id, mc_id, idx);
-		    mc_motherp4 = tas::els_mc_motherp4().at(i); 
-		  }
+        //Require a tag
+        bool foundTag = false;
+        for(unsigned int j = 0; j < tas::els_p4().size(); j++){
+          if (i == j) continue;
+          if (tas::els_p4().at(j).pt() < 20.0) continue;
+          if (fabs(tas::els_etaSC().at(j)) > 2.5) continue;
+          if (!electronID(j,SS_medium_v3)) continue;
+          foundTag = true; 
+          tag_p4 = tas::els_p4().at(j);
+          tag_charge = tas::els_charge().at(j);
+          tag_HLTLeadingLeg = (tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j) > 0);
+          //Randomize if needed (??)
+          if (used == false && ((rndm < 0.5 && tag_charge < 0) || (rndm >= 0.5 && tag_charge > 0))){
+            isRandom = true;
+            used = true;
+          }
+          else isRandom = false;
+        } 
 
-		  BabyTree->Fill(); 
-		  InitLeptonBranches();
-	  
-	  	  //cout<<"\nEnd electron loop"<<endl;
-	  	} //close electron loop
-	  
-	  
+        if(electronID(i, SS_veto_noiso_v3)==0 && !foundTag) continue;
+
+        //p4 is the tag of the probe
+        p4 = tas::els_p4().at(i);    
+
+        //Calculate dilep mass, etc.  
+        if (foundTag){
+          dilep_p4 = p4 + tag_p4;
+          dilep_mass = dilep_p4.M();
+        }
+
+        //Probe id and idx
+        id = -11.0*tas::els_charge().at(i); 
+        idx = i;
+
+        //Find probe in MC
+        if (!evt_isRealData){
+          mc_p4 = tas::els_mc_p4().at(i);  
+          mc_id = tas::els_mc_id().at(i);  
+          motherID = lepMotherID(Lep(id, idx));
+          mc_motherp4 = tas::els_mc_motherp4().at(i); 
+        }
+
+        //Impact parameter
+        dxyPV = abs(id) == 11 ? tas::els_dxyPV().at(i) : tas::mus_dxyPV().at(i); 
+        dxyPV_err = abs(id) == 11 ? tas::els_d0Err().at(i) : tas::mus_d0Err().at(i); 
+        dZ = abs(id) == 11 ? tas::els_dzPV().at(i) : tas::mus_dzPV().at(i);
+        ip3d = tas::els_ip3d().at(i);
+        ip3derr = tas::els_ip3derr().at(i);
+
+        //Iso, etc.
+        RelIso03 = eleRelIso03_noCorr(i);
+        RelIso03EA = eleRelIso03EA(i);
+        RelIso03DB = eleRelIso03DB(i);
+        ptrelv0 = getPtRel(id, idx, false);
+        ptrelv1 = getPtRel(id, idx, true);
+        miniiso = elMiniRelIso(idx, true, 0.0, false, true);
+        jet_close_lep = closestJet(p4,0.4,2.4);
+        ptratio = jet_close_lep.pt() > 0 ? p4.pt()/jet_close_lep.pt() : 1; 
+
+        //MT
+        mt = MT(p4.pt(), p4.phi(), evt_pfmet, evt_pfmetPhi); 
+
+        //Other Electron ID stuff
+        sigmaIEtaIEta_full5x5 = tas::els_sigmaIEtaIEta_full5x5().at(i);//new below
+        etaSC = tas::els_etaSC().at(i);
+        dEtaIn = tas::els_dEtaIn().at(i);
+        dPhiIn = tas::els_dPhiIn().at(i);
+        hOverE = tas::els_hOverE().at(i);
+        ecalEnergy = tas::els_ecalEnergy().at(i);
+        eOverPIn = tas::els_eOverPIn().at(i);
+        conv_vtx_flag = tas::els_conv_vtx_flag().at(i);
+        exp_innerlayers = tas::els_exp_innerlayers().at(i);
+        charge = tas::els_charge().at(i);    
+        sccharge = tas::els_sccharge().at(i);   
+        ckf_charge = tas::els_ckf_charge().at(i);
+        trk_charge = tas::els_trk_charge().at(i);
+        threeChargeAgree_branch = threeChargeAgree(i);
+        mva = getMVAoutput(i); 
+        type = tas::els_type().at(i);
+        tkIso = tas::els_tkIso().at(i);
+        ecalIso = tas::els_ecalIso().at(i);
+        hcalIso = tas::els_hcalIso().at(i);
+        sigmaIEtaIEta = tas::els_sigmaIEtaIEta().at(i);
+
+        //SS Id bools on probe
+        if(electronID(i, SS_medium_v3))             passes_SS_tight_v3 = true;
+        if(electronID(i, SS_medium_noiso_v3))       passes_SS_tight_noiso_v3 = true;
+        if(electronID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
+        if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
+        if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
+        if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+
+        //Fill tree one entry for every probe
+        BabyTree->Fill(); 
+        InitLeptonBranches();
+
+      }
+
     }//close event loop
-    
+
     file->Close();
     delete file;
-	
-	cout<<"\nFile done"<<endl;
+
+    cout << "\nFile done" <<endl;
   }//close file loop
-  
+
   cout<<"\nWriting file"<<endl;
 
   BabyFile->cd();
   BabyTree->Write();
   BabyFile->Close();
 
-
   return 0;  
 
 }
 
-void babyMaker::SetOutputPath( std::string outputpath )
-{
+void babyMaker::SetOutputPath( std::string outputpath ){
   path = outputpath;
 }
