@@ -744,8 +744,7 @@ bool isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx
   
 void  babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx) {
 
-  //temporary until we run on mc with the new tag
-  //if (tas::evt_isRealData()==0) idx=-1;
+  if (tas::evt_isRealData()==0) idx=-1;
 
   //---single el trigger---//
   setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v" ,  (idx>=0 ? tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx)  : 0), HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
