@@ -60,6 +60,7 @@ do
 
   samplename=""
   sampledir=""
+  samplesize=0
   
   #loop to find sample_dir
   for (( i = 1; i <= $nLines; i++ ))
@@ -80,7 +81,11 @@ do
         sampledir="$temptwo"
 	#if sampledir is in the list make it sample_dir
         if [ "$sample" == "$samplename" ]; then
-           sample_dir="$sampledir"
+	   tmpsize=`/bin/ls $sampledir/merged_ntuple_*.root | wc -l`
+	   if [ $tmpsize -gt $samplesize ]; then
+              sample_dir="$sampledir"
+	      samplesize=$tmpsize
+	   fi
         fi
     fi
     #sample_dir already found
