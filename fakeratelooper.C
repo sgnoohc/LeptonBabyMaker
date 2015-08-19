@@ -865,6 +865,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     TTree *tree = (TTree*)file->Get("Events");
     cms3.Init(tree);
   
+    //bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
+    bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
+
     // Loop over Events in current file
     unsigned int nEventsTree = tree->GetEntriesFast();
     for(unsigned int evt = 0; evt < nEventsTree; evt++){
@@ -875,6 +878,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if(nEventsDone >= nEventsToDo) continue;   
       cms3.GetEntry(evt);
       nEventsDone++;
+
+      if (tas::evt_isRealData() && isPromptReco && tas::evt_run() <= 251562) continue;
 
       //If data, check good run list
       if (tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 

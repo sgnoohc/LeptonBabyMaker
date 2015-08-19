@@ -178,7 +178,10 @@ Path /hadoop/cms/store/user/gzevi/DoubleElectron/crab_DoubleElectron_CMSSW_7_4_0
 
 SAMPLE
 Name 2015DoubleEG
-Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleEG_MINIAOD_PromptReco-v1/merged/V07-04-06/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleEG_MINIAOD_PromptReco-v1/merged/V07-04-07/
+SAMPLE
+Name 2015DoubleEG
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleEG_MINIAOD_17Jul2015-v1/merged/V07-04-07/
 
 SAMPLE
 Name 2015SingleEl
@@ -190,4 +193,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015B_SingleMuon_MINIAOD_PromptRec
 
 SAMPLE
 Name 2015DoubleMuon
-Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleMuon_MINIAOD_PromptReco-v1/merged/V07-04-06/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleMuon_MINIAOD_PromptReco-v1/merged/V07-04-07/
+SAMPLE
+Name 2015DoubleMuon
+Path /hadoop/cms/store/group/snt/run2_data/Run2015B_DoubleMuon_MINIAOD_17Jul2015-v1/merged/V07-04-07/
