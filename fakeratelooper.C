@@ -978,6 +978,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         ptrelv1 = getPtRel(id, idx, true);
         miniiso = muMiniRelIsoCMS3_EA(idx);
         miniisoDB = muMiniRelIsoCMS3_DB(idx);
+        jet_close_lep = closestJet(p4,0.4,2.4);
         ptratio = jet_close_lep.pt() > 0 ? p4.pt()/jet_close_lep.pt() : 1; 
 
         //MT
@@ -999,7 +1000,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         exp_innerlayers = tas::mus_exp_innerlayers().at(i);
         exp_outerlayers = tas::mus_exp_outerlayers().at(i);
         segmCompatibility = tas::mus_segmCompatibility().at(i);
-        jet_close_lep = closestJet(p4,0.4,2.4);
         if (!doFast){
           reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
           annulus04 = reliso04 - miniiso;
