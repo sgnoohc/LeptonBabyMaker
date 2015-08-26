@@ -202,6 +202,10 @@ private:
   int tag_HLT_IsoTkMu24_eta2p1;
   int tag_HLT_IsoMu27;
   int tag_HLT_IsoTkMu27;
+  int tag_HLT_Mu8_TrkIsoVVL;
+  int tag_HLT_Mu17_TrkIsoVVL;
+  int tag_HLT_Mu8;
+  int tag_HLT_Mu17;
 
   // -- probe HLT match -- // 
 
