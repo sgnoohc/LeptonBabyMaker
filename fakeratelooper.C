@@ -899,7 +899,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       //MET variables
       metStruct trackMetStruct =  trackerMET(0.2);
       pair<float,float> met3p0Pair = MET3p0();
-      pair<float,float> t1met3p0Pair = ( (isQCD || jetcorr_filenames_pfL1L2L3.size()==0) ? make_pair<float,float>(-1.,-99.) : getT1CHSMET3p0(jet_corrector_pfL1L2L3) );
+      pair<float,float> t1met3p0Pair = make_pair<float,float>(-1.,-99.); // getT1CHSMET3p0(jet_corrector_pfL1L2L3)
 
       //Fill Easy Variables
       evt_pfmet      = cms3.evt_pfmet();
