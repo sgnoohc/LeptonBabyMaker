@@ -49,7 +49,8 @@ CORESOURCES=$(DIR)/$(COREDIR)/CMS3.cc \
  $(DIR)/$(COREDIR)/IsolationTools.cc \
  $(DIR)/$(COREDIR)/SSSelections.cc \
  $(DIR)/$(TOOLSDIR)/JetCorrector.cc \
- $(DIR)/$(TOOLSDIR)/goodrun.cc
+ $(DIR)/$(TOOLSDIR)/goodrun.cc \
+ $(DIR)/$(COREDIR)/Tools/utils.cc
 COREOBJECTS=$(CORESOURCES:.cc=.o)
 CORELIB=libCMS3CORE.so
 

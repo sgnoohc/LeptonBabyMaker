@@ -8,9 +8,10 @@
 #include "TF1.h"
 #include "Math/VectorUtil.h"
 #include <vector>
+#include <iostream>
 
 #include "CORE/CMS3.h"
-#include "CORE/SSSelections.h"  //remove this one eventually!!!
+#include "CORE/SSSelections.h"  
 #include "CORE/ElectronSelections.h"
 #include "CORE/MuonSelections.h"
 #include "CORE/MetSelections.h"
@@ -19,6 +20,7 @@
 #include "CORE/TriggerSelections.h"
 #include "CORE/MCSelections.h"
 #include "CORE/IsolationTools.h"
+#include "CORE/Tools/utils.h"
 
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
@@ -81,6 +83,7 @@ private:
   bool filt_ecaltp;
   bool filt_trkfail;
   bool filt_eebadsc;
+  bool passes_met_filters;
   bool evt_isRealData;
   float scale1fb;     
   float evt_xsec_incl;         
@@ -206,6 +209,10 @@ private:
   int tag_HLT_IsoTkMu24_eta2p1;
   int tag_HLT_IsoMu27;
   int tag_HLT_IsoTkMu27;
+  int tag_HLT_Mu8_TrkIsoVVL;
+  int tag_HLT_Mu17_TrkIsoVVL;
+  int tag_HLT_Mu8;
+  int tag_HLT_Mu17;
 
   // -- probe HLT match -- // 
 
