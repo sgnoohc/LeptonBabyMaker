@@ -184,6 +184,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ckf_charge"           , &ckf_charge              );
   BabyTree->Branch("threeChargeAgree"     , &threeChargeAgree_branch );
   BabyTree->Branch("mva"                  , &mva                     );
+  BabyTree->Branch("mva_25ns"             , &mva_25ns                );
   BabyTree->Branch("ecalIso"              , &ecalIso                 );
   BabyTree->Branch("hcalIso"              , &hcalIso                 );
   BabyTree->Branch("ecalPFClusterIso"     , &ecalPFClusterIso        );
@@ -570,7 +571,7 @@ void babyMaker::InitLeptonBranches(){
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL = 0;
 }
 
-bool babyMaker::checkMuonTag(unsigned int i){
+bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
   for (unsigned int j = 0; j < tas::mus_p4().size(); j++){
     if (i == j) continue;
     if (tas::mus_p4().at(j).pt() < 20.0) continue;
@@ -583,10 +584,12 @@ bool babyMaker::checkMuonTag(unsigned int i){
     tag_HLTLeadingLeg = false;
 
     //both data and MC - works with new data and MC
-    tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(j);
-    tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg  = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(j);
-    tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg   = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(j);
-    tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg    = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(j);
+    if (!oldTag) {
+      tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(j);
+      tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg  = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(j);
+      tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg   = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(j);
+      tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg    = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(j);
+    }
     setHLTBranch("HLT_IsoMu20_v"         ,  tag_p4, tag_HLT_IsoMu20         );
     setHLTBranch("HLT_IsoTkMu20_v"       ,  tag_p4, tag_HLT_IsoTkMu20       );
     setHLTBranch("HLT_IsoMu24_eta2p1_v"  ,  tag_p4, tag_HLT_IsoMu24_eta2p1  );
@@ -689,9 +692,9 @@ bool isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx
   return false;
 }
 
-void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx){
+void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag){
 
-  //if (tas::evt_isRealData()==0) idx=-1;//not sure here
+  if (oldTag) idx=-1;
 
   //Single Electron Trigger
   setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v" ,  (idx>=0 ? tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx)  : 0), HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
@@ -732,10 +735,10 @@ void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx){
 
 }
 
-void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx) {
+void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag) {
 
   //temporary until we run on mc with the new tag
-  //if (tas::evt_isRealData()==0) idx = -1;
+  if (oldTag) idx = -1;
 
   //Single Muon Triggers
   setHLTBranch("HLT_Mu8_v"             , p4, HLT_Mu8             );
@@ -803,6 +806,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   // File Loop
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
 
+    bool isQCD = TString(currentFile->GetTitle()).Contains("QCD_");
+    bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
     bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
     int bx = 25;
     if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
@@ -861,9 +866,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     TTree *tree = (TTree*)file->Get("Events");
     cms3.Init(tree);
   
-    //bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
-    bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
-
     // Loop over Events in current file
     unsigned int nEventsTree = tree->GetEntriesFast();
     for(unsigned int evt = 0; evt < nEventsTree; evt++){
@@ -892,7 +894,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
       //MET variables
       metStruct trackMetStruct =  trackerMET(0.2);
-      pair<float,float> met3p0Pair = MET3p0();
+      pair<float,float> met3p0Pair = (isQCD ? MET3p0() : getT1CHSMET3p0(jet_corrector_pfL1L2L3) );
 
       //Fill Easy Variables
       evt_pfmet      = cms3.evt_pfmet();
@@ -1017,7 +1019,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         InitLeptonBranches(); 
 
         //Check for a tag
-        bool foundTag = checkMuonTag(i);
+        bool foundTag = checkMuonTag(i, isQCD);
         if (foundTag) foundMuTag = true; 
 
         // Require pT > 10 GeV
@@ -1026,12 +1028,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         //Save the muon if we have a tag OR if it passes loose ID 
         if(muonID(i, SS_veto_noiso_v3)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
         //check to which leg a match has been found
-        //if (tas::evt_isRealData()){
-	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
-	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
-	probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg         = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
-	probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg          = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
-	//}
+        if (isQCD==0){//fixme: old tag
+	  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
+	  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
+	  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg         = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
+	  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg          = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
+	}
 
         //ID & Index for muons
         id = -13.0*tas::mus_charge().at(i);
@@ -1163,7 +1165,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         muID::unsetCache();
 
         //Fill trigger branches
-        fillMuonTriggerBranches(p4,idx);
+        fillMuonTriggerBranches(p4,idx,isQCD);
 
         //Fill baby once per probe
         BabyTree->Fill(); 
@@ -1276,6 +1278,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         trk_charge = tas::els_trk_charge().at(i);
         threeChargeAgree_branch = threeChargeAgree(i);
         mva = getMVAoutput(i); 
+	//temp fix since els_conv_vtx_prob is not in the tag for MC
+	if (isDataFromFileName) mva_25ns = v25nsMVAreader->MVA(i);
         type = tas::els_type().at(i);
         ecalIso = tas::els_ecalIso().at(i);
         hcalIso = tas::els_hcalIso().at(i);
@@ -1301,7 +1305,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         dEtaOut                = tas::els_dEtaOut().at(i);
         dPhiOut                = tas::els_dPhiOut().at(i);
 	gsf_validHits          = tas::els_validHits().at(i);
-	conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
+	//temp fix since els_conv_vtx_prob is not in the tag for MC
+	if (isDataFromFileName) conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
 
         if (!doFast){
           reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
@@ -1348,7 +1353,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         }
   
         //Triggers
-        fillElectronTriggerBranches(p4, idx);
+        fillElectronTriggerBranches(p4, idx, isQCD);
 
         //Fill tree once per tag
         BabyTree->Fill(); 
@@ -1386,7 +1391,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
 
-          fillElectronTriggerBranches(p4,-1);
+          fillElectronTriggerBranches(p4,-1,isQCD);
 
           BabyTree->Fill(); 
         }
@@ -1412,7 +1417,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
 
-          fillMuonTriggerBranches(p4,-1);
+          fillMuonTriggerBranches(p4,-1,isQCD);
 
           BabyTree->Fill(); 		  
         }	    

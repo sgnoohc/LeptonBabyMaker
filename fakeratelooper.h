@@ -44,10 +44,10 @@ public:
   int looper(TChain* chain, char* output_name, int nEvents = -1);
   void SetOutputPath( std::string outputpath ); //init. Electron variables only
 
-  bool checkMuonTag (unsigned int i);
+  bool checkMuonTag (unsigned int i, bool oldTag = false);
   bool checkElectronTag (unsigned int i);
-  void fillMuonTriggerBranches(LorentzVector &p4, int idx);
-  void fillElectronTriggerBranches(LorentzVector &p4, int idx);
+  void fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
+  void fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
 
 
 
