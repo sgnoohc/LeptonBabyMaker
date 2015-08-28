@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 	if(!(samplelist[i].Contains(".root"))) {
 	  samplelist[i] = samplelist[i] + filename;
 	  std::ifstream infile2(samplelist[i].Data());
-	  if (infile2.good()==0) {
+	  if (infile2.good()==0 && !(TString(filename).Contains("*"))) {
 	    cout << "Warning! File: " << samplelist[i] << " does not exist ab exist. Not added to files to be processed." << endl;
 	    continue;
 	  }
