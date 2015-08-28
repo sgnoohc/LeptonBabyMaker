@@ -94,6 +94,8 @@ private:
   TString sample;
   int nFOs_SS;
   int nvtx;
+  float rho;
+  float rho_neut_centr;
 
   //---both e and mu---//
   LorentzVector p4;
@@ -151,6 +153,11 @@ private:
   float reliso04;
   float annulus04;
   LorentzVector jet_close_lep;
+  float jet_close_undoJEC;
+  float jet_close_L1;
+  float jet_close_L1nc;
+  float jet_close_L1ncmc;
+  float jet_close_L1L2L3;
   float ptratio;
   int tag_charge;
   float tag_eSeed;
@@ -228,6 +235,7 @@ private:
   int   trk_charge;
   bool  threeChargeAgree_branch;
   float mva;
+  float mva_25ns;
   float ecalIso;
   float hcalIso;
   float ecalPFClusterIso;
@@ -249,7 +257,8 @@ private:
   float eOverPOut             ;
   float dEtaOut               ;
   float dPhiOut               ;
-
+  int   gsf_validHits;
+  float conv_vtx_prob;
 
   //---mus---//
   int   pid_PFMuon;

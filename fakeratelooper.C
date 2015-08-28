@@ -48,6 +48,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("sample", &sample);
   BabyTree->Branch("nFOs_SS", &nFOs_SS);
   BabyTree->Branch("nvtx", &nvtx);
+  BabyTree->Branch("rho", &rho);
+  BabyTree->Branch("rho_neut_centr", &rho_neut_centr);
 
   //---both el and mu---//
   BabyTree->Branch("p4", &p4);
@@ -108,6 +110,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("iso03emEt", &iso03emEt);
   BabyTree->Branch("iso03hadEt", &iso03hadEt);
   BabyTree->Branch("jet_close_lep", &jet_close_lep);
+  BabyTree->Branch("jet_close_undoJEC", &jet_close_undoJEC);
+  BabyTree->Branch("jet_close_L1", &jet_close_L1);
+  BabyTree->Branch("jet_close_L1nc", &jet_close_L1nc);
+  BabyTree->Branch("jet_close_L1ncmc", &jet_close_L1ncmc);
+  BabyTree->Branch("jet_close_L1L2L3", &jet_close_L1L2L3);
   BabyTree->Branch("ptratio", &ptratio);
   BabyTree->Branch("tag_charge", &tag_charge);
   BabyTree->Branch("tag_eSeed", &tag_eSeed);
@@ -183,6 +190,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ckf_charge"           , &ckf_charge);
   BabyTree->Branch("threeChargeAgree"     , &threeChargeAgree_branch);
   BabyTree->Branch("mva"                  , &mva);
+  BabyTree->Branch("mva_25ns"             , &mva_25ns);
   BabyTree->Branch("ecalIso"              , &ecalIso);
   BabyTree->Branch("hcalIso"              , &hcalIso);
   BabyTree->Branch("ecalPFClusterIso"     , &ecalPFClusterIso);
@@ -204,6 +212,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("eOverPOut"            , &eOverPOut             );
   BabyTree->Branch("dEtaOut"              , &dEtaOut               );    
   BabyTree->Branch("dPhiOut"              , &dPhiOut               );                
+  BabyTree->Branch("gsf_validHits"        , &gsf_validHits         );                
+  BabyTree->Branch("conv_vtx_prob"        , &conv_vtx_prob         );                
 
   //---mus---//
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
@@ -317,6 +327,7 @@ void babyMaker::InitBabyNtuple(){
   sample = "";
   nFOs_SS = -1;
   nvtx = -1;
+  rho = -1;
 
   InitLeptonBranches();
 
@@ -383,6 +394,11 @@ void babyMaker::InitLeptonBranches(){
   iso03emEt = -1;
   iso03hadEt = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
+  jet_close_undoJEC = -1;
+  jet_close_L1 = -1;
+  jet_close_L1nc = -1;
+  jet_close_L1ncmc = -1;
+  jet_close_L1L2L3 = -1;
   ptratio = -1;
   tag_charge = 0.;
   tag_eSeed = -1;
@@ -468,6 +484,7 @@ void babyMaker::InitLeptonBranches(){
   trk_charge = -1;
   threeChargeAgree_branch = 0;
   mva = -999.;
+  mva_25ns = -999.;
   ecalIso = -1;
   hcalIso = -1;
   ecalPFClusterIso = -1;
@@ -489,6 +506,8 @@ void babyMaker::InitLeptonBranches(){
   eOverPOut             = -1;
   dEtaOut               = -1;
   dPhiOut               = -1;
+  gsf_validHits         = -1;
+  conv_vtx_prob         = -1;
 
   //---single mu trigger---//
   HLT_Mu8_TrkIsoVVL = 0;
@@ -836,8 +855,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
   createAndInitMVA("CORE");
 
-  //readMVA* localEleMVAreader = new readMVA();
-  //localEleMVAreader->InitMVA("CORE"); 
+  readMVA* v25nsMVAreader = new readMVA();
+  v25nsMVAreader->InitMVA("CORE",true); 
 
   //Add good run list
   set_goodrun_file("goodRunList/json_Golden_246908-251883_snt.txt");
@@ -855,9 +874,61 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   TObjArray *listOfFiles = chain->GetListOfFiles();
   TIter fileIter(listOfFiles);
   TFile *currentFile = 0;
- 
+
   // File Loop
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
+
+    bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
+    int bx = 25;
+    if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
+    
+    // ----------------------------------
+    // retrieve JEC from files, if using
+    // ----------------------------------
+    
+    std::vector<std::string> jetcorr_filenames_pfL1;
+    FactorizedJetCorrector *jet_corrector_pfL1;
+    jetcorr_filenames_pfL1.clear();
+    std::vector<std::string> jetcorr_filenames_pfL1MC;
+    FactorizedJetCorrector *jet_corrector_pfL1MC;
+    jetcorr_filenames_pfL1MC.clear();
+    std::vector<std::string> jetcorr_filenames_pfL1L2L3;
+    FactorizedJetCorrector *jet_corrector_pfL1L2L3;
+    jetcorr_filenames_pfL1L2L3.clear();
+    // files for RunIISpring15 MC
+    if (bx == 50) {
+      if (isDataFromFileName) {
+	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt");
+      } else {
+	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt");
+      }
+      jetcorr_filenames_pfL1MC.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+    }
+    else if (bx == 25) {
+      if (isDataFromFileName) {
+	//do something
+      } else {
+	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L3Absolute_AK4PFchs.txt");
+      }
+      jetcorr_filenames_pfL1MC.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+    }
+    cout << "applying JEC from the following files:" << endl;
+    for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1L2L3.size(); ++ifile) {
+      cout << "   " << jetcorr_filenames_pfL1L2L3.at(ifile) << endl;
+    }
+    jet_corrector_pfL1  = makeJetCorrector(jetcorr_filenames_pfL1);
+    jet_corrector_pfL1MC  = makeJetCorrector(jetcorr_filenames_pfL1MC);
+    jet_corrector_pfL1L2L3  = makeJetCorrector(jetcorr_filenames_pfL1L2L3);
 
     // Get File Content
     if(nEventsDone >= nEventsToDo) continue;
@@ -935,7 +1006,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       }
       nvtx = nVert;
       
-      
+      rho = tas::evt_fixgridfastjet_all_rho();
+      rho_neut_centr = tas::evt_fixgridfastjet_centralneutral_rho();
+ 
+
       //Fill data vs. mc variables
       filt_hbhe = evt_isRealData ? (tas::evt_hbheFilter() &&
 				    tas::hcalnoise_isolatedNoiseSumE() < 50.0 &&
@@ -1134,7 +1208,35 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  ptrelv1 = getPtRel(id, idx, true);
 		  miniiso = muMiniRelIsoCMS3_EA(idx);
 		  miniisoDB = muMiniRelIsoCMS3_DB(idx);
-		  jet_close_lep = closestJet(p4,0.4,2.4);
+		  int closeJetIdx = closestJetIdx(p4,0.4,2.4);
+		  if (closeJetIdx>=0) {
+		    jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
+		    jet_close_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
+		    //L1
+		    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1->setRho(rho);
+		    jet_close_L1 = jet_corrector_pfL1->getCorrection();
+		    //L1, redo it with a different rho
+		    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1->setRho(rho_neut_centr);
+		    jet_close_L1nc = jet_corrector_pfL1->getCorrection();
+		    //L1, redo it with a different rho and MC correction file
+		    jet_corrector_pfL1MC->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1MC->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1MC->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1MC->setRho(rho_neut_centr);
+		    jet_close_L1ncmc = jet_corrector_pfL1MC->getCorrection();
+		    //L1L2L3
+		    jet_corrector_pfL1L2L3->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1L2L3->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1L2L3->setRho(rho);
+		    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
+		  }
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  if (!doFast){
 		    reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
@@ -1264,6 +1366,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  trk_charge = tas::els_trk_charge().at(i);
 		  threeChargeAgree_branch = threeChargeAgree(i);
 		  mva = getMVAoutput(i); //localEleMVAreader->MVA(i);
+		  mva_25ns = v25nsMVAreader->MVA(i);
 		  type = tas::els_type().at(i);
 		  mt = calculateMt(p4, evt_pfmet, evt_pfmetPhi); 
 		  // Some old variables used in skimming and perhaps HLT
@@ -1291,12 +1394,43 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 		  eOverPOut              = tas::els_eOverPOut().at(i);
 		  dEtaOut                = tas::els_dEtaOut().at(i);
 		  dPhiOut                = tas::els_dPhiOut().at(i);
-		  
+		  gsf_validHits          = tas::els_validHits().at(i);
+		  conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
+
+
 		  if (!doFast) isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
 
 		  ptrelv0 = getPtRel(id, idx, false);
 		  ptrelv1 = getPtRel(id, idx, true);
-		  jet_close_lep = closestJet(p4,0.4,2.4);
+		  int closeJetIdx = closestJetIdx(p4,0.4,2.4);
+		  if (closeJetIdx>=0) {
+		    jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
+		    jet_close_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
+		    //L1
+		    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1->setRho(rho);
+		    jet_close_L1 = jet_corrector_pfL1->getCorrection();
+		    //L1, redo it with a different rho
+		    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1->setRho(rho_neut_centr);
+		    jet_close_L1nc = jet_corrector_pfL1->getCorrection();
+		    //L1, redo it with a different rho and MC correction file
+		    jet_corrector_pfL1MC->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1MC->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1MC->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1MC->setRho(rho_neut_centr);
+		    jet_close_L1ncmc = jet_corrector_pfL1MC->getCorrection();
+		    //L1L2L3
+		    jet_corrector_pfL1L2L3->setJetEta(jet_close_lep.eta());
+		    jet_corrector_pfL1L2L3->setJetPt(jet_close_lep.pt());
+		    jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
+		    jet_corrector_pfL1L2L3->setRho(rho);
+		    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
+		  }
 		  ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
 		  miniiso = elMiniRelIsoCMS3_EA(idx);
 		  miniisoDB = elMiniRelIsoCMS3_DB(idx);
