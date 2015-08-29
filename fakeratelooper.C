@@ -845,7 +845,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       }
       jetcorr_filenames_pfL1MC.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
     }
-    elsr if (bx == 25) {
+    else if (bx == 25) {
       if (isDataFromFileName) {
 	//do something
       } else {
