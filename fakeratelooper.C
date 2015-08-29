@@ -813,7 +813,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     bool isQCD = TString(currentFile->GetTitle()).Contains("QCD_");
     bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
     bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
-    int bx = 25;
+    int bx = 50;
     if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
     
     // ----------------------------------
@@ -829,32 +829,32 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     std::vector<std::string> jetcorr_filenames_pfL1L2L3;
     FactorizedJetCorrector *jet_corrector_pfL1L2L3;
     jetcorr_filenames_pfL1L2L3.clear();
-    // files for RunIISpring15 MC
+    //// files for RunIISpring15 MC
     if (bx == 50) {
       if (isDataFromFileName) {
-	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt");
+	jetcorr_filenames_pfL1.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_DATA_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_DATA_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_DATA_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_DATA_L3Absolute_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_DATA_L2L3Residual_AK4PFchs.txt");
       } else {
-	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt");
+	jetcorr_filenames_pfL1.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt");
       }
-      jetcorr_filenames_pfL1MC.push_back  ("Tools/jetcorr/data/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1MC.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt");
     }
     else if (bx == 25) {
       if (isDataFromFileName) {
 	//do something
       } else {
-	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L3Absolute_AK4PFchs.txt");
+	jetcorr_filenames_pfL1.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/PY8_RunIISpring15DR74_bx25_MC_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/PY8_RunIISpring15DR74_bx25_MC_L3Absolute_AK4PFchs.txt");
       }
-      jetcorr_filenames_pfL1MC.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1MC.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
     }
     cout << "applying JEC from the following files:" << endl;
     for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1L2L3.size(); ++ifile) {
