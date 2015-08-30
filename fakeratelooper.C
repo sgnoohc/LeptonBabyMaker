@@ -799,6 +799,56 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //Initialize Baby Ntuple
   InitBabyNtuple();
 
+  //JEC files -- 50 ns MC
+  std::vector<std::string> jetcorr_filenames_50ns_MC_pfL1;
+  std::vector<std::string> jetcorr_filenames_50ns_MC_pfL1L2L3;
+  jetcorr_filenames_50ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_50ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_50ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_50ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt");
+
+  //JEC files -- 50 ns DATA
+  std::vector<std::string> jetcorr_filenames_50ns_DATA_pfL1;
+  std::vector<std::string> jetcorr_filenames_50ns_DATA_pfL1L2L3;
+  jetcorr_filenames_50ns_DATA_pfL1.push_back    ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_50ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_50ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_50ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_50ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt");
+
+  //JEC files -- 25 ns MC
+  std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1;
+  std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1L2L3;
+  jetcorr_filenames_25ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L3Absolute_AK4PFchs.txt");
+
+  //Make JEC for each of these
+  FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1; 
+  FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1L2L3; 
+  FactorizedJetCorrector *jet_corrector_50ns_DATA_pfL1; 
+  FactorizedJetCorrector *jet_corrector_50ns_DATA_pfL1L2L3; 
+  FactorizedJetCorrector *jet_corrector_25ns_MC_pfL1; 
+  FactorizedJetCorrector *jet_corrector_25ns_MC_pfL1L2L3; 
+
+  //Fill the JEC
+  jet_corrector_50ns_MC_pfL1 = makeJetCorrector(jetcorr_filenames_50ns_MC_pfL1); 
+  jet_corrector_50ns_MC_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_50ns_MC_pfL1L2L3); 
+  jet_corrector_50ns_DATA_pfL1 = makeJetCorrector(jetcorr_filenames_50ns_DATA_pfL1); 
+  jet_corrector_50ns_DATA_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_50ns_DATA_pfL1L2L3); 
+  jet_corrector_25ns_MC_pfL1 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL1); 
+  jet_corrector_25ns_MC_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL1L2L3); 
+
+  //JECs
+  FactorizedJetCorrector *jet_corrector_pfL1 = 0;
+  FactorizedJetCorrector *jet_corrector_pfL1MC = 0;
+  FactorizedJetCorrector *jet_corrector_pfL1L2L3 = 0;
+
+  //Record filenames
+  std::vector <string> jetcorr_filenames_pfL1;
+  std::vector <string> jetcorr_filenames_pfL1L2L3;
+
   //Set up loop over chain
   unsigned int nEventsDone = 0;
   unsigned int nEventsToDo = chain->GetEntries();
@@ -813,56 +863,40 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     bool isQCD = TString(currentFile->GetTitle()).Contains("QCD_");
     bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
     bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
+
     int bx = 25;
     if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
-    
+
     // ----------------------------------
     // retrieve JEC from files, if using
     // ----------------------------------
     
-    std::vector<std::string> jetcorr_filenames_pfL1;
-    FactorizedJetCorrector *jet_corrector_pfL1;
-    jetcorr_filenames_pfL1.clear();
-    std::vector<std::string> jetcorr_filenames_pfL1MC;
-    FactorizedJetCorrector *jet_corrector_pfL1MC;
-    jetcorr_filenames_pfL1MC.clear();
-    std::vector<std::string> jetcorr_filenames_pfL1L2L3;
-    FactorizedJetCorrector *jet_corrector_pfL1L2L3;
-    jetcorr_filenames_pfL1L2L3.clear();
     //// files for RunIISpring15 MC
-    if (bx == 50) {
-      if (isDataFromFileName) {
-	jetcorr_filenames_pfL1.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt");
-      } else {
-	jetcorr_filenames_pfL1.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt");
-      }
-      jetcorr_filenames_pfL1MC.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
+    if (bx == 50 && isDataFromFileName){
+      jet_corrector_pfL1 = jet_corrector_50ns_DATA_pfL1;
+      jet_corrector_pfL1MC = jet_corrector_50ns_MC_pfL1;
+      jet_corrector_pfL1L2L3 = jet_corrector_50ns_DATA_pfL1L2L3;
+      jetcorr_filenames_pfL1 = jetcorr_filenames_50ns_DATA_pfL1;
+      jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_50ns_DATA_pfL1L2L3;
     }
-    else if (bx == 25) {
-      if (isDataFromFileName) {
-	//do something
-      } else {
-	jetcorr_filenames_pfL1.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L3Absolute_AK4PFchs.txt");
-      }
-      jetcorr_filenames_pfL1MC.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_V5_MC_L1FastJet_AK4PFchs.txt");
+    else if (bx == 50 && !isDataFromFileName){
+      jet_corrector_pfL1 = jet_corrector_50ns_MC_pfL1;
+      jet_corrector_pfL1MC = jet_corrector_50ns_MC_pfL1;
+      jet_corrector_pfL1L2L3 = jet_corrector_50ns_MC_pfL1L2L3;
+      jetcorr_filenames_pfL1 = jetcorr_filenames_50ns_MC_pfL1;
+      jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_50ns_MC_pfL1L2L3;
+    }
+    else if (bx == 25 && !isDataFromFileName){
+      jet_corrector_pfL1 = jet_corrector_25ns_MC_pfL1;
+      jet_corrector_pfL1MC = jet_corrector_25ns_MC_pfL1;
+      jet_corrector_pfL1L2L3 = jet_corrector_25ns_MC_pfL1L2L3;
+      jetcorr_filenames_pfL1 = jetcorr_filenames_25ns_MC_pfL1;
+      jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_25ns_MC_pfL1L2L3;
     }
     cout << "applying JEC from the following files:" << endl;
     for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1L2L3.size(); ++ifile) {
       cout << "   " << jetcorr_filenames_pfL1L2L3.at(ifile) << endl;
     }
-    jet_corrector_pfL1  = makeJetCorrector(jetcorr_filenames_pfL1);
-    jet_corrector_pfL1MC  = makeJetCorrector(jetcorr_filenames_pfL1MC);
-    jet_corrector_pfL1L2L3  = makeJetCorrector(jetcorr_filenames_pfL1L2L3);
 
     // Get File Content
     if(nEventsDone >= nEventsToDo) continue;
@@ -1016,7 +1050,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         }
         continue;
       }
-
       usedMu = false;
       usedEl = false;
       TRandom r;
