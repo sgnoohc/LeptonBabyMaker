@@ -54,6 +54,7 @@ int main(int argc, char **argv)
     }
 
     int nevents = -1;
+    if (sample == "default") nevents = 100;
     if (argc < 3) {
       cout<<"Number of events not specified. Running over "<<nevents<<" events"<<endl;
     }

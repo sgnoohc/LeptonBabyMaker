@@ -15,7 +15,7 @@ Then
 ```
 git clone git@github.com:cmstas/LeptonBabyMaker.git
 cd LeptonBabyMaker
-git checkout commissioning13TeV
+git checkout cmssw74x
 source setupCORE.sh
 make
 ./main.exe

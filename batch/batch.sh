@@ -161,7 +161,7 @@ then
   echo "CHECKING FOR ZOMBIES"
   for file in `/bin/ls $copy_dir/*.root`
   do
-    root -l -b -q checkForZombies.C'("'$file'")'
+    root -l -b -q -n checkForZombies.C'("'$file'")'
     if [ -e listOfZombies.txt ]; then
       zombie=""
       zombie=`tail listOfZombies.txt`
