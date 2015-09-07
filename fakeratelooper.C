@@ -791,7 +791,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   v25nsMVAreader->InitMVA("CORE",true); 
 
   //Add good run list
-  set_goodrun_file("goodRunList/json_Golden_246908-254879_snt.txt");
+  set_goodrun_file("goodRunList/json_Golden_246908-255031_20p38pb_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
@@ -819,10 +819,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //JEC files -- 25 ns MC
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1;
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1L2L3;
-  jetcorr_filenames_25ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
 
   //Make JEC for each of these
   FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1; 
@@ -869,7 +869,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     // ----------------------------------
     // retrieve JEC from files, if using
     // ----------------------------------
-    
+
     //// files for RunIISpring15 MC
     if (bx == 50 && isDataFromFileName){
       jet_corrector_pfL1 = jet_corrector_50ns_DATA_pfL1;
