@@ -147,8 +147,12 @@ Name QCD_non_Enriched
 Path /hadoop/cms/store/group/snt/run2_25ns/QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
+Name TTbar50ns_madgraph
+Path /hadoop/cms/store/group/snt/run2_50ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/V07-04-03/
+
+SAMPLE
 Name TTbar_madgraph
-Path  /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-03/
+Path  /hadoop/cms/store/group/snt/run2_25ns/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/V07-04-08/
 
 SAMPLE
 Name TTbar_amcnlo
@@ -171,7 +175,7 @@ Path /hadoop/cms/store/group/snt/run2_25ns/TTJets_DiLept_TuneCUETP8M1_13TeV-madg
 
 SAMPLE
 Name DY_amcnlo
-Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-06/
+Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-08/
 #separate the two due to different tags
 SAMPLE
 Name DY_amcnlo_M10to50
@@ -186,7 +190,7 @@ Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-5to50_TuneCUETP8M1_13TeV
 
 SAMPLE
 Name WJets
-Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
+Path /hadoop/cms/store/group/snt/run2_25ns/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
 
 SAMPLE
 Name DY50ns
