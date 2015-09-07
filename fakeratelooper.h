@@ -173,6 +173,8 @@ private:
   float iso03sumPt;
   float iso03emEt;
   float iso03hadEt;
+  int   exp_innerlayers;
+  int   exp_outerlayers;
 
   // -- tag HLT match -- // 
   int tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg;
@@ -237,7 +239,6 @@ private:
   float ecalEnergy;
   float eOverPIn;
   bool  conv_vtx_flag;
-  int   exp_innerlayers;
   int   charge;
   int   sccharge;
   int   ckf_charge;
@@ -281,7 +282,6 @@ private:
   float trkKink;
   int   validHits;
   int   lostHits;
-  int   exp_outerlayers;
   float segmCompatibility;
 
   //---single mu trigger---//

@@ -120,6 +120,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_eSeed"                     , &tag_eSeed);
   BabyTree->Branch("tag_eSCraw"                    , &tag_eSCraw);
   BabyTree->Branch("tag_HLTLeadingLeg"             , &tag_HLTLeadingLeg);
+  BabyTree->Branch("exp_innerlayers"               , &exp_innerlayers);
+  BabyTree->Branch("exp_outerlayers"               , &exp_outerlayers);
 
   //Tag triggers
   BabyTree->Branch("tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg"                , &tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg);
@@ -180,7 +182,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ecalEnergy"           , &ecalEnergy              );
   BabyTree->Branch("eOverPIn"             , &eOverPIn                );
   BabyTree->Branch("conv_vtx_flag"        , &conv_vtx_flag           );
-  BabyTree->Branch("exp_innerlayers"      , &exp_innerlayers         );
   BabyTree->Branch("charge"               , &charge                  );
   BabyTree->Branch("sccharge"             , &sccharge                );
   BabyTree->Branch("ckf_charge"           , &ckf_charge              );
@@ -223,7 +224,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("trkKink"                , &trkKink);
   BabyTree->Branch("validHits"              , &validHits);
   BabyTree->Branch("lostHits"               , &lostHits);
-  BabyTree->Branch("exp_outerlayers"        , &exp_outerlayers);
   BabyTree->Branch("segmCompatibility"      , &segmCompatibility);
 
   //Single Muon Triggers
@@ -810,12 +810,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   // File Loop
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
 
-    bool isQCD = TString(currentFile->GetTitle()).Contains("QCD_");
     bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
     bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
     int bx = 25;
     if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
-    
+
     // ----------------------------------
     // retrieve JEC from files, if using
     // ----------------------------------
@@ -847,14 +846,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     }
     else if (bx == 25) {
       if (isDataFromFileName) {
-	//do something
+	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
       } else {
-	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L2Relative_AK4PFchs.txt");
-	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L3Absolute_AK4PFchs.txt");
+	jetcorr_filenames_pfL1.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
+	jetcorr_filenames_pfL1L2L3.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
       }
-      jetcorr_filenames_pfL1MC.push_back  ("Tools/jetcorr/data/PY8_RunIISpring15DR74_bx25_MC_L1FastJet_AK4PFchs.txt");
+      jetcorr_filenames_pfL1MC.push_back  ("Tools/jetcorr/data/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
     }
     cout << "applying JEC from the following files:" << endl;
     for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1L2L3.size(); ++ifile) {
@@ -899,7 +901,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       //MET variables
       metStruct trackMetStruct =  trackerMET(0.2);
       pair<float,float> met3p0Pair = MET3p0();
-      pair<float,float> t1met3p0Pair = make_pair<float,float>(-1.,-99.); // getT1CHSMET3p0(jet_corrector_pfL1L2L3)
+      pair<float,float> t1met3p0Pair = getT1CHSMET3p0(jet_corrector_pfL1L2L3);
 
       //Fill Easy Variables
       evt_pfmet      = cms3.evt_pfmet();
@@ -1026,7 +1028,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         InitLeptonBranches(); 
 
         //Check for a tag
-        bool foundTag = checkMuonTag(i, isQCD);
+        bool foundTag = checkMuonTag(i, false);
         if (foundTag) foundMuTag = true; 
 
         // Require pT > 10 GeV
@@ -1035,12 +1037,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         //Save the muon if we have a tag OR if it passes loose ID 
         if(muonID(i, SS_veto_noiso_v3)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
         //check to which leg a match has been found
-        if (isQCD==0){//fixme: old tag
-	  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
-	  probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
-	  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg         = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
-	  probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg          = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
-	}
+	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
+	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
+	probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg         = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
+	probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg          = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
 
         //ID & Index for muons
         id = -13.0*tas::mus_charge().at(i);
@@ -1174,7 +1174,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         muID::unsetCache();
 
         //Fill trigger branches
-        fillMuonTriggerBranches(p4,idx,isQCD);
+        fillMuonTriggerBranches(p4,idx,false);
 
         //Fill baby once per probe
         BabyTree->Fill(); 
@@ -1193,8 +1193,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         // Require pT > 10 GeV
         if (tas::els_p4().at(i).pt() <= 10) continue; 
 
-        //Save the muon if we have a tag OR if it passes loose ID 
-        if(electronID(i, SS_veto_noiso_v3)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue; 
+        //Save the electron if we have a tag OR if it passes loose ID 
+        if(electronID(i, SS_veto_noiso_v3)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue;
 
         //p4
         p4 = tas::els_p4().at(i);    
@@ -1289,8 +1289,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         trk_charge = tas::els_trk_charge().at(i);
         threeChargeAgree_branch = threeChargeAgree(i);
         mva = getMVAoutput(i); 
-	//temp fix since els_conv_vtx_prob is not in the tag for MC
-	if (isDataFromFileName) mva_25ns = v25nsMVAreader->MVA(i);
+	mva_25ns = v25nsMVAreader->MVA(i);
         type = tas::els_type().at(i);
         ecalIso = tas::els_ecalIso().at(i);
         hcalIso = tas::els_hcalIso().at(i);
@@ -1316,8 +1315,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         dEtaOut                = tas::els_dEtaOut().at(i);
         dPhiOut                = tas::els_dPhiOut().at(i);
 	gsf_validHits          = tas::els_validHits().at(i);
-	//temp fix since els_conv_vtx_prob is not in the tag for MC
-	if (isDataFromFileName) conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
+	conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
 
         if (!doFast){
           reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
@@ -1364,7 +1362,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         }
   
         //Triggers
-        fillElectronTriggerBranches(p4, idx, isQCD);
+        fillElectronTriggerBranches(p4, idx, false);
 
         //Fill tree once per tag
         BabyTree->Fill(); 
@@ -1402,7 +1400,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
 
-          fillElectronTriggerBranches(p4,-1,isQCD);
+          fillElectronTriggerBranches(p4,-1,false);
 
           BabyTree->Fill(); 
         }
@@ -1428,7 +1426,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
 
-          fillMuonTriggerBranches(p4,-1,isQCD);
+          fillMuonTriggerBranches(p4,-1,false);
 
           BabyTree->Fill(); 		  
         }	    
