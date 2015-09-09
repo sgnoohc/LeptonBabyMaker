@@ -791,7 +791,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   v25nsMVAreader->InitMVA("CORE",true); 
 
   //Add good run list
-  set_goodrun_file("goodRunList/json_Golden_246908-255031_20p38pb_snt.txt");
+  set_goodrun_file("goodRunList/json_Golden_246908-255031_16p10pb_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
