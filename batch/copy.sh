@@ -22,7 +22,14 @@ if [ -d $CONDOR_DIR_NAME ]; then
 fi
 mkdir $CONDOR_DIR_NAME
 
-cp -rL $PREV_DIR $CONDOR_DIR_NAME
+cp $PREV_DIR/fakeratelooper.h $CONDOR_DIR_NAME/
+cp $PREV_DIR/fakeratelooper.C $CONDOR_DIR_NAME/
+cp $PREV_DIR/main.C $CONDOR_DIR_NAME/
+cp $PREV_DIR/LinkDef.h $CONDOR_DIR_NAME/
+cp $PREV_DIR/sample.dat $CONDOR_DIR_NAME/
+cp $PREV_DIR/Makefile $CONDOR_DIR_NAME/
+cp -rL $PREV_DIR/CORE $CONDOR_DIR_NAME/
+cp -rL $PREV_DIR/goodRunList $CONDOR_DIR_NAME/
 tar czf $CONDOR_DIR_NAME.tar.gz $CONDOR_DIR_NAME
 
 cd $START_DIR
