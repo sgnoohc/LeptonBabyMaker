@@ -45,6 +45,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ht"                , &ht);
   BabyTree->Branch("jets"              , &jets);
   BabyTree->Branch("jets_disc"         , &jets_disc);
+  BabyTree->Branch("jets_area"         , &jets_area);
   BabyTree->Branch("sample"            , &sample);
   BabyTree->Branch("nFOs_SS"           , &nFOs_SS);
   BabyTree->Branch("nvtx"              , &nvtx);
@@ -335,6 +336,7 @@ void babyMaker::InitBabyNtuple(){
   ht = -1;
   jets.clear();
   jets_disc.clear();
+  jets_area.clear();
   sample = "";
   nFOs_SS = -1;
   nvtx = -1;
@@ -1039,6 +1041,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         //Save b-tags
         float disc = tas::pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag().at(i);  
         jets_disc.push_back(disc);
+
+        jets_area.push_back(tas::pfjets_area().at(i));
 
       }
       njets = jets.size();

@@ -96,6 +96,7 @@ private:
   float ht;  
   vector <LorentzVector> jets;
   vector <float> jets_disc; 
+  vector <float> jets_area; 
   TString sample;
   int nFOs_SS;
   int nvtx;
