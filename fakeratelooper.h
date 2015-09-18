@@ -222,13 +222,16 @@ private:
 
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
-
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210;
+  int probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
+  int probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
+  int probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG1510;
   int probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20;
   int probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10;
-  double probe_L1EG2210_pt;
-  double probe_L1EG20_pt;
-  double probe_L1EG10_pt;
+  float probe_L1EG2210_pt;
+  float probe_L1EG1510_pt;
+  float probe_L1EG20_pt;
+  float probe_L1EG10_pt;
   
   int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
   int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
@@ -357,6 +360,8 @@ private:
   int HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300;
   int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
   int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
+  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
+  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL;
     
 };
 

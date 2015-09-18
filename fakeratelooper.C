@@ -456,9 +456,13 @@ void babyMaker::InitLeptonBranches(){
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = 0;
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = 0;
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210 = 0;
+  probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg = 0;
+  probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = 0;
+  probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG1510 = 0;
   probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20 = 0;
   probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10 = 0;
   probe_L1EG2210_pt = -1;
+  probe_L1EG1510_pt = -1;
   probe_L1EG20_pt = -1;
   probe_L1EG10_pt = -1;
   probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg = 0;
@@ -585,6 +589,8 @@ void babyMaker::InitLeptonBranches(){
   HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300 = 0;
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ = 0;
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL = 0;
+  HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ = 0;
+  HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL = 0;
 }
 
 bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
@@ -740,6 +746,7 @@ void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool old
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg =  (idx>=0 ? tas::els_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg().at(idx) : 0);
 
   probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210 = matchToHLTFilter("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v", "hltL1sL1DoubleEG2210", p4, 0.6, &probe_L1EG2210_pt);
+  probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG1510 = matchToHLTFilter("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v", "hltL1sL1DoubleEG1510", p4, 0.6, &probe_L1EG1510_pt);
   probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20 = matchToHLTFilter("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v", "hltL1sL1SingleEG20", p4, 0.6, &probe_L1EG20_pt);
   probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10 = matchToHLTFilter("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v", "hltL1sL1SingleEG10", p4, 0.6, &probe_L1EG10_pt);
 
@@ -752,6 +759,15 @@ void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool old
   setHLTBranch("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v",  (idx>=0 ? tas::els_HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_ElectronLeg().at(idx) : 0), HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300);
   setHLTBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",  p4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
   setHLTBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+  setHLTBranch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",  p4, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  setHLTBranch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v",     p4, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL);
+  if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ != 0) {
+    float test = 0;
+    probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg  = matchToHLTFilter("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v", "hltEle17Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg1Filter", p4, 0.1, &test);
+    probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg = matchToHLTFilter("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v", "hltEle17Ele12CaloIdLTrackIdLIsoVLTrackIsoLeg2Filter", p4, 0.1, &test);
+  }
+
+
 
 }
 
@@ -940,7 +956,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       CMS3::progress(nEventsDone, nEventsToDo);
 
       //Debug mode
-      if (verbose && tas::evt_event() != evt_cut) continue;
+      //if (verbose && tas::evt_event() != evt_cut) continue;
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       //Preliminary stuff
@@ -1028,6 +1044,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       } 
 
       //Calculate number of fakeable objects
+      if (verbose) cout << "Calculate number of fakeable objects" <<endl;
       nFOs_SS = 0; 
       for(size_t j = 0; j < tas::mus_p4().size(); j++){
         if(muonID(j, SS_fo_v3) && tas::mus_p4().at(j).pt() > 10) nFOs_SS++;
@@ -1041,6 +1058,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       bool foundElTag = false;
 
       // Variables to keep track of PFElectrons and PFMuons
+      if (verbose) cout << "Variables to keep track of PFElectrons and PFMuons" <<endl;
       // We would like to save PFleptons if they don't overlap with something we've already saved.
       // If they do overlap, we want to save the fact that they overlap
       // Load the pflepton p4s in memory, we'll have to check them on each lepton
@@ -1071,6 +1089,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       TRandom r;
       rndm = r.Rndm();
       //Muon Loop -- we loop over the probes
+      if (verbose) cout << "Muon Loop -- we loop over the probes" <<endl;
       for(unsigned int i=0; i<tas::mus_p4().size(); i++){
         InitLeptonBranches(); 
 
@@ -1089,6 +1108,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg         = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
 	probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg          = tas::mus_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
 
+	if (verbose) cout << "Saving this muon." << endl;
         //ID & Index for muons
         id = -13.0*tas::mus_charge().at(i);
         idx = i;  
@@ -1229,6 +1249,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       } //close muon loop
 
       //Electron Loop
+      if (verbose) cout << "Electron Loop" << endl;
       for(unsigned int i=0; i<tas::els_p4().size(); i++){
 
         InitLeptonBranches(); 
@@ -1242,6 +1263,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
         //Save the electron if we have a tag OR if it passes loose ID 
         if(electronID(i, SS_veto_noiso_v3)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue;
+
+	if (verbose) cout << "Saving this electron" << endl;
 
         //p4
         p4 = tas::els_p4().at(i);    
@@ -1280,6 +1303,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         tkIso = tas::els_tkIso().at(i);
         ptrelv0 = getPtRel(id, idx, false);
         ptrelv1 = getPtRel(id, idx, true);
+	if (verbose) cout << "About to correct jets for this electron" << endl;
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
 	  jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
@@ -1311,6 +1335,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
 	  }
 	}
+	if (verbose) cout << "Finished jet corrections" << endl;
         ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
         miniiso = elMiniRelIsoCMS3_EA(idx);
         miniisoDB = elMiniRelIsoCMS3_DB(idx);
@@ -1371,7 +1396,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         }
 
         elID::setCache(idx,mva,miniiso,ptratio,ptrelv1);
-
+	if (verbose) cout << "Starting electron IDs" << endl; 
         //Save SS ID bools
         if(electronID(i, SS_medium_v3))             passes_SS_tight_v3 = true;
         if(electronID(i, SS_medium_noiso_v3))       passes_SS_tight_noiso_v3 = true;
@@ -1379,7 +1404,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
         if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
         if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
-
+	if (verbose) cout << "Done SS IDs" <<endl;
         //Save WW ID bools
         if(electronID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
         if(electronID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
@@ -1389,31 +1414,31 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, WW_fo_looseMVA_noiso_v1))  passes_WW_fo_looseMVA_noiso_v1 = true;
         if(electronID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
         if(electronID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
-    
+
         //Save HAD ID bools
         if(electronID(i, HAD_veto_v3))              passes_HAD_veto_v3 = true;
         if(electronID(i, HAD_veto_noiso_v3))        passes_HAD_veto_noiso_v3 = true;
-
+	if (verbose) cout << "Done WW and HAD IDs" <<endl;
         //Save POG ID bools
         if( tas::els_passVetoId().at(i) )           passes_POG_vetoID = true;
         if( tas::els_passLooseId().at(i) )          passes_POG_looseID = true;
         if( tas::els_passMediumId().at(i) )         passes_POG_mediumID = true;
         if( tas::els_passTightId().at(i) )          passes_POG_tightID = true;
-
+	if (verbose) cout << "Done POG IDs"<<endl;
         elID::unsetCache();
-
+	if (verbose) cout << "Some MC properties"<<endl;
         if (!evt_isRealData ) {
           motherID = lepMotherID(Lep(id, idx));
           mc_motherp4 = tas::els_mc_motherp4().at(i); 
           mc_motherid = tas::els_mc_motherid().at(i); 
         }
-  
         //Triggers
+	if (verbose) cout << "Electron triggers" << endl;
         fillElectronTriggerBranches(p4, idx, false);
-
+	if (verbose) cout << "Saving electron branches"<<endl;
         //Fill tree once per tag
         BabyTree->Fill(); 
-
+	if (verbose) cout << "Finished electron"<<endl;
       }
 
       ////////// Addition of PF LEPTONS that were not included before //////////////////
@@ -1421,7 +1446,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       //    - compare size of pfelp4 with probeelp4, and same for muons
       //    - check whether there is a muon/electron tag
       // if something to be done, then we need to save the pflepton as well as tag properties and triggers...
-
+      if (verbose) cout << "Addition of PF LEPTONS that were not included before" << endl;
       bool addPFel = false;
       bool addPFmu = false;
       if ( foundElTag && savedElP4s.size() != pfelP4.size() ) addPFel = true;
