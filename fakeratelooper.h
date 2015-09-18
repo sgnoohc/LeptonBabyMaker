@@ -223,6 +223,13 @@ private:
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
   int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
 
+  int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210;
+  int probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20;
+  int probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10;
+  double probe_L1EG2210_pt;
+  double probe_L1EG20_pt;
+  double probe_L1EG10_pt;
+  
   int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
   int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
   int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
