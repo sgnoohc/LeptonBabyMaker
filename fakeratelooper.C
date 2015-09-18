@@ -151,9 +151,13 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg" , &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg);
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg", &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg);
   BabyTree->Branch("probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210", &probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210);
+  BabyTree->Branch("probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg" , &probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg);
+  BabyTree->Branch("probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg", &probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg);
+  BabyTree->Branch("probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG1510", &probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG1510);
   BabyTree->Branch("probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20", &probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20);
   BabyTree->Branch("probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10", &probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10);
   BabyTree->Branch("probe_L1EG2210_pt", &probe_L1EG2210_pt);
+  BabyTree->Branch("probe_L1EG1510_pt", &probe_L1EG1510_pt);
   BabyTree->Branch("probe_L1EG20_pt", &probe_L1EG20_pt);
   BabyTree->Branch("probe_L1EG10_pt", &probe_L1EG10_pt);
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg"   , &tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg);
@@ -293,6 +297,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300"          , &HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300);
   BabyTree->Branch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"              , &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
   BabyTree->Branch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"                 , &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+  BabyTree->Branch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"              , &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  BabyTree->Branch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL"                 , &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL);
 
 }
 
