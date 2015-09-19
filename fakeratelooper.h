@@ -97,6 +97,7 @@ private:
   vector <LorentzVector> jets;
   vector <float> jets_disc; 
   vector <float> jets_area; 
+  vector <float> jets_undoJEC; 
   TString sample;
   int nFOs_SS;
   int nvtx;
@@ -159,7 +160,9 @@ private:
   float reliso04;
   float annulus04;
   LorentzVector jet_close_lep;
-  float jet_close_undoJEC;
+  int jet_close_lep_idx;
+  float jet_close_lep_undoJEC;
+  float jet_close_lep_area;
   float jet_close_L1;
   float jet_close_L1nc;
   float jet_close_L1ncmc;

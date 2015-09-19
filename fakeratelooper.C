@@ -46,6 +46,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jets"              , &jets);
   BabyTree->Branch("jets_disc"         , &jets_disc);
   BabyTree->Branch("jets_area"         , &jets_area);
+  BabyTree->Branch("jets_undoJEC"      , &jets_undoJEC);
   BabyTree->Branch("sample"            , &sample);
   BabyTree->Branch("nFOs_SS"           , &nFOs_SS);
   BabyTree->Branch("nvtx"              , &nvtx);
@@ -110,8 +111,10 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("iso03sumPt"                    , &iso03sumPt);
   BabyTree->Branch("iso03emEt"                     , &iso03emEt);
   BabyTree->Branch("iso03hadEt"                    , &iso03hadEt);
+  BabyTree->Branch("jet_close_lep_idx"                 , &jet_close_lep_idx);
   BabyTree->Branch("jet_close_lep"                 , &jet_close_lep);
-  BabyTree->Branch("jet_close_undoJEC"             , &jet_close_undoJEC);
+  BabyTree->Branch("jet_close_lep_undoJEC"             , &jet_close_lep_undoJEC);
+  BabyTree->Branch("jet_close_lep_area"             , &jet_close_lep_area);
   BabyTree->Branch("jet_close_L1"                  , &jet_close_L1);
   BabyTree->Branch("jet_close_L1nc"                , &jet_close_L1nc);
   BabyTree->Branch("jet_close_L1ncmc"              , &jet_close_L1ncmc);
@@ -337,6 +340,7 @@ void babyMaker::InitBabyNtuple(){
   jets.clear();
   jets_disc.clear();
   jets_area.clear();
+  jets_undoJEC.clear();
   sample = "";
   nFOs_SS = -1;
   nvtx = -1;
@@ -406,8 +410,10 @@ void babyMaker::InitLeptonBranches(){
   iso03sumPt = -1;
   iso03emEt = -1;
   iso03hadEt = -1;
+  jet_close_lep_idx = -1;
   jet_close_lep = LorentzVector(0,0,0,0);
-  jet_close_undoJEC = -1;
+  jet_close_lep_undoJEC = -1;
+  jet_close_lep_area = -1;
   jet_close_L1 = -1;
   jet_close_L1nc = -1;
   jet_close_L1ncmc = -1;
@@ -1043,6 +1049,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         jets_disc.push_back(disc);
 
         jets_area.push_back(tas::pfjets_area().at(i));
+        jets_undoJEC.push_back(tas::pfjets_undoJEC().at(i));
 
       }
       njets = jets.size();
@@ -1167,8 +1174,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         miniisoDB = muMiniRelIsoCMS3_DB(idx);
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
+      jet_close_lep_idx = closeJetIdx;
 	  jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
-	  jet_close_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
+	  jet_close_lep_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
+	  jet_close_lep_area = tas::pfjets_area().at(closeJetIdx);
 	  if (jetcorr_filenames_pfL1L2L3.size()>0) { 
 	    //L1
 	    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
@@ -1316,8 +1325,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	if (verbose) cout << "About to correct jets for this electron" << endl;
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
+      jet_close_lep_idx = closeJetIdx;
 	  jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
-	  jet_close_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
+	  jet_close_lep_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
+	  jet_close_lep_area = tas::pfjets_area().at(closeJetIdx);
 	  if (jetcorr_filenames_pfL1L2L3.size()>0) { 
 	    //L1
 	    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
