@@ -1,17 +1,44 @@
 # LeptonBabyMaker
 one lepton babymaker for common SS+OS effort
 
-To use the baby maker, first make sure you have root sourced. Then check out this repo: 
+Instructions for 74X
+
+Setup CMSSW74X (if not already setup):
+```
+cmsrel CMSSW_7_4_1_patch1
+cd CMSSW_7_4_1_patch1/src
+cmsenv
+```
+
+Then 
+
+```
 git clone git@github.com:cmstas/LeptonBabyMaker.git
+cd LeptonBabyMaker
+git checkout cmssw74x
+source setupCORE.sh
+make
+./main.exe
+```
 
-Then checkout and compile CORE
-. setupCORE.sh 
+Currently running main.C, while runLooper.C is kept for reference.
 
-At the top of runLooper.C, specify the user-controlled options (see the comment).
+main.C can have 4 inputs
+```
+./main.exe SampleName NumberOfEvents FileNumber OutputDirectory
+```
+The default values are
+   * SampleName = default.
+   * NumberOfEvents = -1 (meaning all)
+   * FileNumber = 0 (meaning merged_ntuple_*.root)
+   * OutputDirectory = ./
 
-Then run the looper
-root -b -q runLooper.C
+Also note, that the samples are stored in sample.dat in format
+```
+SAMPLE
+Name SampleName
+Path CMSntuplePath
+```
 
-Important things to note:
-  1. Moved declaration of output directory to runLooper.C. Make sure you update the output path before running over a large sample!
-  2. You need to set the samples and running options in runLooper.C. The previous samples run to make the fake rate can be used as an example of how this is done.
+Batch mode is now implemented to work for root6.
+

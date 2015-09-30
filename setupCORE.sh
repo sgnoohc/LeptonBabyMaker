@@ -6,7 +6,8 @@ then
 else 
   git clone git@github.com:cmstas/CORE.git
   cd CORE
-  make -j 8
+  git checkout cmssw74x
+  make -j 10
   cd ..
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+#  git clone git@github.com:cmstas/Tools.git
 fi
