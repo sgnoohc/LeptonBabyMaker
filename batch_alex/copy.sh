@@ -18,3 +18,7 @@ cp  /home/users/cgeorge/CORE/Tools/jetcorr/data/run2_50ns/*.txt CORE/Tools/jetco
 cp ../sample.dat .
 cp ../liblooper.so . 
 cp -r ../goodRunList/*.txt goodRunList/
+
+#Do the tarring
+tar czf CORE.tar.gz CORE
+tar czf goodRunList.tar.gz goodRunList
