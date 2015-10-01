@@ -8,3 +8,11 @@ fakeratelooper_C.so
 LinkDef*
 Tools
 *.so
+.nfs*
+batch_alex/*.tar.gz
+batch_alex/condorFile
+batch_alex/goodRunList/
+batch_alex/logs/
+null
+batch_alex/sample.dat
+batch_alex/voms_status.txt

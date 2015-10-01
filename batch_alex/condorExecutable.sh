@@ -4,8 +4,11 @@
 FILENO=$1
 
 #set up root sys
+export CMS_PATH=/cvmfs/cms.cern.ch
+export SCRAM_ARCH=slc6_amd64_gcc491
+source /cvmfs/cms.cern.ch/cmsset_default.sh
 cd /cvmfs/cms.cern.ch/slc6_amd64_gcc491/cms/cmssw-patch/CMSSW_7_4_1_patch1/external/slc6_amd64_gcc491/
-cmsenv
+eval `scramv1 runtime -sh`
 cd - 
 
 #untar
