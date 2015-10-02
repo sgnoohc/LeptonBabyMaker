@@ -4,7 +4,7 @@ for (( i = 1 ; i <= 239; i++))
 do
  
   #see if already there
-  COPYDIR=/hadoop/cms/store/user/cgeorge/condor/singleLeptonBabies/
+  COPYDIR=/hadoop/cms/store/user/cgeorge/condor/singleLeptonBabies
   OUTPUT=DY_amcnlo_$FILENO.root
   if [ -e $COPYDIR/$OUTPUT ]; then continue; fi; 
 
