@@ -21,4 +21,4 @@ tar -xzvf goodRunList.tar.gz
 #copy back the output
 COPYDIR=/hadoop/cms/store/user/cgeorge/condor/singleLeptonBabies/
 OUTPUT=DY_amcnlo_$FILENO.root
-lcg-cp -b -D srmv2 --vo cms --connect-timeout 2400 --verbose file://`pwd`/${OUTPUT}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${COPYDIR}/${OUTPUT}.root
+lcg-cp -b -D srmv2 --vo cms --connect-timeout 2400 --verbose file://`pwd`/${OUTPUT}.root srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=${COPYDIR}/${OUTPUT}
