@@ -167,6 +167,7 @@ private:
   float jet_close_L1nc;
   float jet_close_L1ncmc;
   float jet_close_L1L2L3;
+  float jet_close_L2L3;
   float ptratio;
   int tag_charge;
   float tag_eSeed;

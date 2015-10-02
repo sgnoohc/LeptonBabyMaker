@@ -119,6 +119,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jet_close_L1nc"                , &jet_close_L1nc);
   BabyTree->Branch("jet_close_L1ncmc"              , &jet_close_L1ncmc);
   BabyTree->Branch("jet_close_L1L2L3"              , &jet_close_L1L2L3);
+  BabyTree->Branch("jet_close_L2L3"                , &jet_close_L2L3);
   BabyTree->Branch("ptratio"                       , &ptratio);
   BabyTree->Branch("tag_charge"                    , &tag_charge);
   BabyTree->Branch("tag_eSeed"                     , &tag_eSeed);
@@ -418,6 +419,7 @@ void babyMaker::InitLeptonBranches(){
   jet_close_L1nc = -1;
   jet_close_L1ncmc = -1;
   jet_close_L1L2L3 = -1;
+  jet_close_L2L3 = -1;
   ptratio = -1;
   dilep_mass = -1.;
   isRandom = false;
@@ -848,10 +850,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //JEC files -- 50 ns MC
   std::vector<std::string> jetcorr_filenames_50ns_MC_pfL1;
   std::vector<std::string> jetcorr_filenames_50ns_MC_pfL1L2L3;
+  std::vector<std::string> jetcorr_filenames_50ns_MC_pfL2L3;
   jetcorr_filenames_50ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
   jetcorr_filenames_50ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt");
   jetcorr_filenames_50ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt");
   jetcorr_filenames_50ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_50ns_MC_pfL2L3.push_back    ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_50ns_MC_pfL2L3.push_back    ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_50ns_MC_pfL2L3.push_back    ("CORE/Tools/jetcorr/data/run2_50ns/Summer15_50nsV4_MC_L2L3Residual_AK4PFchs.txt");
 
   //JEC files -- 50 ns DATA
   std::vector<std::string> jetcorr_filenames_50ns_DATA_pfL1;
@@ -865,35 +871,45 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //JEC files -- 25 ns MC
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1;
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1L2L3;
+  std::vector<std::string> jetcorr_filenames_25ns_MC_pfL2L3;
   jetcorr_filenames_25ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
   jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
   jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
   jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L2L3Residual_AK4PFchs.txt");
 
   //Make JEC for each of these
   FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1; 
   FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1L2L3; 
+  FactorizedJetCorrector *jet_corrector_50ns_MC_pfL2L3; 
   FactorizedJetCorrector *jet_corrector_50ns_DATA_pfL1; 
   FactorizedJetCorrector *jet_corrector_50ns_DATA_pfL1L2L3; 
   FactorizedJetCorrector *jet_corrector_25ns_MC_pfL1; 
   FactorizedJetCorrector *jet_corrector_25ns_MC_pfL1L2L3; 
+  FactorizedJetCorrector *jet_corrector_25ns_MC_pfL2L3; 
 
   //Fill the JEC
   jet_corrector_50ns_MC_pfL1 = makeJetCorrector(jetcorr_filenames_50ns_MC_pfL1); 
   jet_corrector_50ns_MC_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_50ns_MC_pfL1L2L3); 
+  jet_corrector_50ns_MC_pfL2L3 = makeJetCorrector(jetcorr_filenames_50ns_MC_pfL2L3); 
   jet_corrector_50ns_DATA_pfL1 = makeJetCorrector(jetcorr_filenames_50ns_DATA_pfL1); 
   jet_corrector_50ns_DATA_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_50ns_DATA_pfL1L2L3); 
   jet_corrector_25ns_MC_pfL1 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL1); 
   jet_corrector_25ns_MC_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL1L2L3); 
+  jet_corrector_25ns_MC_pfL2L3 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL2L3); 
 
   //JECs
   FactorizedJetCorrector *jet_corrector_pfL1 = 0;
   FactorizedJetCorrector *jet_corrector_pfL1MC = 0;
   FactorizedJetCorrector *jet_corrector_pfL1L2L3 = 0;
+  FactorizedJetCorrector *jet_corrector_pfL2L3 = 0;
 
   //Record filenames
   std::vector <string> jetcorr_filenames_pfL1;
   std::vector <string> jetcorr_filenames_pfL1L2L3;
+  std::vector <string> jetcorr_filenames_pfL2L3;
 
   //Set up loop over chain
   unsigned int nEventsDone = 0;
@@ -921,12 +937,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       jet_corrector_pfL1 = jet_corrector_50ns_DATA_pfL1;
       jet_corrector_pfL1MC = jet_corrector_50ns_MC_pfL1;
       jet_corrector_pfL1L2L3 = jet_corrector_50ns_DATA_pfL1L2L3;
+      jet_corrector_pfL2L3 = jet_corrector_25ns_MC_pfL2L3; //just a kludge, we will never use this
       jetcorr_filenames_pfL1 = jetcorr_filenames_50ns_DATA_pfL1;
       jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_50ns_DATA_pfL1L2L3;
     }
     else if (bx == 50 && !isDataFromFileName){
       jet_corrector_pfL1 = jet_corrector_50ns_MC_pfL1;
       jet_corrector_pfL1MC = jet_corrector_50ns_MC_pfL1;
+      jet_corrector_pfL2L3 = jet_corrector_50ns_MC_pfL2L3;
       jet_corrector_pfL1L2L3 = jet_corrector_50ns_MC_pfL1L2L3;
       jetcorr_filenames_pfL1 = jetcorr_filenames_50ns_MC_pfL1;
       jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_50ns_MC_pfL1L2L3;
@@ -935,6 +953,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       jet_corrector_pfL1 = jet_corrector_25ns_MC_pfL1;
       jet_corrector_pfL1MC = jet_corrector_25ns_MC_pfL1;
       jet_corrector_pfL1L2L3 = jet_corrector_25ns_MC_pfL1L2L3;
+      jet_corrector_pfL2L3 = jet_corrector_25ns_MC_pfL2L3;
       jetcorr_filenames_pfL1 = jetcorr_filenames_25ns_MC_pfL1;
       jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_25ns_MC_pfL1L2L3;
     }
@@ -1203,6 +1222,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	    jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1L2L3->setRho(rho);
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
+	    //L2L3
+        LorentzVector raw_jet = jet_close_lep*tas::pfjets_undoJEC().at(closeJetIdx);
+	    jet_corrector_pfL2L3->setJetEta(raw_jet.eta());
+	    jet_corrector_pfL2L3->setJetPt(raw_jet.pt());
+	    jet_corrector_pfL2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
+	    jet_corrector_pfL2L3->setRho(rho);
+	    jet_close_L2L3 = jet_corrector_pfL2L3->getCorrection();
 	  }
 	}
         ptratio = jet_close_lep.pt() > 0 ? p4.pt()/jet_close_lep.pt() : 1; 
@@ -1354,6 +1380,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	    jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1L2L3->setRho(rho);
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
+	    //L2L3
+        LorentzVector raw_jet = jet_close_lep*tas::pfjets_undoJEC().at(closeJetIdx);
+	    jet_corrector_pfL2L3->setJetEta(raw_jet.eta());
+	    jet_corrector_pfL2L3->setJetPt(raw_jet.pt());
+	    jet_corrector_pfL2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
+	    jet_corrector_pfL2L3->setRho(rho);
+	    jet_close_L2L3 = jet_corrector_pfL2L3->getCorrection();
 	  }
 	}
 	if (verbose) cout << "Finished jet corrections" << endl;
