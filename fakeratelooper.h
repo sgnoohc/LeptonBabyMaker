@@ -94,6 +94,7 @@ private:
   float gen_metPhi;  
   float njets;  
   float ht;  
+  float ht_SS;  
   vector <LorentzVector> jets;
   vector <float> jets_disc; 
   vector <float> jets_area; 
@@ -127,12 +128,34 @@ private:
   float pfNeutralHadronIso;
   float tkIso;
   float sumPUPt;
+  //SS bools v3
   bool passes_SS_tight_v3;
   bool passes_SS_tight_noiso_v3;
   bool passes_SS_fo_v3;
   bool passes_SS_fo_noiso_v3;
   bool passes_SS_fo_looseMVA_v3;
   bool passes_SS_fo_looseMVA_noiso_v3;
+  bool passes_SS_veto_v3;
+  bool passes_SS_veto_noiso_v3;
+  //SS bools v4
+  bool passes_SS_tight_v4;
+  bool passes_SS_tight_noiso_v4;
+  bool passes_SS_fo_v4;
+  bool passes_SS_fo_noiso_v4;
+  bool passes_SS_fo_looseMVA_v4;
+  bool passes_SS_fo_looseMVA_noiso_v4;
+  bool passes_SS_veto_v4;
+  bool passes_SS_veto_noiso_v4;
+  //SS bools v5
+  bool passes_SS_tight_v5;
+  bool passes_SS_tight_noiso_v5;
+  bool passes_SS_fo_v5;
+  bool passes_SS_fo_noiso_v5;
+  bool passes_SS_fo_looseMVA_v5;
+  bool passes_SS_fo_looseMVA_noiso_v5;
+  bool passes_SS_veto_v5;
+  bool passes_SS_veto_noiso_v5;
+  //WW bools
   bool passes_WW_medium_v1;
   bool passes_WW_medium_noiso_v1;
   bool passes_WW_fo_v1;
@@ -141,14 +164,17 @@ private:
   bool passes_WW_fo_looseMVA_noiso_v1;
   bool passes_WW_veto_v1;
   bool passes_WW_veto_noiso_v1;
+  //HAD bools
   bool passes_HAD_veto_v3;
   bool passes_HAD_veto_noiso_v3;
   bool passes_HAD_loose_v3;
   bool passes_HAD_loose_noiso_v3;
+  //POG bools
   bool passes_POG_vetoID;
   bool passes_POG_looseID;
   bool passes_POG_mediumID;
   bool passes_POG_tightID;
+  //
   float ip3d;
   float ip3derr;
   int type;

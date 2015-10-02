@@ -43,6 +43,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("gen_metPhi"        , &gen_metPhi);
   BabyTree->Branch("njets"             , &njets);
   BabyTree->Branch("ht"                , &ht);
+  BabyTree->Branch("ht_SS"             , &ht_SS);
   BabyTree->Branch("jets"              , &jets);
   BabyTree->Branch("jets_disc"         , &jets_disc);
   BabyTree->Branch("jets_area"         , &jets_area);
@@ -82,6 +83,24 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("passes_SS_fo_noiso_v3"         , &passes_SS_fo_noiso_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_v3"      , &passes_SS_fo_looseMVA_v3);
   BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v3", &passes_SS_fo_looseMVA_noiso_v3);
+  BabyTree->Branch("passes_SS_veto_v3"             , &passes_SS_veto_v3);
+  BabyTree->Branch("passes_SS_veto_noiso_v3"       , &passes_SS_veto_noiso_v3);
+  BabyTree->Branch("passes_SS_tight_v4"            , &passes_SS_tight_v4);
+  BabyTree->Branch("passes_SS_tight_noiso_v4"      , &passes_SS_tight_noiso_v4);
+  BabyTree->Branch("passes_SS_fo_v4"               , &passes_SS_fo_v4);
+  BabyTree->Branch("passes_SS_fo_noiso_v4"         , &passes_SS_fo_noiso_v4);
+  BabyTree->Branch("passes_SS_fo_looseMVA_v4"      , &passes_SS_fo_looseMVA_v4);
+  BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v4", &passes_SS_fo_looseMVA_noiso_v4);
+  BabyTree->Branch("passes_SS_veto_v4"             , &passes_SS_veto_v4);
+  BabyTree->Branch("passes_SS_veto_noiso_v4"       , &passes_SS_veto_noiso_v4);
+  BabyTree->Branch("passes_SS_tight_v5"            , &passes_SS_tight_v5);
+  BabyTree->Branch("passes_SS_tight_noiso_v5"      , &passes_SS_tight_noiso_v5);
+  BabyTree->Branch("passes_SS_fo_v5"               , &passes_SS_fo_v5);
+  BabyTree->Branch("passes_SS_fo_noiso_v5"         , &passes_SS_fo_noiso_v5);
+  BabyTree->Branch("passes_SS_fo_looseMVA_v5"      , &passes_SS_fo_looseMVA_v5);
+  BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v5", &passes_SS_fo_looseMVA_noiso_v5);
+  BabyTree->Branch("passes_SS_veto_v5"             , &passes_SS_veto_v5);
+  BabyTree->Branch("passes_SS_veto_noiso_v5"       , &passes_SS_veto_noiso_v5);
   BabyTree->Branch("passes_WW_medium_v1"           , &passes_WW_medium_v1);
   BabyTree->Branch("passes_WW_medium_noiso_v1"     , &passes_WW_medium_noiso_v1);
   BabyTree->Branch("passes_WW_fo_v1"               , &passes_WW_fo_v1);
@@ -338,6 +357,7 @@ void babyMaker::InitBabyNtuple(){
   gen_metPhi = -99;
   njets = -1;
   ht = -1;
+  ht_SS = -1;
   jets.clear();
   jets_disc.clear();
   jets_area.clear();
@@ -382,6 +402,24 @@ void babyMaker::InitLeptonBranches(){
   passes_SS_fo_noiso_v3 = 0;
   passes_SS_fo_looseMVA_v3 = 0;
   passes_SS_fo_looseMVA_noiso_v3 = 0;
+  passes_SS_veto_v3 = 0;
+  passes_SS_veto_noiso_v3 = 0;
+  passes_SS_tight_v4 = 0;
+  passes_SS_tight_noiso_v4 = 0;
+  passes_SS_fo_v4 = 0;
+  passes_SS_fo_noiso_v4 = 0;
+  passes_SS_fo_looseMVA_v4 = 0;
+  passes_SS_fo_looseMVA_noiso_v4 = 0;
+  passes_SS_veto_v4 = 0;
+  passes_SS_veto_noiso_v4 = 0;
+  passes_SS_tight_v5 = 0;
+  passes_SS_tight_noiso_v5 = 0;
+  passes_SS_fo_v5 = 0;
+  passes_SS_fo_noiso_v5 = 0;
+  passes_SS_fo_looseMVA_v5 = 0;
+  passes_SS_fo_looseMVA_noiso_v5 = 0;
+  passes_SS_veto_v5 = 0;
+  passes_SS_veto_noiso_v5 = 0;
   passes_WW_medium_v1 = 0;
   passes_WW_medium_noiso_v1 = 0;
   passes_WW_fo_v1 = 0;
@@ -839,7 +877,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   v25nsMVAreader->InitMVA("CORE",true); 
 
   //Add good run list
-  set_goodrun_file("goodRunList/json_Golden_246908-255031_16p10pb_snt.txt");
+  set_goodrun_file("goodRunList/json_Golden_246908-256869_166p37pb_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
@@ -880,6 +918,19 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
   jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_MC_L2L3Residual_AK4PFchs.txt");
 
+  //JEC files -- 25 ns DATA
+  std::vector<std::string> jetcorr_filenames_25ns_DATA_pfL1;
+  std::vector<std::string> jetcorr_filenames_25ns_DATA_pfL1L2L3;
+  std::vector<std::string> jetcorr_filenames_25ns_DATA_pfL2L3;
+  jetcorr_filenames_25ns_DATA_pfL1.push_back    ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt");
+
   //Make JEC for each of these
   FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1; 
   FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1L2L3; 
@@ -889,6 +940,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   FactorizedJetCorrector *jet_corrector_25ns_MC_pfL1; 
   FactorizedJetCorrector *jet_corrector_25ns_MC_pfL1L2L3; 
   FactorizedJetCorrector *jet_corrector_25ns_MC_pfL2L3; 
+  FactorizedJetCorrector *jet_corrector_25ns_DATA_pfL1; 
+  FactorizedJetCorrector *jet_corrector_25ns_DATA_pfL1L2L3; 
+  FactorizedJetCorrector *jet_corrector_25ns_DATA_pfL2L3; 
 
   //Fill the JEC
   jet_corrector_50ns_MC_pfL1 = makeJetCorrector(jetcorr_filenames_50ns_MC_pfL1); 
@@ -899,6 +953,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   jet_corrector_25ns_MC_pfL1 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL1); 
   jet_corrector_25ns_MC_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL1L2L3); 
   jet_corrector_25ns_MC_pfL2L3 = makeJetCorrector(jetcorr_filenames_25ns_MC_pfL2L3); 
+  jet_corrector_25ns_DATA_pfL1 = makeJetCorrector(jetcorr_filenames_25ns_DATA_pfL1); 
+  jet_corrector_25ns_DATA_pfL1L2L3 = makeJetCorrector(jetcorr_filenames_25ns_DATA_pfL1L2L3); 
+  jet_corrector_25ns_DATA_pfL2L3 = makeJetCorrector(jetcorr_filenames_25ns_DATA_pfL2L3); 
 
   //JECs
   FactorizedJetCorrector *jet_corrector_pfL1 = 0;
@@ -949,7 +1006,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       jetcorr_filenames_pfL1 = jetcorr_filenames_50ns_MC_pfL1;
       jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_50ns_MC_pfL1L2L3;
     }
-    else if (bx == 25){
+    else if (bx == 25 && isDataFromFileName){
+      jet_corrector_pfL1 = jet_corrector_25ns_DATA_pfL1;
+      jet_corrector_pfL1MC = jet_corrector_25ns_MC_pfL1;
+      jet_corrector_pfL1L2L3 = jet_corrector_25ns_DATA_pfL1L2L3;
+      jet_corrector_pfL2L3 = jet_corrector_25ns_DATA_pfL2L3;
+      jetcorr_filenames_pfL1 = jetcorr_filenames_25ns_DATA_pfL1;
+      jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_25ns_DATA_pfL1L2L3;
+    }
+    else if (bx == 25 && !isDataFromFileName){
       jet_corrector_pfL1 = jet_corrector_25ns_MC_pfL1;
       jet_corrector_pfL1MC = jet_corrector_25ns_MC_pfL1;
       jet_corrector_pfL1L2L3 = jet_corrector_25ns_MC_pfL1L2L3;
@@ -957,10 +1022,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       jetcorr_filenames_pfL1 = jetcorr_filenames_25ns_MC_pfL1;
       jetcorr_filenames_pfL1L2L3 = jetcorr_filenames_25ns_MC_pfL1L2L3;
     }
-    cout << "applying JEC from the following files:" << endl;
-    for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1L2L3.size(); ++ifile) {
-      cout << "   " << jetcorr_filenames_pfL1L2L3.at(ifile) << endl;
-    }
+    //cout << "applying JEC from the following files:" << endl;
+    //for (unsigned int ifile = 0; ifile < jetcorr_filenames_pfL1L2L3.size(); ++ifile) {
+    //cout << "   " << jetcorr_filenames_pfL1L2L3.at(ifile) << endl;
+    //}
 
     // Get File Content
     if(nEventsDone >= nEventsToDo) continue;
@@ -1045,6 +1110,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
       //Determine and save jet variables
       ht = 0;
+      ht_SS = 0;
       for (unsigned int i = 0; i < tas::pfjets_p4().size(); i++){
         LorentzVector jet = tas::pfjets_p4().at(i);
 
@@ -1062,6 +1128,17 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
         //HT is sum of jets with pT > 40
         if(jet.pt() > 40) ht += jet.pt();
+
+        if(jet.pt() > 40 && fabs(jet.eta())<2.4) {
+	  bool jetClean = true;
+	  for(size_t j = 0; j < tas::mus_p4().size(); j++){
+	    if(muonID(j, SS_fo_v4) && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) jetClean = false;
+	  }
+	  for(size_t j = 0; j < tas::els_p4().size(); j++){
+	    if(electronID(j, SS_fo_looseMVA_v4) && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) jetClean = false;
+	  }
+	  if (jetClean) ht_SS += jet.pt();
+	}
 
         //Save b-tags
         float disc = tas::pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag().at(i);  
@@ -1083,10 +1160,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if (verbose) cout << "Calculate number of fakeable objects" <<endl;
       nFOs_SS = 0; 
       for(size_t j = 0; j < tas::mus_p4().size(); j++){
-        if(muonID(j, SS_fo_v3) && tas::mus_p4().at(j).pt() > 10) nFOs_SS++;
+        if(muonID(j, SS_fo_v4) && tas::mus_p4().at(j).pt() > 10) nFOs_SS++;
       }
       for(size_t j = 0; j < tas::els_p4().size(); j++){
-        if( electronID(j, SS_fo_looseMVA_v3) && tas::els_p4().at(j).pt() > 10) nFOs_SS++;
+        if( electronID(j, SS_fo_looseMVA_v4) && tas::els_p4().at(j).pt() > 10) nFOs_SS++;
       }
 
       //These variables are persistent through the event, used for PFlepton saving
@@ -1137,7 +1214,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	if (tas::mus_p4().at(i).pt()<=10.) continue;
 
         //Save the muon if we have a tag OR if it passes loose ID 
-        if(muonID(i, SS_veto_noiso_v3)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
+        if(muonID(i, SS_veto_noiso_v4)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
         //check to which leg a match has been found
 	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
 	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
@@ -1223,7 +1300,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	    jet_corrector_pfL1L2L3->setRho(rho);
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
 	    //L2L3
-        LorentzVector raw_jet = jet_close_lep*tas::pfjets_undoJEC().at(closeJetIdx);
+	    LorentzVector raw_jet = jet_close_lep*tas::pfjets_undoJEC().at(closeJetIdx);
 	    jet_corrector_pfL2L3->setJetEta(raw_jet.eta());
 	    jet_corrector_pfL2L3->setJetPt(raw_jet.pt());
 	    jet_corrector_pfL2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
@@ -1265,6 +1342,20 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(muonID(i, SS_tight_noiso_v3))        passes_SS_tight_noiso_v3 = true;
         if(muonID(i, SS_fo_v3))                 passes_SS_fo_v3 = true;
         if(muonID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
+        if(muonID(i, SS_veto_v3))               passes_SS_veto_v3 = true;
+        if(muonID(i, SS_veto_noiso_v3))         passes_SS_veto_noiso_v3 = true;
+        if(muonID(i, SS_tight_v4))              passes_SS_tight_v4 = true;
+        if(muonID(i, SS_tight_noiso_v4))        passes_SS_tight_noiso_v4 = true;
+        if(muonID(i, SS_fo_v4))                 passes_SS_fo_v4 = true;
+        if(muonID(i, SS_fo_noiso_v4))           passes_SS_fo_noiso_v4 = true;
+        if(muonID(i, SS_veto_v4))               passes_SS_veto_v4 = true;
+        if(muonID(i, SS_veto_noiso_v4))         passes_SS_veto_noiso_v4 = true;
+        if(muonID(i, SS_tight_v5))              passes_SS_tight_v5 = true;
+        if(muonID(i, SS_tight_noiso_v5))        passes_SS_tight_noiso_v5 = true;
+        if(muonID(i, SS_fo_v5))                 passes_SS_fo_v5 = true;
+        if(muonID(i, SS_fo_noiso_v5))           passes_SS_fo_noiso_v5 = true;
+        if(muonID(i, SS_veto_v5))               passes_SS_veto_v5 = true;
+        if(muonID(i, SS_veto_noiso_v5))         passes_SS_veto_noiso_v5 = true;
 
         //Save WW ID bools
         if(muonID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
@@ -1307,7 +1398,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if (tas::els_p4().at(i).pt() <= 10) continue; 
 
         //Save the electron if we have a tag OR if it passes loose ID 
-        if(electronID(i, SS_veto_noiso_v3)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue;
+        if(electronID(i, SS_veto_noiso_v4)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue;
 
 	if (verbose) cout << "Saving this electron" << endl;
 
@@ -1381,7 +1472,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	    jet_corrector_pfL1L2L3->setRho(rho);
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
 	    //L2L3
-        LorentzVector raw_jet = jet_close_lep*tas::pfjets_undoJEC().at(closeJetIdx);
+	    LorentzVector raw_jet = jet_close_lep*tas::pfjets_undoJEC().at(closeJetIdx);
 	    jet_corrector_pfL2L3->setJetEta(raw_jet.eta());
 	    jet_corrector_pfL2L3->setJetPt(raw_jet.pt());
 	    jet_corrector_pfL2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
@@ -1458,6 +1549,25 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
         if(electronID(i, SS_fo_looseMVA_v3))        passes_SS_fo_looseMVA_v3 = true;
         if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
+        if(electronID(i, SS_veto_v3))               passes_SS_veto_v3 = true;
+        if(electronID(i, SS_veto_noiso_v3))         passes_SS_veto_noiso_v3 = true;
+        if(electronID(i, SS_medium_v4))             passes_SS_tight_v4 = true;
+        if(electronID(i, SS_medium_noiso_v4))       passes_SS_tight_noiso_v4 = true;
+        if(electronID(i, SS_fo_v4))                 passes_SS_fo_v4 = true;
+        if(electronID(i, SS_fo_noiso_v4))           passes_SS_fo_noiso_v4 = true;
+        if(electronID(i, SS_fo_looseMVA_v4))        passes_SS_fo_looseMVA_v4 = true;
+        if(electronID(i, SS_fo_looseMVA_noiso_v4))  passes_SS_fo_looseMVA_noiso_v4 = true;
+        if(electronID(i, SS_veto_v4))               passes_SS_veto_v4 = true;
+        if(electronID(i, SS_veto_noiso_v4))         passes_SS_veto_noiso_v4 = true;
+        if(electronID(i, SS_medium_v5))             passes_SS_tight_v5 = true;
+        if(electronID(i, SS_medium_noiso_v5))       passes_SS_tight_noiso_v5 = true;
+        if(electronID(i, SS_fo_v5))                 passes_SS_fo_v5 = true;
+        if(electronID(i, SS_fo_noiso_v5))           passes_SS_fo_noiso_v5 = true;
+        if(electronID(i, SS_fo_looseMVA_v5))        passes_SS_fo_looseMVA_v5 = true;
+        if(electronID(i, SS_fo_looseMVA_noiso_v5))  passes_SS_fo_looseMVA_noiso_v5 = true;
+        if(electronID(i, SS_veto_v5))               passes_SS_veto_v5 = true;
+        if(electronID(i, SS_veto_noiso_v5))         passes_SS_veto_noiso_v5 = true;
+
 	if (verbose) cout << "Done SS IDs" <<endl;
         //Save WW ID bools
         if(electronID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
