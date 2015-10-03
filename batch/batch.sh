@@ -11,7 +11,7 @@ verbose="false"
 #Set directory to copy results to when finished
 copy_dir=/hadoop/cms/store/user/${USER}/condor/forCommissioning
 if [ ! -d $copy_dir/merged_files ]; then
-    mkdir $copy_dir/merged_files
+    mkdir -p $copy_dir/merged_files
 fi
 
 #Check that log file folder and tarball files exists
