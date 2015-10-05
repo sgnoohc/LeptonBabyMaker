@@ -1266,7 +1266,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         iso03hadEt = tas::mus_iso03_hadEt().at(i);
         ptrelv0 = getPtRel(id, idx, false);
         ptrelv1 = getPtRel(id, idx, true);
-        miniiso = muMiniRelIsoCMS3_EA(idx);
+        miniiso = muMiniRelIsoCMS3_EA(idx,1);
         miniisoDB = muMiniRelIsoCMS3_DB(idx);
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
@@ -1482,7 +1482,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	}
 	if (verbose) cout << "Finished jet corrections" << endl;
         ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-        miniiso = elMiniRelIsoCMS3_EA(idx);
+        miniiso = elMiniRelIsoCMS3_EA(idx,1);
         miniisoDB = elMiniRelIsoCMS3_DB(idx);
 
         //MT
