@@ -1270,7 +1270,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         miniisoDB = muMiniRelIsoCMS3_DB(idx);
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
-      jet_close_lep_idx = closeJetIdx;
+	  jet_close_lep_idx = closeJetIdx;
 	  jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
 	  jet_close_lep_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
 	  jet_close_lep_area = tas::pfjets_area().at(closeJetIdx);
@@ -1442,7 +1442,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	if (verbose) cout << "About to correct jets for this electron" << endl;
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
-      jet_close_lep_idx = closeJetIdx;
+	  jet_close_lep_idx = closeJetIdx;
 	  jet_close_lep = tas::pfjets_p4().at(closeJetIdx);
 	  jet_close_lep_undoJEC = tas::pfjets_undoJEC().at(closeJetIdx);
 	  jet_close_lep_area = tas::pfjets_area().at(closeJetIdx);
