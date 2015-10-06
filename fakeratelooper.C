@@ -1264,8 +1264,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         iso03sumPt = tas::mus_iso03_sumPt().at(i);
         iso03emEt  = tas::mus_iso03_emEt().at(i);
         iso03hadEt = tas::mus_iso03_hadEt().at(i);
-        ptrelv0 = getPtRel(id, idx, false);
-        ptrelv1 = getPtRel(id, idx, true);
+        ptrelv0 = getPtRel(id, idx, false, 0);
+        ptrelv1 = getPtRel(id, idx, true, 0);
         miniiso = muMiniRelIsoCMS3_EA(idx,1);
         miniisoDB = muMiniRelIsoCMS3_DB(idx);
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
@@ -1344,18 +1344,31 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(muonID(i, SS_fo_noiso_v3))           passes_SS_fo_noiso_v3 = true;
         if(muonID(i, SS_veto_v3))               passes_SS_veto_v3 = true;
         if(muonID(i, SS_veto_noiso_v3))         passes_SS_veto_noiso_v3 = true;
+	LorentzVector close_jet_v4 = closestJet(p4, 0.4, 2.4, 1);  
+	float ptrel_v4 = ptRel(p4, close_jet_v4, true);
+	float ptratio_v4 = close_jet_v4.pt() > 0 ? p4.pt()/close_jet_v4.pt() : 1;
+        muID::unsetCache();
+        muID::setCache(idx,miniiso,ptratio_v4,ptrel_v4);
         if(muonID(i, SS_tight_v4))              passes_SS_tight_v4 = true;
         if(muonID(i, SS_tight_noiso_v4))        passes_SS_tight_noiso_v4 = true;
         if(muonID(i, SS_fo_v4))                 passes_SS_fo_v4 = true;
         if(muonID(i, SS_fo_noiso_v4))           passes_SS_fo_noiso_v4 = true;
         if(muonID(i, SS_veto_v4))               passes_SS_veto_v4 = true;
         if(muonID(i, SS_veto_noiso_v4))         passes_SS_veto_noiso_v4 = true;
+	LorentzVector close_jet_v5 = closestJet(p4, 0.4, 2.4, 2);  
+	float ptrel_v5 = ptRel(p4, close_jet_v5, true);
+	float ptratio_v5 = close_jet_v5.pt() > 0 ? p4.pt()/close_jet_v5.pt() : 1;
+        muID::unsetCache();
+        muID::setCache(idx,miniiso,ptratio_v5,ptrel_v5);
         if(muonID(i, SS_tight_v5))              passes_SS_tight_v5 = true;
         if(muonID(i, SS_tight_noiso_v5))        passes_SS_tight_noiso_v5 = true;
         if(muonID(i, SS_fo_v5))                 passes_SS_fo_v5 = true;
         if(muonID(i, SS_fo_noiso_v5))           passes_SS_fo_noiso_v5 = true;
         if(muonID(i, SS_veto_v5))               passes_SS_veto_v5 = true;
         if(muonID(i, SS_veto_noiso_v5))         passes_SS_veto_noiso_v5 = true;
+
+        muID::unsetCache();
+        muID::setCache(idx,miniiso,ptratio,ptrelv1);
 
         //Save WW ID bools
         if(muonID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
@@ -1437,8 +1450,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         pfPhotonIso = tas::els_pfPhotonIso().at(i);
         pfNeutralHadronIso = tas::els_pfNeutralHadronIso().at(i);
         tkIso = tas::els_tkIso().at(i);
-        ptrelv0 = getPtRel(id, idx, false);
-        ptrelv1 = getPtRel(id, idx, true);
+        ptrelv0 = getPtRel(id, idx, false, 0);
+        ptrelv1 = getPtRel(id, idx, true, 0);
 	if (verbose) cout << "About to correct jets for this electron" << endl;
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
@@ -1551,6 +1564,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, SS_fo_looseMVA_noiso_v3))  passes_SS_fo_looseMVA_noiso_v3 = true;
         if(electronID(i, SS_veto_v3))               passes_SS_veto_v3 = true;
         if(electronID(i, SS_veto_noiso_v3))         passes_SS_veto_noiso_v3 = true;
+
+	LorentzVector close_jet_v4 = closestJet(p4, 0.4, 2.4, 1);  
+	float ptrel_v4 = ptRel(p4, close_jet_v4, true);
+	float ptratio_v4 = close_jet_v4.pt() > 0 ? p4.pt()/close_jet_v4.pt() : 1;
+        elID::unsetCache();
+        muID::setCache(idx,miniiso,ptratio_v4,ptrel_v4);
         if(electronID(i, SS_medium_v4))             passes_SS_tight_v4 = true;
         if(electronID(i, SS_medium_noiso_v4))       passes_SS_tight_noiso_v4 = true;
         if(electronID(i, SS_fo_v4))                 passes_SS_fo_v4 = true;
@@ -1559,6 +1578,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, SS_fo_looseMVA_noiso_v4))  passes_SS_fo_looseMVA_noiso_v4 = true;
         if(electronID(i, SS_veto_v4))               passes_SS_veto_v4 = true;
         if(electronID(i, SS_veto_noiso_v4))         passes_SS_veto_noiso_v4 = true;
+
+	LorentzVector close_jet_v5 = closestJet(p4, 0.4, 2.4, 2);  
+	float ptrel_v5 = ptRel(p4, close_jet_v5, true);
+	float ptratio_v5 = close_jet_v5.pt() > 0 ? p4.pt()/close_jet_v5.pt() : 1;
+        elID::unsetCache();
+        muID::setCache(idx,miniiso,ptratio_v5,ptrel_v5);
         if(electronID(i, SS_medium_v5))             passes_SS_tight_v5 = true;
         if(electronID(i, SS_medium_noiso_v5))       passes_SS_tight_noiso_v5 = true;
         if(electronID(i, SS_fo_v5))                 passes_SS_fo_v5 = true;
@@ -1567,8 +1592,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, SS_fo_looseMVA_noiso_v5))  passes_SS_fo_looseMVA_noiso_v5 = true;
         if(electronID(i, SS_veto_v5))               passes_SS_veto_v5 = true;
         if(electronID(i, SS_veto_noiso_v5))         passes_SS_veto_noiso_v5 = true;
-
 	if (verbose) cout << "Done SS IDs" <<endl;
+
+        elID::unsetCache();
+        elID::setCache(idx,mva,miniiso,ptratio,ptrelv1);
+
         //Save WW ID bools
         if(electronID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
         if(electronID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
