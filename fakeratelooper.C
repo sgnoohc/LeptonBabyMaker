@@ -19,6 +19,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("evt_pfmetPhi"      , &evt_pfmetPhi);
   BabyTree->Branch("evt_trackmet"      , &evt_trackmet);
   BabyTree->Branch("evt_trackmetPhi"   , &evt_trackmetPhi);
+  BabyTree->Branch("evt_corrMET"       , &evt_corrMET);
+  BabyTree->Branch("evt_corrMETPhi"    , &evt_corrMETPhi);
   BabyTree->Branch("evt_met3p0"        , &evt_met3p0);
   BabyTree->Branch("evt_met3p0Phi"     , &evt_met3p0Phi);
   BabyTree->Branch("evt_t1met3p0"      , &evt_t1met3p0);
@@ -333,6 +335,8 @@ void babyMaker::InitBabyNtuple(){
   evt_pfmetPhi = -99.;
   evt_trackmet = -1;
   evt_trackmetPhi = -99;
+  evt_corrMET = -1;
+  evt_corrMETPhi = -99.;
   evt_met3p0 = -1;
   evt_met3p0Phi = -99.;
   evt_t1met3p0 = -1;
@@ -1064,12 +1068,15 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       metStruct trackMetStruct =  trackerMET(0.2);
       pair<float,float> met3p0Pair = MET3p0();
       pair<float,float> t1met3p0Pair = getT1CHSMET3p0(jet_corrector_pfL1L2L3);
+      pair<float,float> corrMETPair = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1L2L3);
 
       //Fill Easy Variables
       evt_pfmet      = cms3.evt_pfmet();
       evt_pfmetPhi   = cms3.evt_pfmetPhi();
       evt_trackmet   = trackMetStruct.met;
       evt_trackmetPhi= trackMetStruct.metphi;
+      evt_corrMET    = corrMETPair.first;
+      evt_corrMETPhi = corrMETPair.second;
       evt_met3p0     = met3p0Pair.first;
       evt_met3p0Phi  = met3p0Pair.second;
       evt_t1met3p0   = t1met3p0Pair.first;
@@ -1132,10 +1139,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(jet.pt() > 40 && fabs(jet.eta())<2.4) {
 	  bool jetClean = true;
 	  for(size_t j = 0; j < tas::mus_p4().size(); j++){
-	    if(muonID(j, SS_fo_v4) && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) jetClean = false;
+	    if(muonID(j, SS_fo_v5) && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) jetClean = false;
 	  }
 	  for(size_t j = 0; j < tas::els_p4().size(); j++){
-	    if(electronID(j, SS_fo_looseMVA_v4) && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) jetClean = false;
+	    if(electronID(j, SS_fo_looseMVA_v5) && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) jetClean = false;
 	  }
 	  if (jetClean) ht_SS += jet.pt();
 	}
@@ -1160,10 +1167,10 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if (verbose) cout << "Calculate number of fakeable objects" <<endl;
       nFOs_SS = 0; 
       for(size_t j = 0; j < tas::mus_p4().size(); j++){
-        if(muonID(j, SS_fo_v4) && tas::mus_p4().at(j).pt() > 10) nFOs_SS++;
+        if(muonID(j, SS_fo_v5) && tas::mus_p4().at(j).pt() > 10) nFOs_SS++;
       }
       for(size_t j = 0; j < tas::els_p4().size(); j++){
-        if( electronID(j, SS_fo_looseMVA_v4) && tas::els_p4().at(j).pt() > 10) nFOs_SS++;
+        if( electronID(j, SS_fo_looseMVA_v5) && tas::els_p4().at(j).pt() > 10) nFOs_SS++;
       }
 
       //These variables are persistent through the event, used for PFlepton saving
@@ -1214,7 +1221,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	if (tas::mus_p4().at(i).pt()<=10.) continue;
 
         //Save the muon if we have a tag OR if it passes loose ID 
-        if(muonID(i, SS_veto_noiso_v4)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
+        if(muonID(i, SS_veto_noiso_v5)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
         //check to which leg a match has been found
 	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
 	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
@@ -1264,9 +1271,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         iso03sumPt = tas::mus_iso03_sumPt().at(i);
         iso03emEt  = tas::mus_iso03_emEt().at(i);
         iso03hadEt = tas::mus_iso03_hadEt().at(i);
-        ptrelv0 = getPtRel(id, idx, false, 0);
-        ptrelv1 = getPtRel(id, idx, true, 0);
-        miniiso = muMiniRelIsoCMS3_EA(idx,1);
+        ptrelv0 = getPtRel(id, idx, false, ssWhichCorr);
+        ptrelv1 = getPtRel(id, idx, true, ssWhichCorr);
+        miniiso = muMiniRelIsoCMS3_EA(idx,ssEAversion);
         miniisoDB = muMiniRelIsoCMS3_DB(idx);
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
@@ -1449,8 +1456,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         pfPhotonIso = tas::els_pfPhotonIso().at(i);
         pfNeutralHadronIso = tas::els_pfNeutralHadronIso().at(i);
         tkIso = tas::els_tkIso().at(i);
-        ptrelv0 = getPtRel(id, idx, false, 0);
-        ptrelv1 = getPtRel(id, idx, true, 0);
+        ptrelv0 = getPtRel(id, idx, false, ssWhichCorr);
+        ptrelv1 = getPtRel(id, idx, true, ssWhichCorr);
 	if (verbose) cout << "About to correct jets for this electron" << endl;
 	int closeJetIdx = closestJetIdx(p4,0.4,2.4);
 	if (closeJetIdx>=0) {
@@ -1494,7 +1501,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	}
 	if (verbose) cout << "Finished jet corrections" << endl;
         ptratio = ( jet_close_lep.pt()>0. ? p4.pt()/jet_close_lep.pt() : 1. ); 
-        miniiso = elMiniRelIsoCMS3_EA(idx,1);
+        miniiso = elMiniRelIsoCMS3_EA(idx,ssEAversion);
         miniisoDB = elMiniRelIsoCMS3_DB(idx);
 
         //MT

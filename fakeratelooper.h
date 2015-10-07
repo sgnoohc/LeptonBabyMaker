@@ -72,6 +72,8 @@ private:
   float evt_trackmetPhi; //not CMS3
   float evt_met3p0;
   float evt_met3p0Phi;
+  float evt_corrMET;
+  float evt_corrMETPhi;
   float evt_t1met3p0;
   float evt_t1met3p0Phi;
   float evt_pfsumet;
