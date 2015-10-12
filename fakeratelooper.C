@@ -1119,10 +1119,39 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       ht = 0;
       ht_SS = 0;
       for (unsigned int i = 0; i < tas::pfjets_p4().size(); i++){
-        LorentzVector jet = tas::pfjets_p4().at(i);
+
+	LorentzVector raw_jet = tas::pfjets_p4().at(i)*tas::pfjets_undoJEC().at(i);
 
         //Require loose jet ID
         if (!isLoosePFJet(i)) continue;
+	
+	float jet_L1L2L3 = 1.;
+	float jet_L1 = 1.;
+	float jet_L2L3 = 1.;
+	if (jetcorr_filenames_pfL1L2L3.size()>0) { 
+	  //L1L2L3
+	  jet_corrector_pfL1L2L3->setJetEta(raw_jet.eta());
+	  jet_corrector_pfL1L2L3->setJetPt(raw_jet.pt());
+	  jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(i));
+	  jet_corrector_pfL1L2L3->setRho(rho);
+	  jet_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
+	  //L1
+	  jet_corrector_pfL1->setJetEta(raw_jet.eta());
+	  jet_corrector_pfL1->setJetPt(raw_jet.pt());
+	  jet_corrector_pfL1->setJetA(tas::pfjets_area().at(i));
+	  jet_corrector_pfL1->setRho(rho);
+	  jet_L1 = jet_corrector_pfL1->getCorrection();
+	  //L2L3
+	  jet_corrector_pfL2L3->setJetEta(raw_jet.eta());
+	  jet_corrector_pfL2L3->setJetPt(raw_jet.pt());
+	  jet_corrector_pfL2L3->setJetA(tas::pfjets_area().at(i));
+	  jet_corrector_pfL2L3->setRho(rho);
+	  jet_L2L3 = jet_corrector_pfL2L3->getCorrection();
+	}
+
+        LorentzVector jet = raw_jet*jet_L1L2L3;
+
+	// cout << "jet pT=" << jet.pt() << " pTraw=" << raw_jet.pt() << " eta=" << raw_jet.eta() << " phi=" << raw_jet.phi() << " area=" << tas::pfjets_area().at(i) << " rho=" << rho << " L1=" << jet_L1 << " L2L3=" << jet_L2L3 << " L1L2L3=" << jet_L1L2L3 << endl;
 
         //Kinematic jet cuts
         if (jet.pt() < 25) continue;
@@ -1284,25 +1313,25 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  if (jetcorr_filenames_pfL1L2L3.size()>0) { 
 	    //L1
 	    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt()*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1->setRho(rho);
 	    jet_close_L1 = jet_corrector_pfL1->getCorrection();
 	    //L1, redo it with a different rho
 	    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1->setRho(rho_neut_centr);
 	    jet_close_L1nc = jet_corrector_pfL1->getCorrection();
 	    //L1, redo it with a different rho and MC correction file
 	    jet_corrector_pfL1MC->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1MC->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1MC->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1MC->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1MC->setRho(rho_neut_centr);
 	    jet_close_L1ncmc = jet_corrector_pfL1MC->getCorrection();
 	    //L1L2L3
 	    jet_corrector_pfL1L2L3->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1L2L3->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1L2L3->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1L2L3->setRho(rho);
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
@@ -1468,25 +1497,25 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	  if (jetcorr_filenames_pfL1L2L3.size()>0) { 
 	    //L1
 	    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1->setRho(rho);
 	    jet_close_L1 = jet_corrector_pfL1->getCorrection();
 	    //L1, redo it with a different rho
 	    jet_corrector_pfL1->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1->setRho(rho_neut_centr);
 	    jet_close_L1nc = jet_corrector_pfL1->getCorrection();
 	    //L1, redo it with a different rho and MC correction file
 	    jet_corrector_pfL1MC->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1MC->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1MC->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1MC->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1MC->setRho(rho_neut_centr);
 	    jet_close_L1ncmc = jet_corrector_pfL1MC->getCorrection();
 	    //L1L2L3
 	    jet_corrector_pfL1L2L3->setJetEta(jet_close_lep.eta());
-	    jet_corrector_pfL1L2L3->setJetPt(jet_close_lep.pt());
+	    jet_corrector_pfL1L2L3->setJetPt(jet_close_lep.pt())*jet_close_lep_undoJEC);
 	    jet_corrector_pfL1L2L3->setJetA(tas::pfjets_area().at(closeJetIdx));
 	    jet_corrector_pfL1L2L3->setRho(rho);
 	    jet_close_L1L2L3 = jet_corrector_pfL1L2L3->getCorrection();
