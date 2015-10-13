@@ -1123,7 +1123,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	LorentzVector raw_jet = tas::pfjets_p4().at(i)*tas::pfjets_undoJEC().at(i);
 
         //Require loose jet ID
-        if (!isLoosePFJet(i)) continue;
+        if (!isLoosePFJet_50nsV1(i)) continue;
 	
 	float jet_L1L2L3 = 1.;
 	float jet_L1 = 1.;
