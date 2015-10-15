@@ -271,3 +271,7 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_PromptRec
 SAMPLE
 Name Sync
 Path /nfs-7/userdata/ss2015/sync_files_new/V07-04-08/TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_MINIAODSIM_Asympt25ns_MCRUN2_74_V9-v1_30000_60087A61-9134-E511-B0C6-0025905B855E.root
+
+SAMPLE
+Name SyncDoubleMu
+Path /nfs-7/userdata/ss2015/sync_files_new/V07-04-08/DoubleMuon_MINIAOD_PromptReco-v3_000_257_531_00000_B26DC190-8166-E511-AE66-02163E0133A7.root
