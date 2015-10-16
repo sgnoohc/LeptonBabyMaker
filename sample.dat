@@ -275,3 +275,6 @@ Path /nfs-7/userdata/ss2015/sync_files_new/V07-04-08/TTWJetsToLNu_TuneCUETP8M1_1
 SAMPLE
 Name SyncDoubleMu
 Path /nfs-7/userdata/ss2015/sync_files_new/V07-04-08/DoubleMuon_MINIAOD_PromptReco-v3_000_257_531_00000_B26DC190-8166-E511-AE66-02163E0133A7.root
+SAMPLE
+Name SyncDoubleEG
+Path /nfs-7/userdata/ss2015/sync_files_new/V07-04-08/DoubleEG_MINIAOD_PromptReco-v3_000_257_531_00000_2CFA9A0A-0F66-E511-88FF-02163E013484.root
