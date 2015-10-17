@@ -985,6 +985,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
     bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
     bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
+    if (isPromptReco) isDataFromFileName = true;
+    else if (TString(currentFile->GetTitle()).Contains("DoubleMuon")) isDataFromFileName = true;
+    else if (TString(currentFile->GetTitle()).Contains("DoubleEG")) isDataFromFileName = true;
 
     int bx = 25;
     if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
