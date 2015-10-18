@@ -3,7 +3,7 @@
 
 //Switches
 bool verbose = 0;
-unsigned int evt_cut = 74994186;
+unsigned int evt_cut = 48600368;
 bool doFast = true;
 
 //Main functions
@@ -1061,7 +1061,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       CMS3::progress(nEventsDone, nEventsToDo);
 
       //Debug mode
-      //if (verbose && tas::evt_event() != evt_cut) continue;
+      if (verbose && tas::evt_event() != evt_cut) continue;
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       //Preliminary stuff
@@ -1157,10 +1157,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(jet.pt() > 40 && fabs(jet.eta())<2.4) {
 	  bool jetClean = true;
 	  for(size_t j = 0; j < tas::mus_p4().size(); j++){
-	    if(muonID(j, SS_fo_v5) && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) jetClean = false;
+	    if(muonID(j, SS_fo_v5) && tas::mus_p4().at(j).pt()>5.  && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) {
+	      jetClean = false;
+	      if (verbose) cout << "jet cleaned by muon p4: " << tas::mus_p4().at(j) << " pt=" << tas::mus_p4().at(j).pt() << endl;
+	    }
 	  }
 	  for(size_t j = 0; j < tas::els_p4().size(); j++){
-	    if(electronID(j, SS_fo_looseMVA_v5) && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) jetClean = false;
+	    if(electronID(j, SS_fo_looseMVA_v5) && tas::els_p4().at(j).pt()>7. && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) {
+	      jetClean = false;
+	      if (verbose) cout << "jet cleaned by electron p4: " << tas::els_p4().at(j) << " pt=" << tas::els_p4().at(j).pt() << endl;
+	    }
 	  }
 	  if (jetClean) ht_SS += jet.pt();
 	}
