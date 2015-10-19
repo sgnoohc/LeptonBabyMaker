@@ -20,6 +20,7 @@
 #include "CORE/TriggerSelections.h"
 #include "CORE/MCSelections.h"
 #include "CORE/IsolationTools.h"
+#include "CORE/IsoTrackVeto.h"
 #include "CORE/Tools/utils.h"
 
 #pragma GCC diagnostic ignored "-Wwrite-strings"
@@ -48,7 +49,7 @@ public:
   bool checkElectronTag (unsigned int i);
   void fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
   void fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
-
+  int  pfLepMotherID(int pfidx);
 
 
 protected:
@@ -198,6 +199,7 @@ private:
   float jet_close_L2L3;
   float ptratio;
   int tag_charge;
+  int tag_mc_motherid;
   float tag_eSeed;
   float tag_eSCraw;
   bool tag_HLTLeadingLeg;
