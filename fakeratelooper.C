@@ -1,10 +1,11 @@
-#include "fakeratelooper.h" 
+B1;2c#include "fakeratelooper.h" 
 #include "CORE/Tools/goodrun.h"
 
 //Switches
 bool verbose = 0;
-unsigned int evt_cut = 48600368;
+unsigned int evt_cut = 0;
 bool doFast = true;
+bool applyJson = true;
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
@@ -1065,24 +1066,28 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     unsigned int nEventsTree = tree->GetEntriesFast();
     for(unsigned int evt = 0; evt < nEventsTree; evt++){
 
+      if (verbose) cout << "Event "<<evt<<endl;
       // Get Event Content
       if(nEventsDone >= nEventsToDo) continue;   
       cms3.GetEntry(evt);
       nEventsDone++;
 
+      if (verbose) cout << "Check prompt reco (Data)"<<endl;
       if (tas::evt_isRealData() && isPromptReco && tas::evt_run() <= 251562) continue;
 
       //If data, check good run list
-      if (tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 
+      if (verbose) cout << "Check good run (Data)"<<endl;
+      if (applyJson && tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 
 
       //Initialize variables
+      if (verbose) cout << "InitBabyNtuple"<<endl;
       InitBabyNtuple();
 
       // Progress
       CMS3::progress(nEventsDone, nEventsToDo);
 
       //Debug mode
-      if (verbose && tas::evt_event() != evt_cut) continue;
+      if (verbose && tas::evt_event() != evt_cut && evt_cut != 0) continue;
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       //Preliminary stuff
@@ -1712,7 +1717,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           charge = tas::isotracks_charge().at(pfidx);
           RelIso03 = tas::isotracks_relIso().at(pfidx);
           annulus04 = PFCandRelIsoAn04(pfidx);
-	  motherID = pfLepMotherID(pfidx);
+	  if (!evt_isRealData) motherID = pfLepMotherID(pfidx);
 	  
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
@@ -1740,7 +1745,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           charge = tas::isotracks_charge().at(pfidx);
           RelIso03 = tas::isotracks_relIso().at(pfidx);
           annulus04 = PFCandRelIsoAn04(pfidx);
-	  motherID = pfLepMotherID(pfidx);
+	  if (!evt_isRealData) motherID = pfLepMotherID(pfidx);
 	  
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
