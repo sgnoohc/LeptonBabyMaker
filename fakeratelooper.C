@@ -3,7 +3,7 @@
 
 //Switches
 bool verbose = 0;
-unsigned int evt_cut = 74994186;
+unsigned int evt_cut = 48600368;
 bool doFast = true;
 
 //Main functions
@@ -143,6 +143,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("jet_close_L2L3"                , &jet_close_L2L3);
   BabyTree->Branch("ptratio"                       , &ptratio);
   BabyTree->Branch("tag_charge"                    , &tag_charge);
+  BabyTree->Branch("tag_mc_motherid"               , &tag_mc_motherid);
   BabyTree->Branch("tag_eSeed"                     , &tag_eSeed);
   BabyTree->Branch("tag_eSCraw"                    , &tag_eSCraw);
   BabyTree->Branch("tag_HLTLeadingLeg"             , &tag_HLTLeadingLeg);
@@ -468,6 +469,7 @@ void babyMaker::InitLeptonBranches(){
 
   //Tag variables
   tag_charge = 0.;
+  tag_mc_motherid = 0.;
   tag_eSeed = -1;
   tag_eSCraw = -1;
   tag_HLTLeadingLeg = false;
@@ -555,10 +557,10 @@ void babyMaker::InitLeptonBranches(){
   eOverPIn = -1;
   conv_vtx_flag = 0;
   exp_innerlayers = -1;
-  charge = -1;
-  sccharge = -1;
-  ckf_charge = -1;
-  trk_charge = -1;
+  charge = 0;
+  sccharge = 0;
+  ckf_charge = 0;
+  trk_charge = 0;
   threeChargeAgree_branch = 0;
   mva = -999.;
   mva_25ns = -999.;
@@ -659,9 +661,11 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     if (fabs(tas::mus_dxyPV().at(j)) > 0.05) continue;
     if (fabs(tas::mus_dzPV().at(j)) > 0.1) continue;
     if (!isTightMuonPOG(j)) continue; 
+    if (muRelIso03EA(j) > 0.2) continue;
     tag_p4 = tas::mus_p4().at(j);
     tag_charge = tas::mus_charge().at(j);
     tag_HLTLeadingLeg = false;
+    tag_mc_motherid = tas::mus_mc_motherid().at(j);
 
     //both data and MC - works with new data and MC
     if (!oldTag) {
@@ -704,6 +708,7 @@ bool babyMaker::checkElectronTag(unsigned int i){
     tag_eSeed = tas::els_eSeed().at(j); 
     tag_eSCraw = tas::els_eSCRaw().at(j);      
     tag_HLTLeadingLeg = (tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j) > 0);
+    tag_mc_motherid = tas::els_mc_motherid().at(j);
 
     //both data and MC triggers
     tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg().at(j);
@@ -868,6 +873,22 @@ void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag)
 
 }
 
+
+int babyMaker::pfLepMotherID(int pfidx) {
+  
+  for (unsigned int j = 0; j < tas::genps_id().size(); j++) {
+    if ( tas::genps_id().at(j) != tas::isotracks_particleId().at(pfidx) ) continue;
+    if ( tas::genps_p4().at(j).pt() < 2 ) continue;
+    if ( !tas::genps_isPromptFinalState().at(j) ) continue;
+    if (ROOT::Math::VectorUtil::DeltaR(tas::isotracks_p4().at(pfidx), tas::genps_p4().at(j)) > 0.1) continue;
+    // Found good match
+    return 1;
+  }
+  return 0;
+}
+
+
+
 //Main function
 int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
@@ -879,7 +900,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
   readMVA* v25nsMVAreader = new readMVA();
   v25nsMVAreader->InitMVA("CORE",true); 
-
+  
   //Add good run list
   set_goodrun_file("goodRunList/goldenJson1p280ifb.txt");
 
@@ -985,6 +1006,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
     bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
     bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
+    if (isPromptReco) isDataFromFileName = true;
+    else if (TString(currentFile->GetTitle()).Contains("DoubleMuon")) isDataFromFileName = true;
+    else if (TString(currentFile->GetTitle()).Contains("DoubleEG")) isDataFromFileName = true;
 
     int bx = 25;
     if (TString(currentFile->GetTitle()).Contains("Run2015B") || TString(currentFile->GetTitle()).Contains("50ns")) bx = 50;
@@ -1058,7 +1082,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       CMS3::progress(nEventsDone, nEventsToDo);
 
       //Debug mode
-      //if (verbose && tas::evt_event() != evt_cut) continue;
+      if (verbose && tas::evt_event() != evt_cut) continue;
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       //Preliminary stuff
@@ -1154,10 +1178,16 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(jet.pt() > 40 && fabs(jet.eta())<2.4) {
 	  bool jetClean = true;
 	  for(size_t j = 0; j < tas::mus_p4().size(); j++){
-	    if(muonID(j, SS_fo_v5) && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) jetClean = false;
+	    if(muonID(j, SS_fo_v5) && tas::mus_p4().at(j).pt()>5.  && (ROOT::Math::VectorUtil::DeltaR(jet, tas::mus_p4().at(j)) < 0.4) ) {
+	      jetClean = false;
+	      if (verbose) cout << "jet cleaned by muon p4: " << tas::mus_p4().at(j) << " pt=" << tas::mus_p4().at(j).pt() << endl;
+	    }
 	  }
 	  for(size_t j = 0; j < tas::els_p4().size(); j++){
-	    if(electronID(j, SS_fo_looseMVA_v5) && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) jetClean = false;
+	    if(electronID(j, SS_fo_looseMVA_v5) && tas::els_p4().at(j).pt()>7. && (ROOT::Math::VectorUtil::DeltaR(jet,tas::els_p4().at(j)) < 0.4) ) {
+	      jetClean = false;
+	      if (verbose) cout << "jet cleaned by electron p4: " << tas::els_p4().at(j) << " pt=" << tas::els_p4().at(j).pt() << endl;
+	    }
 	  }
 	  if (jetClean) ht_SS += jet.pt();
 	}
@@ -1352,7 +1382,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         exp_outerlayers = tas::mus_exp_outerlayers().at(i);
         segmCompatibility = tas::mus_segmCompatibility().at(i);
         if (!doFast){
-          reliso04 = muRelIsoCustomCone(idx, 0.4, true, 0.5, false, true);
+          reliso04 = muRelIsoCustomCone(i, 0.4, true, 0.5, false, true);
           annulus04 = reliso04 - miniiso;
           isPF = isPFmuon(pfmuP4, pfmuIsReco, i);
         }
@@ -1569,7 +1599,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
 
         if (!doFast){
-          reliso04 = elRelIsoCustomCone(idx, 0.4, true, 0.0, false, true);
+          reliso04 = elRelIsoCustomCone(i, 0.4, true, 0.0, false, true);
           isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
           annulus04 = reliso04 - miniiso;
         }
@@ -1678,10 +1708,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           isPF = true; // that's why we're here!
           if (id > 0) id = 1011; 
           else id = -1011;
-          dZ = abs(id) == 11 ? tas::els_dzPV().at(i) : tas::mus_dzPV().at(i);
+          dZ = tas::isotracks_dz().at(pfidx); 
           charge = tas::isotracks_charge().at(pfidx);
           RelIso03 = tas::isotracks_relIso().at(pfidx);
-
+          annulus04 = PFCandRelIsoAn04(pfidx);
+	  motherID = pfLepMotherID(pfidx);
+	  
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
 
@@ -1707,7 +1739,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           dZ = tas::isotracks_dz().at(pfidx); 
           charge = tas::isotracks_charge().at(pfidx);
           RelIso03 = tas::isotracks_relIso().at(pfidx);
-
+          annulus04 = PFCandRelIsoAn04(pfidx);
+	  motherID = pfLepMotherID(pfidx);
+	  
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
 
