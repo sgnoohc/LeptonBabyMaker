@@ -665,7 +665,7 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     tag_p4 = tas::mus_p4().at(j);
     tag_charge = tas::mus_charge().at(j);
     tag_HLTLeadingLeg = false;
-    tag_mc_motherid = tas::mus_mc_motherid().at(j);
+    if (!evt_isRealData) tag_mc_motherid = tas::mus_mc_motherid().at(j);
 
     //both data and MC - works with new data and MC
     if (!oldTag) {
@@ -708,7 +708,7 @@ bool babyMaker::checkElectronTag(unsigned int i){
     tag_eSeed = tas::els_eSeed().at(j); 
     tag_eSCraw = tas::els_eSCRaw().at(j);      
     tag_HLTLeadingLeg = (tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j) > 0);
-    tag_mc_motherid = tas::els_mc_motherid().at(j);
+    if (!evt_isRealData) tag_mc_motherid = tas::els_mc_motherid().at(j);
 
     //both data and MC triggers
     tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = tas::els_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg().at(j);
