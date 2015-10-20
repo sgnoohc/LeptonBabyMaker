@@ -1,4 +1,4 @@
-B1;2c#include "fakeratelooper.h" 
+#include "fakeratelooper.h" 
 #include "CORE/Tools/goodrun.h"
 
 //Switches
