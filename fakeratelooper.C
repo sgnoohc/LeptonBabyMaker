@@ -3,8 +3,9 @@
 
 //Switches
 bool verbose = 0;
-unsigned int evt_cut = 48600368;
+unsigned int evt_cut = 0;
 bool doFast = true;
+bool applyJson = true;
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
@@ -103,14 +104,12 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("passes_SS_fo_looseMVA_noiso_v5", &passes_SS_fo_looseMVA_noiso_v5);
   BabyTree->Branch("passes_SS_veto_v5"             , &passes_SS_veto_v5);
   BabyTree->Branch("passes_SS_veto_noiso_v5"       , &passes_SS_veto_noiso_v5);
-  BabyTree->Branch("passes_WW_medium_v1"           , &passes_WW_medium_v1);
-  BabyTree->Branch("passes_WW_medium_noiso_v1"     , &passes_WW_medium_noiso_v1);
-  BabyTree->Branch("passes_WW_fo_v1"               , &passes_WW_fo_v1);
-  BabyTree->Branch("passes_WW_fo_noiso_v1"         , &passes_WW_fo_noiso_v1);
-  BabyTree->Branch("passes_WW_fo_looseMVA_v1"      , &passes_WW_fo_looseMVA_v1);
-  BabyTree->Branch("passes_WW_fo_looseMVA_noiso_v1", &passes_WW_fo_looseMVA_noiso_v1);
-  BabyTree->Branch("passes_WW_veto_v1"             , &passes_WW_veto_v1);
-  BabyTree->Branch("passes_WW_veto_noiso_v1"       , &passes_WW_veto_noiso_v1);
+  BabyTree->Branch("passes_WW_medium_v2"           , &passes_WW_medium_v2);
+  BabyTree->Branch("passes_WW_medium_noiso_v2"     , &passes_WW_medium_noiso_v2);
+  BabyTree->Branch("passes_WW_fo_v2"               , &passes_WW_fo_v2);
+  BabyTree->Branch("passes_WW_fo_noiso_v2"         , &passes_WW_fo_noiso_v2);
+  BabyTree->Branch("passes_WW_veto_v2"             , &passes_WW_veto_v2);
+  BabyTree->Branch("passes_WW_veto_noiso_v2"       , &passes_WW_veto_noiso_v2);
   BabyTree->Branch("passes_HAD_veto_v3"            , &passes_HAD_veto_v3);
   BabyTree->Branch("passes_HAD_veto_noiso_v3"      , &passes_HAD_veto_noiso_v3);
   BabyTree->Branch("passes_HAD_loose_v3"           , &passes_HAD_loose_v3);
@@ -425,14 +424,12 @@ void babyMaker::InitLeptonBranches(){
   passes_SS_fo_looseMVA_noiso_v5 = 0;
   passes_SS_veto_v5 = 0;
   passes_SS_veto_noiso_v5 = 0;
-  passes_WW_medium_v1 = 0;
-  passes_WW_medium_noiso_v1 = 0;
-  passes_WW_fo_v1 = 0;
-  passes_WW_fo_noiso_v1 = 0;
-  passes_WW_fo_looseMVA_v1 = 0;
-  passes_WW_fo_looseMVA_noiso_v1 = 0;
-  passes_WW_veto_v1 = 0;
-  passes_WW_veto_noiso_v1 = 0;
+  passes_WW_medium_v2 = 0;
+  passes_WW_medium_noiso_v2 = 0;
+  passes_WW_fo_v2 = 0;
+  passes_WW_fo_noiso_v2 = 0;
+  passes_WW_veto_v2 = 0;
+  passes_WW_veto_noiso_v2 = 0;
   passes_HAD_veto_v3 = 0;
   passes_HAD_veto_noiso_v3 = 0;
   passes_HAD_loose_v3 = 0;
@@ -1065,24 +1062,28 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     unsigned int nEventsTree = tree->GetEntriesFast();
     for(unsigned int evt = 0; evt < nEventsTree; evt++){
 
+      if (verbose) cout << "Event "<<evt<<endl;
       // Get Event Content
       if(nEventsDone >= nEventsToDo) continue;   
       cms3.GetEntry(evt);
       nEventsDone++;
 
+      if (verbose) cout << "Check prompt reco (Data)"<<endl;
       if (tas::evt_isRealData() && isPromptReco && tas::evt_run() <= 251562) continue;
 
       //If data, check good run list
-      if (tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 
+      if (verbose) cout << "Check good run (Data)"<<endl;
+      if (applyJson && tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 
 
       //Initialize variables
+      if (verbose) cout << "InitBabyNtuple"<<endl;
       InitBabyNtuple();
 
       // Progress
       CMS3::progress(nEventsDone, nEventsToDo);
 
       //Debug mode
-      if (verbose && tas::evt_event() != evt_cut) continue;
+      if (verbose && tas::evt_event() != evt_cut && evt_cut != 0) continue;
       if (verbose) cout << "file name is " << file->GetName() << endl;
 
       //Preliminary stuff
@@ -1422,12 +1423,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         muID::setCache(idx,miniiso,ptratio,ptrelv1);
 
         //Save WW ID bools
-        if(muonID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
-        if(muonID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
-        if(muonID(i, WW_fo_v1))                 passes_WW_fo_v1 = true;
-        if(muonID(i, WW_fo_noiso_v1))           passes_WW_fo_noiso_v1 = true;
-        if(muonID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
-        if(muonID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
+        if(muonID(i, WW_medium_v2))             passes_WW_medium_v2 = true;
+        if(muonID(i, WW_medium_noiso_v2))       passes_WW_medium_noiso_v2 = true;
+        if(muonID(i, WW_fo_v2))                 passes_WW_fo_v2 = true;
+        if(muonID(i, WW_fo_noiso_v2))           passes_WW_fo_noiso_v2 = true;
+        if(muonID(i, WW_veto_v2))               passes_WW_veto_v2 = true;
+        if(muonID(i, WW_veto_noiso_v2))         passes_WW_veto_noiso_v2 = true;
 
         //Save HAD ID bools
         if(muonID(i, HAD_loose_v3))              passes_HAD_loose_v3 = true;
@@ -1649,14 +1650,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         elID::setCache(idx,mva,miniiso,ptratio,ptrelv1);
 
         //Save WW ID bools
-        if(electronID(i, WW_medium_v1))             passes_WW_medium_v1 = true;
-        if(electronID(i, WW_medium_noiso_v1))       passes_WW_medium_noiso_v1 = true;
-        if(electronID(i, WW_fo_v1))                 passes_WW_fo_v1 = true;
-        if(electronID(i, WW_fo_noiso_v1))           passes_WW_fo_noiso_v1 = true;
-        if(electronID(i, WW_fo_looseMVA_v1))        passes_WW_fo_looseMVA_v1 = true;
-        if(electronID(i, WW_fo_looseMVA_noiso_v1))  passes_WW_fo_looseMVA_noiso_v1 = true;
-        if(electronID(i, WW_veto_v1))               passes_WW_veto_v1 = true;
-        if(electronID(i, WW_veto_noiso_v1))         passes_WW_veto_noiso_v1 = true;
+        if(electronID(i, WW_medium_v2))             passes_WW_medium_v2 = true;
+        if(electronID(i, WW_medium_noiso_v2))       passes_WW_medium_noiso_v2 = true;
+        if(electronID(i, WW_fo_v2))                 passes_WW_fo_v2 = true;
+        if(electronID(i, WW_fo_noiso_v2))           passes_WW_fo_noiso_v2 = true;
+        if(electronID(i, WW_veto_v2))               passes_WW_veto_v2 = true;
+        if(electronID(i, WW_veto_noiso_v2))         passes_WW_veto_noiso_v2 = true;
 
         //Save HAD ID bools
         if(electronID(i, HAD_veto_v3))              passes_HAD_veto_v3 = true;
@@ -1712,7 +1711,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           charge = tas::isotracks_charge().at(pfidx);
           RelIso03 = tas::isotracks_relIso().at(pfidx);
           annulus04 = PFCandRelIsoAn04(pfidx);
-	  motherID = pfLepMotherID(pfidx);
+	  if (!evt_isRealData) motherID = pfLepMotherID(pfidx);
 	  
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
@@ -1740,7 +1739,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           charge = tas::isotracks_charge().at(pfidx);
           RelIso03 = tas::isotracks_relIso().at(pfidx);
           annulus04 = PFCandRelIsoAn04(pfidx);
-	  motherID = pfLepMotherID(pfidx);
+	  if (!evt_isRealData) motherID = pfLepMotherID(pfidx);
 	  
           dilep_p4 = p4 + tag_p4;
           dilep_mass = dilep_p4.M();
