@@ -47,6 +47,7 @@ CORESOURCES=$(DIR)/$(COREDIR)/CMS3.cc \
  $(DIR)/$(COREDIR)/TriggerSelections.cc \
  $(DIR)/$(COREDIR)/MCSelections.cc \
  $(DIR)/$(COREDIR)/IsolationTools.cc \
+ $(DIR)/$(COREDIR)/IsoTrackVeto.cc \
  $(DIR)/$(COREDIR)/SSSelections.cc \
  $(DIR)/$(TOOLSDIR)/JetCorrector.cc \
  $(DIR)/$(TOOLSDIR)/goodrun.cc \

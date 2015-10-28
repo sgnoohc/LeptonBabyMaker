@@ -20,6 +20,7 @@
 #include "CORE/TriggerSelections.h"
 #include "CORE/MCSelections.h"
 #include "CORE/IsolationTools.h"
+#include "CORE/IsoTrackVeto.h"
 #include "CORE/Tools/utils.h"
 
 #pragma GCC diagnostic ignored "-Wwrite-strings"
@@ -48,7 +49,7 @@ public:
   bool checkElectronTag (unsigned int i);
   void fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
   void fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
-
+  int  pfLepMotherID(int pfidx);
 
 
 protected:
@@ -158,14 +159,12 @@ private:
   bool passes_SS_veto_v5;
   bool passes_SS_veto_noiso_v5;
   //WW bools
-  bool passes_WW_medium_v1;
-  bool passes_WW_medium_noiso_v1;
-  bool passes_WW_fo_v1;
-  bool passes_WW_fo_noiso_v1;
-  bool passes_WW_fo_looseMVA_v1;
-  bool passes_WW_fo_looseMVA_noiso_v1;
-  bool passes_WW_veto_v1;
-  bool passes_WW_veto_noiso_v1;
+  bool passes_WW_medium_v2;
+  bool passes_WW_medium_noiso_v2;
+  bool passes_WW_fo_v2;
+  bool passes_WW_fo_noiso_v2;
+  bool passes_WW_veto_v2;
+  bool passes_WW_veto_noiso_v2;
   //HAD bools
   bool passes_HAD_veto_v3;
   bool passes_HAD_veto_noiso_v3;
@@ -198,6 +197,7 @@ private:
   float jet_close_L2L3;
   float ptratio;
   int tag_charge;
+  int tag_mc_motherid;
   float tag_eSeed;
   float tag_eSCraw;
   bool tag_HLTLeadingLeg;
