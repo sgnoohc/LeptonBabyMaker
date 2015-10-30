@@ -1,5 +1,8 @@
 #include "fakeratelooper.h" 
 #include "CORE/Tools/goodrun.h"
+#include "CORE/Tools/jetcorr/Utilities.icc"
+#include "CORE/Tools/jetcorr/SimpleJetCorrectionUncertainty.icc"
+#include "CORE/Tools/jetcorr/JetCorrectionUncertainty.icc"
 
 //Switches
 bool verbose = 0;
