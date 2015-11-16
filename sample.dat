@@ -258,18 +258,27 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v3
 SAMPLE
 Name 2015DMuonEG
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v4/merged/V07-04-11/
+
+SAMPLE
+Name 2015DDoubleEG
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleEG_MINIAOD_05Oct2015-v1/merged/V07-04-11/
 SAMPLE
 Name 2015DDoubleEG
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleEG_MINIAOD_05Oct2015-v1/merged/V07-04-11/
 SAMPLE
 Name 2015DDoubleEG
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleEG_MINIAOD_PromptReco-v4/merged/V07-04-11/
+
 SAMPLE
 Name 2015DSingleEl
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v3/merged/V07-04-09/
 SAMPLE
 Name 2015DSingleMuon
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v3/merged/V07-04-09/
+
+SAMPLE
+Name 2015DDoubleMuon
+Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
 SAMPLE
 Name 2015DDoubleMuon
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
