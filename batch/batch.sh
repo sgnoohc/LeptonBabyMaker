@@ -17,7 +17,7 @@ fi
 #Check that log file folder and tarball files exists
 if [ ! -d logs ]; then echo "Run . copy.sh first!"; return 1; fi
 if [ ! -e $HOME/forCondor_Commissioning.tar.gz ]; then echo "Run . copy.sh first!"; return 1; fi
-
+if [ $(stat -c%s "$HOME/forCondor_Commissioning.tar.gz") -gt 1000000000 ]; then echo "Your tar file is too big, would crash the condor system."; return 2; fi
 
 #Set directory with the location of the tarball with code
 tar_file=$HOME/forCondor_Commissioning.tar.gz
