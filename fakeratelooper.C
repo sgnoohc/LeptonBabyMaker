@@ -7,8 +7,11 @@
 //Switches
 bool verbose = 0;
 unsigned int evt_cut = 0;
-bool doFast = true;
-bool applyJson = true;
+bool addPFCandidates = false; // Default is false
+bool addAnnulus = false; // Default is false
+bool recoLeptonsDownTo5GeV = false; // Default is false (meaning 10 GeV)
+bool onlySaveTagProbePairs = false; // Default is false
+bool applyJson = false;
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
@@ -1296,10 +1299,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if (foundTag) foundMuTag = true; 
 
         // Require pT > 10 GeV
-	if (tas::mus_p4().at(i).pt()<=10.) continue;
+	float maxPt = 10.;
+	if (recoLeptonsDownTo5GeV) maxPt = 5.;
+	if (tas::mus_p4().at(i).pt()<=maxPt) continue;
 
         //Save the muon if we have a tag OR if it passes loose ID 
         if(muonID(i, SS_veto_noiso_v5)==0 && muonID(i, HAD_loose_v3)==0 && foundTag==false) continue; 
+	if (onlySaveTagProbePairs && foundTag==false) continue; 
+
         //check to which leg a match has been found
 	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg       = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg().at(i);
 	probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg        = tas::mus_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg().at(i);
@@ -1414,9 +1421,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         exp_innerlayers = tas::mus_exp_innerlayers().at(i);
         exp_outerlayers = tas::mus_exp_outerlayers().at(i);
         segmCompatibility = tas::mus_segmCompatibility().at(i);
-        if (!doFast){
+        if (addAnnulus){
           reliso04 = muRelIsoCustomCone(i, 0.4, true, 0.5, false, true);
           annulus04 = reliso04 - miniiso;
+	}
+	if (addPFCandidates) {
 	  int pfidx =  isPFmuon(pfmuP4, pfmuIsReco, i);
 	  if (pfidx != -1) {
 	    isPF = true;		  
@@ -1497,10 +1506,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if (foundTag) foundElTag = true; 
 
         // Require pT > 10 GeV
-        if (tas::els_p4().at(i).pt() <= 10) continue; 
+	float maxPt = 10.;
+	if (recoLeptonsDownTo5GeV) maxPt = 5.;
+        if (tas::els_p4().at(i).pt() <= maxPt) continue; 
 
         //Save the electron if we have a tag OR if it passes loose ID 
         if(electronID(i, SS_veto_noiso_v4)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue;
+	if (onlySaveTagProbePairs && foundTag==false) continue;
 
 	if (verbose) cout << "Saving this electron" << endl;
 
@@ -1636,9 +1648,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 	gsf_validHits          = tas::els_validHits().at(i);
 	conv_vtx_prob          = tas::els_conv_vtx_prob().at(i);
 
-        if (!doFast){
+        if (addAnnulus){
           reliso04 = elRelIsoCustomCone(i, 0.4, true, 0.0, false, true);
           annulus04 = reliso04 - miniiso;
+	}
+	if (addPFCandidates) {
 	  int pfidx =  isPFelectron(pfelP4, pfelIsReco, i);
 	  if (pfidx != -1) {
 	    isPF = true;		  
@@ -1702,6 +1716,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         //Save HAD ID bools
         if(electronID(i, HAD_veto_v3))              passes_HAD_veto_v3 = true;
         if(electronID(i, HAD_veto_noiso_v3))        passes_HAD_veto_noiso_v3 = true;
+        if(electronID(i, HAD_loose_v3))             passes_HAD_loose_v3 = true;
+        if(electronID(i, HAD_loose_noiso_v3))       passes_HAD_loose_noiso_v3 = true;
 	if (verbose) cout << "Done WW and HAD IDs" <<endl;
         //Save POG ID bools
         if( tas::els_passVetoId().at(i) )           passes_POG_vetoID = true;
@@ -1736,7 +1752,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       if ( foundElTag && savedElP4s.size() != pfelP4.size() ) addPFel = true;
       if ( foundMuTag && savedMuP4s.size() != pfmuP4.size() ) addPFmu = true;
 
-      if ( addPFel && !doFast ) {
+      if ( addPFel && addPFCandidates ) {
         for (unsigned int i=0; i<pfelP4.size(); i++) {
           if (pfelIsReco[i]) continue;
           InitLeptonBranches(); 
@@ -1764,7 +1780,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         }
       } // addPFel
 
-      if (addPFmu && !doFast){
+      if (addPFmu && addPFCandidates){
         for (unsigned int i=0; i<pfmuP4.size(); i++) {
           if (pfmuIsReco[i]) continue;
           InitLeptonBranches(); 
