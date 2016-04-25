@@ -11,20 +11,20 @@
 vector<TString> load(const char *type, char *input){
 
   vector<TString> output;
-  char buffer[200];
+  char buffer[400];
   char StringValue[1000];
   ifstream IN(input);
-  while( IN.getline(buffer, 200, '\n') ){
+  while( IN.getline(buffer, 400, '\n') ){
     // ok = false;
     if (buffer[0] == '#') {
       continue; // Skip lines commented with '#'
     }
     if( !strcmp(buffer, "SAMPLE")){
       bool add = false;
-      IN.getline(buffer, 200, '\n');
+      IN.getline(buffer, 400, '\n');
       sscanf(buffer, "Name\t%s", StringValue);
       if((string)StringValue==(string)type) add=true;
-      IN.getline(buffer, 200, '\n');
+      IN.getline(buffer, 400, '\n');
       sscanf(buffer, "Path\t%s", StringValue);
       if(add){
 	std::ostringstream addStream;
