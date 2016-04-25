@@ -50,6 +50,9 @@ public:
   void fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
   void fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
   int  pfLepMotherID(int pfidx);
+  int isPFmuon(vector<LorentzVector> &pfP4, vector<bool> &pfmuIsReco, int idx);
+  int isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx);
+  
 
 
 protected:
@@ -186,6 +189,8 @@ private:
   float miniisoDB;
   float reliso04;
   float annulus04;
+  float AbsTrkIso;
+  float TrkAn04;
   LorentzVector jet_close_lep;
   int jet_close_lep_idx;
   float jet_close_lep_undoJEC;

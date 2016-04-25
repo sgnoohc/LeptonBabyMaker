@@ -131,6 +131,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("miniisoDB"                     , &miniisoDB);
   BabyTree->Branch("reliso04"                      , &reliso04);
   BabyTree->Branch("annulus04"                     , &annulus04);
+  BabyTree->Branch("AbsTrkIso"                     , &AbsTrkIso);
+  BabyTree->Branch("TrkAn04"                       , &TrkAn04);
   BabyTree->Branch("iso03sumPt"                    , &iso03sumPt);
   BabyTree->Branch("iso03emEt"                     , &iso03emEt);
   BabyTree->Branch("iso03hadEt"                    , &iso03hadEt);
@@ -451,6 +453,8 @@ void babyMaker::InitLeptonBranches(){
   miniisoDB = -1;
   reliso04 = -1;
   annulus04 = -1;
+  AbsTrkIso = -1;
+  TrkAn04 = -1;
   iso03sumPt = -1;
   iso03emEt = -1;
   iso03hadEt = -1;
@@ -755,26 +759,26 @@ bool babyMaker::checkElectronTag(unsigned int i){
   return false;
 }
 
-bool isPFmuon(vector<LorentzVector> &pfP4, vector<bool> &pfmuIsReco, int idx){
+int babyMaker::isPFmuon(vector<LorentzVector> &pfP4, vector<bool> &pfmuIsReco, int idx){
   for(size_t i = 0; i < pfP4.size(); i++) {
     float dR2 = ROOT::Math::VectorUtil::DeltaR2(pfP4[i], tas::mus_p4().at(idx));
     if (dR2 < 0.0025) {
       pfmuIsReco[i] = true;
-      return true;
+      return i;
     }
   }
-  return false;
+  return -1;
 }
 
-bool isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx){
+int babyMaker::isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx){
   for(size_t i = 0; i < pfP4.size(); i++){
     float dR2 = ROOT::Math::VectorUtil::DeltaR2(pfP4[i], tas::els_p4().at(idx));
     if (dR2 < 0.0025){
       pfelIsReco[i] = true;
-      return true;
+      return i;
     }
   }
-  return false;
+  return -1;
 }
 
 void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag){
@@ -877,10 +881,10 @@ void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag)
 int babyMaker::pfLepMotherID(int pfidx) {
   
   for (unsigned int j = 0; j < tas::genps_id().size(); j++) {
-    if ( tas::genps_id().at(j) != tas::isotracks_particleId().at(pfidx) ) continue;
+    if ( tas::genps_id().at(j) != tas::pfcands_particleId().at(pfidx) ) continue;
     if ( tas::genps_p4().at(j).pt() < 2 ) continue;
     if ( !tas::genps_isPromptFinalState().at(j) ) continue;
-    if (ROOT::Math::VectorUtil::DeltaR(tas::isotracks_p4().at(pfidx), tas::genps_p4().at(j)) > 0.1) continue;
+    if (ROOT::Math::VectorUtil::DeltaR(tas::pfcands_p4().at(pfidx), tas::genps_p4().at(j)) > 0.1) continue;
     // Found good match
     return 1;
   }
@@ -1239,17 +1243,42 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       vector<bool> pfmuIsReco; pfmuIsReco.clear();
       vector<LorentzVector> pfelP4; pfelP4.clear();
       vector<LorentzVector> pfmuP4; pfmuP4.clear();
-      for(unsigned int i=0; i<tas::isotracks_p4().size(); i++){
-        if (fabs(tas::isotracks_particleId().at(i)) != 11 && fabs(tas::isotracks_particleId().at(i)) != 13 ) continue;
-        if (fabs(tas::isotracks_particleId().at(i)) == 11){
+      vector<float> pfelAbsTrkIso; pfelAbsTrkIso.clear();
+      vector<float> pfmuAbsTrkIso; pfmuAbsTrkIso.clear();
+      vector<float> pfelTrkAn04; pfelTrkAn04.clear();
+      vector<float> pfmuTrkAn04; pfmuTrkAn04.clear();
+// Isotracks not working in 74X (only charge+) //      for(unsigned int i=0; i<tas::isotracks_p4().size(); i++){
+// Isotracks not working in 74X (only charge+) //        if (fabs(tas::isotracks_particleId().at(i)) != 11 && fabs(tas::isotracks_particleId().at(i)) != 13 ) continue;
+// Isotracks not working in 74X (only charge+) //        if (fabs(tas::isotracks_particleId().at(i)) == 11){
+// Isotracks not working in 74X (only charge+) //          pfelidx.push_back(i);
+// Isotracks not working in 74X (only charge+) //          pfelP4.push_back(tas::isotracks_p4().at(i));
+// Isotracks not working in 74X (only charge+) //          pfelIsReco.push_back(false); 
+// Isotracks not working in 74X (only charge+) //        }
+// Isotracks not working in 74X (only charge+) //        else if (fabs(tas::isotracks_particleId().at(i)) == 13){
+// Isotracks not working in 74X (only charge+) //          pfmuidx.push_back(i);
+// Isotracks not working in 74X (only charge+) //          pfmuP4.push_back(tas::isotracks_p4().at(i));
+// Isotracks not working in 74X (only charge+) //          pfmuIsReco.push_back(false); 
+// Isotracks not working in 74X (only charge+) //        }
+// Isotracks not working in 74X (only charge+) //        continue;
+// Isotracks not working in 74X (only charge+) //      }
+      for(unsigned int i=0; i<tas::pfcands_p4().size(); i++){
+        if (fabs(tas::pfcands_particleId().at(i)) != 11 && fabs(tas::pfcands_particleId().at(i)) != 13 ) continue;
+	if (tas::pfcands_p4().at(i).pt() < 5) continue;
+	if(fabs(tas::pfcands_dz().at(i)) > 0.1) continue;
+	if (fabs(tas::pfcands_p4().at(i).eta()) > 2.5) continue;
+        if (fabs(tas::pfcands_particleId().at(i)) == 11){
           pfelidx.push_back(i);
-          pfelP4.push_back(tas::isotracks_p4().at(i));
+          pfelP4.push_back(tas::pfcands_p4().at(i));
           pfelIsReco.push_back(false); 
+	  pfelAbsTrkIso.push_back(TrackIso(i, 0.3, 0.0, true, false));
+	  pfelTrkAn04.push_back(PFCandRelIsoAn04(i));
         }
-        else if (fabs(tas::isotracks_particleId().at(i)) == 13){
+        else if (fabs(tas::pfcands_particleId().at(i)) == 13){
           pfmuidx.push_back(i);
-          pfmuP4.push_back(tas::isotracks_p4().at(i));
+          pfmuP4.push_back(tas::pfcands_p4().at(i));
           pfmuIsReco.push_back(false); 
+	  pfmuAbsTrkIso.push_back(TrackIso(i, 0.3, 0.0, true, false));
+	  pfmuTrkAn04.push_back(PFCandRelIsoAn04(i));
         }
         continue;
       }
@@ -1388,7 +1417,12 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if (!doFast){
           reliso04 = muRelIsoCustomCone(i, 0.4, true, 0.5, false, true);
           annulus04 = reliso04 - miniiso;
-          isPF = isPFmuon(pfmuP4, pfmuIsReco, i);
+	  int pfidx =  isPFmuon(pfmuP4, pfmuIsReco, i);
+	  if (pfidx != -1) {
+	    isPF = true;		  
+	    AbsTrkIso = pfmuAbsTrkIso[pfidx]; // For this electron, save track iso produced earlier for PFmuon
+	    TrkAn04 = pfmuTrkAn04[pfidx];
+	  }
         }
         muID::setCache(idx,miniiso,ptratio,ptrelv1);
 
@@ -1604,8 +1638,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
         if (!doFast){
           reliso04 = elRelIsoCustomCone(i, 0.4, true, 0.0, false, true);
-          isPF = isPFelectron(pfelP4, pfelIsReco, i);		  
           annulus04 = reliso04 - miniiso;
+	  int pfidx =  isPFelectron(pfelP4, pfelIsReco, i);
+	  if (pfidx != -1) {
+	    isPF = true;		  
+	    AbsTrkIso = pfelAbsTrkIso[pfidx]; // For this electron, save track iso produced earlier for PFmuon
+	    TrkAn04 = pfelTrkAn04[pfidx];
+	  }
         }
 
         elID::setCache(idx,mva,miniiso,ptratio,ptrelv1);
@@ -1706,14 +1745,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           // now let's look at our electron
           int pfidx = pfelidx[i];
           p4 = pfelP4[i];
-          id = tas::isotracks_particleId().at(pfidx);
+          id = tas::pfcands_particleId().at(pfidx);
           isPF = true; // that's why we're here!
           if (id > 0) id = 1011; 
           else id = -1011;
-          dZ = tas::isotracks_dz().at(pfidx); 
-          charge = tas::isotracks_charge().at(pfidx);
-          RelIso03 = tas::isotracks_relIso().at(pfidx);
-          annulus04 = PFCandRelIsoAn04(pfidx);
+          dZ = tas::pfcands_dz().at(pfidx); 
+          charge = tas::pfcands_charge().at(pfidx);
+	  AbsTrkIso = pfelAbsTrkIso[i]; // For this muon, save track iso produced earlier for PFmuon
+	  TrkAn04 = pfelTrkAn04[i];
 	  if (!evt_isRealData) motherID = pfLepMotherID(pfidx);
 	  
           dilep_p4 = p4 + tag_p4;
@@ -1734,14 +1773,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           // now let's look at our electron
           int pfidx = pfmuidx[i];
           p4 = pfmuP4[i];
-          id = tas::isotracks_particleId().at(pfidx);
+          id = tas::pfcands_particleId().at(pfidx);
           isPF = true; // that's why we're here!
           if (id > 0) id = 1013; 
           else id = -1013;
-          dZ = tas::isotracks_dz().at(pfidx); 
-          charge = tas::isotracks_charge().at(pfidx);
-          RelIso03 = tas::isotracks_relIso().at(pfidx);
-          annulus04 = PFCandRelIsoAn04(pfidx);
+          dZ = tas::pfcands_dz().at(pfidx); 
+          charge = tas::pfcands_charge().at(pfidx);
+	  AbsTrkIso = pfmuAbsTrkIso[i]; // For this muon, save track iso produced earlier for PFmuon
+	  TrkAn04 = pfmuTrkAn04[i];
 	  if (!evt_isRealData) motherID = pfLepMotherID(pfidx);
 	  
           dilep_p4 = p4 + tag_p4;
