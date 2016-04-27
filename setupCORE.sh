@@ -1,8 +1,9 @@
 #!/bin/bash
 
-if [ "$USER" == "cgeorge" ]
-then 
-  ln -s /home/users/cgeorge/CORE . 
+if [ -d /home/users/$USER/CORE ]
+then
+  echo "Creating symbolic link to ~/CORE , make sure that it's up to date."
+  ln -s /home/users/$USER/CORE . 
 else 
   git clone git@github.com:cmstas/CORE.git
   cd CORE
