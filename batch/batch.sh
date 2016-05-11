@@ -3,6 +3,7 @@
 #samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, WJets, ALL
 #Choose the sample(s) you want here, separated by commmas
 sampleList_in=2015DDoubleEG,2015DDoubleMuon,QCD_Mu_Enriched,QCD_EM_Enriched,DY_madgraph,WJets
+#sampleList_in=2015DSingleElV4,2015DSingleMuonV4,DY_madgraph
 #Choose the number of events (per file): 
 nEvents=-1
 #Decide if you want lots of printouts telling you the status
@@ -10,6 +11,7 @@ verbose="false"
 
 #Set directory to copy results to when finished
 copy_dir=/hadoop/cms/store/user/${USER}/condor/forCommissioning
+#copy_dir=/hadoop/cms/store/user/${USER}/condor/forSoftLeptons74X_1May16
 if [ ! -d $copy_dir/merged_files ]; then
     mkdir -p $copy_dir/merged_files
 fi
@@ -50,10 +52,13 @@ fi
 lineWithPath=`sed -n /path/= voms_status.txt`
 pathToProxy=`awk -v var="$lineWithPath" 'NR==var {print $3}' voms_status.txt`
 
+
+
 #Do all this stuff once per sample
 for sample in $sampleList
 do
 
+  echo "Looking for sample $sample"
   #number of lines in sample.dat
   nLines=`wc -l < ../sample.dat`
 
@@ -93,6 +98,8 @@ do
     fi
 
   done
+
+  echo "Found sample, it has $samplesize files in directory $sample_dir "
 
   for file in `/bin/ls $sample_dir/merged_ntuple_*.root`; do
 
@@ -159,6 +166,7 @@ if [ "$nSubmitted" == "0" ]
 then
   #Check for zombies which should be deleted in copy_dir
   echo "CHECKING FOR ZOMBIES"
+#  echo "NOT CHECKING FOR ZOMBIES"
   for file in `/bin/ls $copy_dir/*.root`
   do
     root -l -b -q -n checkForZombies.C'("'$file'")'
@@ -176,11 +184,11 @@ then
     fi
   done
 
-  if [ "$nZombies" == "0" ]; then
-    . mergeAll.sh $copy_dir $sampleList_in
-    sleep 120
-    mv *.root $copy_dir/merged_files/
-  fi
+#  if [ "$nZombies" == "0" ]; then
+#    . mergeAll.sh $copy_dir $sampleList_in
+#    sleep 120
+#    mv *.root $copy_dir/merged_files/
+#  fi
 fi
 
 #Return exit code
