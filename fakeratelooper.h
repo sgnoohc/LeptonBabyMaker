@@ -46,7 +46,7 @@ public:
   void SetOutputPath( std::string outputpath ); //init. Electron variables only
 
   bool checkMuonTag (unsigned int i, bool oldTag = false);
-  bool checkElectronTag (unsigned int i);
+  bool checkElectronTag (unsigned int i, readMVA* v25nsMVAreader);
   void fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
   void fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag = false);
   int  pfLepMotherID(int pfidx);
@@ -128,6 +128,7 @@ private:
   int mc_id;
   float RelIso03; //RelIso03 (not corrected)
   float RelIso03EA; //RelIso03 (EffectiveArea corrected)
+  float tag_RelIso03EA; //RelIso03 (EffectiveArea corrected)
   float RelIso03DB; //RelIso03 (DeltaBeta corrected)
   float pfChargedHadronIso;
   float pfPhotonIso;
@@ -294,6 +295,7 @@ private:
   bool  threeChargeAgree_branch;
   float mva;
   float mva_25ns;
+  float tag_mva_25ns;
   float ecalIso;
   float hcalIso;
   float ecalPFClusterIso;

@@ -80,6 +80,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("mc_id"                         , &mc_id);
   BabyTree->Branch("RelIso03"                      , &RelIso03);
   BabyTree->Branch("RelIso03EA"                    , &RelIso03EA);
+  BabyTree->Branch("tag_RelIso03EA"                , &tag_RelIso03EA);
   BabyTree->Branch("RelIso03DB"                    , &RelIso03DB);
   BabyTree->Branch("pfChargedHadronIso"            , &pfChargedHadronIso);
   BabyTree->Branch("pfPhotonIso"                   , &pfPhotonIso);
@@ -232,6 +233,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("threeChargeAgree"     , &threeChargeAgree_branch );
   BabyTree->Branch("mva"                  , &mva                     );
   BabyTree->Branch("mva_25ns"             , &mva_25ns                );
+  BabyTree->Branch("tag_mva_25ns"         , &tag_mva_25ns            );
   BabyTree->Branch("ecalIso"              , &ecalIso                 );
   BabyTree->Branch("hcalIso"              , &hcalIso                 );
   BabyTree->Branch("ecalPFClusterIso"     , &ecalPFClusterIso        );
@@ -402,6 +404,7 @@ void babyMaker::InitLeptonBranches(){
   mc_id = -1;
   RelIso03 = -1;
   RelIso03EA = -1;
+  tag_RelIso03EA = -1;
   RelIso03DB = -1;
   pfChargedHadronIso = -1;
   pfPhotonIso = -1;
@@ -571,6 +574,7 @@ void babyMaker::InitLeptonBranches(){
   threeChargeAgree_branch = 0;
   mva = -999.;
   mva_25ns = -999.;
+  tag_mva_25ns = -999.;
   ecalIso = -1;
   hcalIso = -1;
   ecalPFClusterIso = -1;
@@ -665,13 +669,15 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     if (i == j) continue;
     if (tas::mus_p4().at(j).pt() < 20.0) continue;
     if (fabs(tas::mus_p4().at(j).eta()) > 2.4) continue;
-    if (fabs(tas::mus_dxyPV().at(j)) > 0.05) continue;
-    if (fabs(tas::mus_dzPV().at(j)) > 0.1) continue;
+    if (fabs(tas::mus_dxyPV().at(j)) > 0.02) continue;
+    if (fabs(tas::mus_dzPV().at(j)) > 0.05) continue;
+    if (fabs(tas::mus_ip3d().at(i) / tas::mus_ip3derr().at(i)) > 4) continue;
     if (!isTightMuonPOG(j)) continue; 
     if (muRelIso03EA(j) > 0.2) continue;
     tag_p4 = tas::mus_p4().at(j);
     tag_charge = tas::mus_charge().at(j);
     tag_HLTLeadingLeg = false;
+    tag_RelIso03EA = muRelIso03EA(j);
     if (!evt_isRealData) tag_mc_motherid = tas::mus_mc_motherid().at(j);
 
     //both data and MC - works with new data and MC
@@ -704,16 +710,19 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
   return false;
 }
 
-bool babyMaker::checkElectronTag(unsigned int i){
+bool babyMaker::checkElectronTag(unsigned int i, readMVA* v25nsMVAreader){
   for(unsigned int j = 0; j < tas::els_p4().size(); j++){
     if (i == j) continue;
     if (tas::els_p4().at(j).pt() < 20.0) continue;
     if (fabs(tas::els_etaSC().at(j)) > 2.5) continue;
-    if (!tas::els_passTightId().at(j)) continue;
+    if (!tas::els_passMediumId().at(j)) continue;
+    if (fabs(tas::els_ip3d().at(i) / tas::els_ip3derr().at(i)) > 4) continue;
     tag_p4 = tas::els_p4().at(j);
     tag_charge = tas::els_charge().at(j); 
     tag_eSeed = tas::els_eSeed().at(j); 
     tag_eSCraw = tas::els_eSCRaw().at(j);      
+    if (v25nsMVAreader != 0) tag_mva_25ns = v25nsMVAreader->MVA(j);
+    tag_RelIso03EA = eleRelIso03EA(j);
     tag_HLTLeadingLeg = (tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j) > 0);
     if (!evt_isRealData) tag_mc_motherid = tas::els_mc_motherid().at(j);
 
@@ -1502,7 +1511,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         InitLeptonBranches(); 
 
         //Check for a tag
-        bool foundTag = checkElectronTag(i);
+        bool foundTag = checkElectronTag(i, v25nsMVAreader);
         if (foundTag) foundElTag = true; 
 
         // Require pT > 10 GeV
@@ -1757,7 +1766,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           if (pfelIsReco[i]) continue;
           InitLeptonBranches(); 
           // set the tag branches (-1 means we are happy if any reco electron is a tag)
-          checkElectronTag( -1 );
+          checkElectronTag( -1 , 0);
           // now let's look at our electron
           int pfidx = pfelidx[i];
           p4 = pfelP4[i];
