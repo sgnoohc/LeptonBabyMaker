@@ -8,7 +8,14 @@
 
 SAMPLE
 Name default
-Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-08/
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v3/merged/V07-04-09/merged_ntuple_82.root
+#Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3/V07-04-08/
+#Path /hadoop/cms/store/user/rcoelhol/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8__HCALdebug/crab_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIIFall15MiniAODv2-PU25nsData2015v1_HCALDe/CMS3_V07-06-03_MC/merged/merged_ntuple_1.root
+#Path /hadoop/cms/store/user/rcoelhol/SingleElectron/crab_SingleElectron_Run2015D-16Dec2015-v1/CMS3_V07-06-03_DATA/merged/merged_ntuple_1.root
+
+#Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v3/merged/V07-04-09/merged_ntuple_82.root
+
+
 
 SAMPLE
 Name QCD_Test
@@ -182,6 +189,15 @@ Name DY_amcnlo_M10to50
 Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-03/
 
 SAMPLE
+Name DY_25ns
+Path /hadoop/cms/store/group/snt/run2_25ns/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/V07-04-08/
+
+SAMPLE
+Name DY_76X_HCALdebug
+Path /hadoop/cms/store/user/rcoelhol/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8__HCALdebug/crab_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIIFall15MiniAODv2-PU25nsData2015v1_HCALDe/CMS3_V07-06-03_MC/merged/
+
+
+SAMPLE
 Name DY_madgraph
 Path /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
 SAMPLE
@@ -273,6 +289,12 @@ SAMPLE
 Name 2015DSingleEl
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v3/merged/V07-04-09/
 SAMPLE
+Name 2015DSingleElV4
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v4/merged/V07-04-11/
+SAMPLE
+Name 2015DSingleEl76X
+Path /hadoop/cms/store/user/rcoelhol/SingleElectron/crab_SingleElectron_Run2015D-16Dec2015-v1/CMS3_V07-06-03_DATA/merged/
+SAMPLE
 Name 2015DSingleMuon
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v3/merged/V07-04-09/
 
@@ -282,6 +304,10 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleMuon_MINIAOD_05Oc
 SAMPLE
 Name 2015DDoubleMuon
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+SAMPLE
+Name 2015DSingleMuonV4
+Path /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v4/merged/V07-04-11/
+
 SAMPLE
 Name 2015DDoubleMuon
 Path /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_PromptReco-v4/merged/V07-04-11/
