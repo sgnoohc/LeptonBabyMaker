@@ -237,6 +237,7 @@ private:
   int tag_HLT_Ele32_eta2p1_WPTight_Gsf;
   int tag_HLT_Ele22_eta2p1_WPLoose_Gsf;
   int tag_HLT_Ele22_eta2p1_WPTight_Gsf;
+  int tag_HLT_Ele25_eta2p1_WPTight_Gsf;
   int tag_HLT_Ele23_WPLoose_Gsf;
   int tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg;
   int tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL;
@@ -248,8 +249,11 @@ private:
   int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
   int tag_HLT_IsoMu20;
   int tag_HLT_IsoTkMu20;
+  int tag_HLT_IsoTkMu20_eta2p1;
   int tag_HLT_IsoMu24_eta2p1;
   int tag_HLT_IsoTkMu24_eta2p1;
+  int tag_HLT_IsoMu24;
+  int tag_HLT_IsoTkMu24;
   int tag_HLT_IsoMu27;
   int tag_HLT_IsoTkMu27;
   int tag_HLT_Mu8_TrkIsoVVL;
@@ -352,8 +356,11 @@ private:
   int HLT_Mu10_CentralPFJet30_BTagCSV0p54PF;
   int HLT_IsoMu20;
   int HLT_IsoTkMu20;
+  int HLT_IsoTkMu20_eta2p1;
   int HLT_IsoMu24_eta2p1;
   int HLT_IsoTkMu24_eta2p1;
+  int HLT_IsoMu24;
+  int HLT_IsoTkMu24;
   int HLT_IsoMu27;
   int HLT_IsoTkMu27;
   int HLT_Mu45_eta2p1;
@@ -380,6 +387,7 @@ private:
   int HLT_Ele32_eta2p1_WPTight_Gsf;//used in data
   int HLT_Ele22_eta2p1_WPLoose_Gsf;//used in data
   int HLT_Ele22_eta2p1_WPTight_Gsf;//used in data
+  int HLT_Ele25_eta2p1_WPTight_Gsf;//used in data
   int HLT_Ele23_WPLoose_Gsf;//used in data
   int HLT_Ele23_CaloIdL_TrackIdL_IsoVL;
   int HLT_Ele12_CaloIdL_TrackIdL_IsoVL;

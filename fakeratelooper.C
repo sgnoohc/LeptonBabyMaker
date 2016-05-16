@@ -179,6 +179,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLT_Ele32_eta2p1_WPTight_Gsf"                        , &tag_HLT_Ele32_eta2p1_WPTight_Gsf);
   BabyTree->Branch("tag_HLT_Ele22_eta2p1_WPLoose_Gsf"                        , &tag_HLT_Ele22_eta2p1_WPLoose_Gsf);
   BabyTree->Branch("tag_HLT_Ele22_eta2p1_WPTight_Gsf"                        , &tag_HLT_Ele22_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("tag_HLT_Ele25_eta2p1_WPTight_Gsf"                        , &tag_HLT_Ele25_eta2p1_WPTight_Gsf);
   BabyTree->Branch("tag_HLT_Ele23_WPLoose_Gsf"                               , &tag_HLT_Ele23_WPLoose_Gsf);
   BabyTree->Branch("tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg", &tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg);
   BabyTree->Branch("tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL"                    , &tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL);
@@ -201,8 +202,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg"      , &tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg);
   BabyTree->Branch("tag_HLT_IsoMu20"                                         , &tag_HLT_IsoMu20);
   BabyTree->Branch("tag_HLT_IsoTkMu20"                                       , &tag_HLT_IsoTkMu20);
+  BabyTree->Branch("tag_HLT_IsoTkMu20_eta2p1"                                , &tag_HLT_IsoTkMu20_eta2p1);
   BabyTree->Branch("tag_HLT_IsoMu24_eta2p1"                                  , &tag_HLT_IsoMu24_eta2p1);
   BabyTree->Branch("tag_HLT_IsoTkMu24_eta2p1"                                , &tag_HLT_IsoTkMu24_eta2p1);
+  BabyTree->Branch("tag_HLT_IsoMu24"                                         , &tag_HLT_IsoMu24);
+  BabyTree->Branch("tag_HLT_IsoTkMu24"                                       , &tag_HLT_IsoTkMu24);
   BabyTree->Branch("tag_HLT_IsoMu27"                                         , &tag_HLT_IsoMu27);
   BabyTree->Branch("tag_HLT_IsoTkMu27"                                       , &tag_HLT_IsoTkMu27);
   BabyTree->Branch("tag_HLT_Mu8_TrkIsoVVL"                                   , &tag_HLT_Mu8_TrkIsoVVL);
@@ -284,9 +288,12 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Mu10_CentralPFJet30_BTagCSV0p5PF" , &HLT_Mu10_CentralPFJet30_BTagCSV0p5PF);
   BabyTree->Branch("HLT_IsoMu20"                          , &HLT_IsoMu20);
   BabyTree->Branch("HLT_IsoTkMu20"                        , &HLT_IsoTkMu20);
+  BabyTree->Branch("HLT_IsoTkMu20_eta2p1"                 , &HLT_IsoTkMu20_eta2p1);
   BabyTree->Branch("HLT_Mu10_CentralPFJet30_BTagCSV0p54PF", &HLT_Mu10_CentralPFJet30_BTagCSV0p54PF);
   BabyTree->Branch("HLT_IsoMu24_eta2p1"                   , &HLT_IsoMu24_eta2p1);
   BabyTree->Branch("HLT_IsoTkMu24_eta2p1"                 , &HLT_IsoTkMu24_eta2p1);
+  BabyTree->Branch("HLT_IsoMu24"                          , &HLT_IsoMu24);
+  BabyTree->Branch("HLT_IsoTkMu24"                        , &HLT_IsoTkMu24);
   BabyTree->Branch("HLT_IsoMu27"                          , &HLT_IsoMu27);
   BabyTree->Branch("HLT_IsoTkMu27"                        , &HLT_IsoTkMu27);
   BabyTree->Branch("HLT_Mu45_eta2p1"                      , &HLT_Mu45_eta2p1);
@@ -313,6 +320,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Ele32_eta2p1_WPTight_Gsf"                           , &HLT_Ele32_eta2p1_WPTight_Gsf);
   BabyTree->Branch("HLT_Ele22_eta2p1_WPLoose_Gsf"                           , &HLT_Ele22_eta2p1_WPLoose_Gsf);
   BabyTree->Branch("HLT_Ele22_eta2p1_WPTight_Gsf"                           , &HLT_Ele22_eta2p1_WPTight_Gsf);
+  BabyTree->Branch("HLT_Ele25_eta2p1_WPTight_Gsf"                           , &HLT_Ele25_eta2p1_WPTight_Gsf);
   BabyTree->Branch("HLT_Ele23_WPLoose_Gsf"                                  , &HLT_Ele23_WPLoose_Gsf);
   BabyTree->Branch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL"                       , &HLT_Ele23_CaloIdL_TrackIdL_IsoVL);
   BabyTree->Branch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL"                       , &HLT_Ele12_CaloIdL_TrackIdL_IsoVL);
@@ -503,6 +511,7 @@ void babyMaker::InitLeptonBranches(){
   tag_HLT_Ele32_eta2p1_WPTight_Gsf = 0;
   tag_HLT_Ele22_eta2p1_WPLoose_Gsf = 0;
   tag_HLT_Ele22_eta2p1_WPTight_Gsf = 0;
+  tag_HLT_Ele25_eta2p1_WPTight_Gsf = 0;
   tag_HLT_Ele23_WPLoose_Gsf = 0;
   tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg = 0;
   tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL = 0;
@@ -513,8 +522,11 @@ void babyMaker::InitLeptonBranches(){
   tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg = 0;
   tag_HLT_IsoMu20 = 0;
   tag_HLT_IsoTkMu20 = 0;
+  tag_HLT_IsoTkMu20_eta2p1 = 0;
   tag_HLT_IsoMu24_eta2p1 = 0;
   tag_HLT_IsoTkMu24_eta2p1 = 0;
+  tag_HLT_IsoMu24 = 0;
+  tag_HLT_IsoTkMu24 = 0;
   tag_HLT_IsoMu27 = 0;
   tag_HLT_IsoTkMu27 = 0;
   tag_HLT_Mu8_TrkIsoVVL = 0;
@@ -612,8 +624,11 @@ void babyMaker::InitLeptonBranches(){
   HLT_Mu10_CentralPFJet30_BTagCSV0p54PF = 0;
   HLT_IsoMu20 = 0;
   HLT_IsoTkMu20 = 0;
+  HLT_IsoTkMu20_eta2p1 = 0;
   HLT_IsoMu24_eta2p1 = 0;
   HLT_IsoTkMu24_eta2p1 = 0;
+  HLT_IsoMu24 = 0;
+  HLT_IsoTkMu24 = 0;
   HLT_IsoMu27 = 0;
   HLT_IsoTkMu27 = 0;
   HLT_Mu45_eta2p1 = 0;
@@ -640,6 +655,7 @@ void babyMaker::InitLeptonBranches(){
   HLT_Ele32_eta2p1_WPTight_Gsf = 0;
   HLT_Ele22_eta2p1_WPLoose_Gsf = 0;
   HLT_Ele22_eta2p1_WPTight_Gsf = 0;
+  HLT_Ele25_eta2p1_WPTight_Gsf = 0;
   HLT_Ele23_WPLoose_Gsf = 0;
   HLT_Ele23_CaloIdL_TrackIdL_IsoVL = 0;
   HLT_Ele12_CaloIdL_TrackIdL_IsoVL = 0;
@@ -689,8 +705,11 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     }
     setHLTBranch("HLT_IsoMu20_v"         ,  tag_p4, tag_HLT_IsoMu20         );
     setHLTBranch("HLT_IsoTkMu20_v"       ,  tag_p4, tag_HLT_IsoTkMu20       );
+    setHLTBranch("HLT_IsoTkMu20_eta2p1_v",  tag_p4, tag_HLT_IsoTkMu20_eta2p1);
     setHLTBranch("HLT_IsoMu24_eta2p1_v"  ,  tag_p4, tag_HLT_IsoMu24_eta2p1  );
     setHLTBranch("HLT_IsoTkMu24_eta2p1_v",  tag_p4, tag_HLT_IsoTkMu24_eta2p1);
+    setHLTBranch("HLT_IsoMu24_v"         ,  tag_p4, tag_HLT_IsoMu24         );
+    setHLTBranch("HLT_IsoTkMu24_v"       ,  tag_p4, tag_HLT_IsoTkMu24       );
     setHLTBranch("HLT_IsoMu27_v"         ,  tag_p4, tag_HLT_IsoMu27         );
     setHLTBranch("HLT_IsoTkMu27_v"       ,  tag_p4, tag_HLT_IsoTkMu27       );
     setHLTBranch("HLT_Mu8_TrkIsoVVL_v"   ,  tag_p4, tag_HLT_Mu8_TrkIsoVVL   );
@@ -750,6 +769,7 @@ bool babyMaker::checkElectronTag(unsigned int i, readMVA* v25nsMVAreader){
       setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele32_eta2p1_WPTight_Gsf);
       setHLTBranch("HLT_Ele22_eta2p1_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPLoose_Gsf);
       setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele22_eta2p1_WPTight_Gsf);
+      setHLTBranch("HLT_Ele25_eta2p1_WPTight_Gsf_v",  tag_p4, tag_HLT_Ele25_eta2p1_WPTight_Gsf);
       setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  tag_p4, tag_HLT_Ele23_WPLoose_Gsf);	
     }    
 
@@ -818,6 +838,7 @@ void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool old
   if (tas::evt_isRealData()) setHLTBranch("HLT_Ele32_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele32_eta2p1_WPTight_Gsf);
   if (tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPLoose_Gsf_v",  p4, HLT_Ele22_eta2p1_WPLoose_Gsf);
   if (tas::evt_isRealData()) setHLTBranch("HLT_Ele22_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele22_eta2p1_WPTight_Gsf);
+  if (tas::evt_isRealData()) setHLTBranch("HLT_Ele25_eta2p1_WPTight_Gsf_v",  p4, HLT_Ele25_eta2p1_WPTight_Gsf);
   if (tas::evt_isRealData()) setHLTBranch("HLT_Ele23_WPLoose_Gsf_v",  p4, HLT_Ele23_WPLoose_Gsf);
   setHLTBranch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Ele23_CaloIdL_TrackIdL_IsoVL);
   setHLTBranch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v",  p4, HLT_Ele12_CaloIdL_TrackIdL_IsoVL);
@@ -866,8 +887,11 @@ void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag)
   setHLTBranch("HLT_Mu34_TrkIsoVVL_v"  , p4, HLT_Mu34_TrkIsoVVL  );
   setHLTBranch("HLT_IsoMu20_v"         , p4, HLT_IsoMu20         );
   setHLTBranch("HLT_IsoTkMu20_v"       , p4, HLT_IsoTkMu20       );
+  setHLTBranch("HLT_IsoTkMu20_eta2p1_v", p4, HLT_IsoTkMu20_eta2p1);
   setHLTBranch("HLT_IsoMu24_eta2p1_v"  , p4, HLT_IsoMu24_eta2p1  );
   setHLTBranch("HLT_IsoTkMu24_eta2p1_v", p4, HLT_IsoTkMu24_eta2p1);
+  setHLTBranch("HLT_IsoMu24_v"         , p4, HLT_IsoMu24         );
+  setHLTBranch("HLT_IsoTkMu24_v"       , p4, HLT_IsoTkMu24       );
   setHLTBranch("HLT_IsoMu27_v"         , p4, HLT_IsoMu27         );
   setHLTBranch("HLT_IsoTkMu27_v"       , p4, HLT_IsoTkMu27       );
   setHLTBranch("HLT_Mu45_eta2p1_v"     , p4, HLT_Mu45_eta2p1     );
