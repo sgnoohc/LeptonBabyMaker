@@ -74,12 +74,8 @@ private:
   float evt_pfmetPhi;
   float evt_trackmet;  //not CMS3
   float evt_trackmetPhi; //not CMS3
-  float evt_met3p0;
-  float evt_met3p0Phi;
   float evt_corrMET;
   float evt_corrMETPhi;
-  float evt_t1met3p0;
-  float evt_t1met3p0Phi;
   float evt_pfsumet;
   float evt_pfmetSig;
   int evt_event;
@@ -370,9 +366,12 @@ private:
   int HLT_Ele8_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele12_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele18_CaloIdM_TrackIdM_PFJet30;
+  int HLT_Ele17_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele23_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele33_CaloIdM_TrackIdM_PFJet30;
+  int HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30;
+  int HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30;

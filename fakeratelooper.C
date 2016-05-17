@@ -10,8 +10,8 @@ unsigned int evt_cut = 0;
 bool addPFCandidates = false; // Default is false
 bool addAnnulus = false; // Default is false
 bool recoLeptonsDownTo5GeV = false; // Default is false (meaning 10 GeV)
-bool onlySaveTagProbePairs = false; // Default is false
-bool applyJson = false;
+bool onlySaveTagProbePairs = true; // Default is false
+bool applyJson = true;
 
 //Main functions
 void babyMaker::MakeBabyNtuple(const char* output_name){
@@ -28,10 +28,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("evt_trackmetPhi"   , &evt_trackmetPhi);
   BabyTree->Branch("evt_corrMET"       , &evt_corrMET);
   BabyTree->Branch("evt_corrMETPhi"    , &evt_corrMETPhi);
-  BabyTree->Branch("evt_met3p0"        , &evt_met3p0);
-  BabyTree->Branch("evt_met3p0Phi"     , &evt_met3p0Phi);
-  BabyTree->Branch("evt_t1met3p0"      , &evt_t1met3p0);
-  BabyTree->Branch("evt_t1met3p0Phi"   , &evt_t1met3p0Phi);
   BabyTree->Branch("evt_pfsumet"       , &evt_pfsumet);
   BabyTree->Branch("evt_pfmetSig"      , &evt_pfmetSig);
   BabyTree->Branch("evt_event"         , &evt_event);
@@ -302,10 +298,13 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   //Single Electron Triggers
   BabyTree->Branch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30"                      , &HLT_Ele8_CaloIdM_TrackIdM_PFJet30);
   BabyTree->Branch("HLT_Ele12_CaloIdM_TrackIdM_PFJet30"                     , &HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
+  BabyTree->Branch("HLT_Ele17_CaloIdM_TrackIdM_PFJet30"                     , &HLT_Ele17_CaloIdM_TrackIdM_PFJet30);
   BabyTree->Branch("HLT_Ele18_CaloIdM_TrackIdM_PFJet30"                     , &HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
   BabyTree->Branch("HLT_Ele23_CaloIdM_TrackIdM_PFJet30"                     , &HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
   BabyTree->Branch("HLT_Ele33_CaloIdM_TrackIdM_PFJet30"                     , &HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
+  BabyTree->Branch("HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30"                , &HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30);
   BabyTree->Branch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30"               , &HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  BabyTree->Branch("HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30"               , &HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30);
   BabyTree->Branch("HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30"               , &HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
   BabyTree->Branch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30"               , &HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
   BabyTree->Branch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30"               , &HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
@@ -355,10 +354,6 @@ void babyMaker::InitBabyNtuple(){
   evt_trackmetPhi = -99;
   evt_corrMET = -1;
   evt_corrMETPhi = -99.;
-  evt_met3p0 = -1;
-  evt_met3p0Phi = -99.;
-  evt_t1met3p0 = -1;
-  evt_t1met3p0Phi = -99.;
   evt_pfsumet = -1;
   evt_pfmetSig = -1;
   evt_event = -1;
@@ -637,10 +632,13 @@ void babyMaker::InitLeptonBranches(){
   //Single Electron Trigger
   HLT_Ele8_CaloIdM_TrackIdM_PFJet30 = 0;
   HLT_Ele12_CaloIdM_TrackIdM_PFJet30 = 0;
+  HLT_Ele17_CaloIdM_TrackIdM_PFJet30 = 0;
   HLT_Ele18_CaloIdM_TrackIdM_PFJet30 = 0;
   HLT_Ele23_CaloIdM_TrackIdM_PFJet30 = 0;
   HLT_Ele33_CaloIdM_TrackIdM_PFJet30 = 0;
+  HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 = 0;
   HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 = 0;
+  HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30 = 0;
   HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30 = 0;
   HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 = 0;
   HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30 = 0;
@@ -736,7 +734,9 @@ bool babyMaker::checkElectronTag(unsigned int i, readMVA* v25nsMVAreader){
     if (fabs(tas::els_etaSC().at(j)) > 2.5) continue;
     if (!tas::els_passMediumId().at(j)) continue;
     if (fabs(tas::els_ip3d().at(i) / tas::els_ip3derr().at(i)) > 4) continue;
+
     tag_p4 = tas::els_p4().at(j);
+    if (verbose) cout << "Found a tag: pt/eta/phi "<<tag_p4.pt()<<"/"<<tag_p4.eta()<<"/"<<tag_p4.phi() << endl;
     tag_charge = tas::els_charge().at(j); 
     tag_eSeed = tas::els_eSeed().at(j); 
     tag_eSCraw = tas::els_eSCRaw().at(j);      
@@ -820,10 +820,13 @@ void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool old
   //Single Electron Trigger
   setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v" ,  (idx>=0 ? tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx)  : 0), HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
   setHLTBranch("HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele17_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele17_CaloIdM_TrackIdM_PFJet30);
   setHLTBranch("HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
   setHLTBranch("HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
   setHLTBranch("HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30);
   setHLTBranch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v", p4, HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30);
   setHLTBranch("HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
   setHLTBranch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
   setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
@@ -942,7 +945,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   v25nsMVAreader->InitMVA("CORE",true); 
   
   //Add good run list
-  set_goodrun_file("goodRunList/final2015_golden_25ns2p11fb.txt");
+  //  set_goodrun_file("goodRunList/final2015_golden_25ns2p11fb.txt");
+  set_goodrun_file("goodRunList/DCSONLY_json_160516_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
@@ -1105,21 +1109,21 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
     unsigned int nEventsTree = tree->GetEntriesFast();
     for(unsigned int evt = 0; evt < nEventsTree; evt++){
 
-      if (verbose) cout << "Event "<<evt<<endl;
+      //if (verbose) cout << "Event "<<evt<<endl;
       // Get Event Content
       if(nEventsDone >= nEventsToDo) continue;   
       cms3.GetEntry(evt);
       nEventsDone++;
 
-      if (verbose) cout << "Check prompt reco (Data)"<<endl;
+      //if (verbose) cout << "Check prompt reco (Data)"<<endl;
       if (tas::evt_isRealData() && isPromptReco && tas::evt_run() <= 251562) continue;
 
       //If data, check good run list
-      if (verbose) cout << "Check good run (Data)"<<endl;
+      //if (verbose) cout << "Check good run (Data)"<<endl;
       if (applyJson && tas::evt_isRealData() && !goodrun(tas::evt_run(), tas::evt_lumiBlock())) continue; 
 
       //Initialize variables
-      if (verbose) cout << "InitBabyNtuple"<<endl;
+      //if (verbose) cout << "InitBabyNtuple"<<endl;
       InitBabyNtuple();
 
       // Progress
@@ -1134,8 +1138,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
       //MET variables
       metStruct trackMetStruct =  trackerMET(0.2);
-      pair<float,float> met3p0Pair = MET3p0();
-      pair<float,float> t1met3p0Pair = getT1CHSMET3p0(jet_corrector_pfL1L2L3);
       pair<float,float> corrMETPair = getT1CHSMET_fromMINIAOD(jet_corrector_pfL1L2L3);
 
       //Fill Easy Variables
@@ -1145,10 +1147,6 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       evt_trackmetPhi= trackMetStruct.metphi;
       evt_corrMET    = corrMETPair.first;
       evt_corrMETPhi = corrMETPair.second;
-      evt_met3p0     = met3p0Pair.first;
-      evt_met3p0Phi  = met3p0Pair.second;
-      evt_t1met3p0   = t1met3p0Pair.first;
-      evt_t1met3p0Phi= t1met3p0Pair.second;
       evt_pfsumet    = cms3.evt_pfsumet();
       evt_pfmetSig   = cms3.evt_pfmetSig();
       evt_event      = tas::evt_event();
@@ -1547,11 +1545,11 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, SS_veto_noiso_v4)==0 && electronID(i, HAD_veto_v3)==0 && foundTag==false) continue;
 	if (onlySaveTagProbePairs && foundTag==false) continue;
 
-	if (verbose) cout << "Saving this electron" << endl;
-
         //p4
         p4 = tas::els_p4().at(i);    
         savedElP4s.push_back(p4);
+
+	if (verbose) cout << "Saving this electron: pt/eta/phi "<<p4.pt()<<"/"<<p4.eta()<<"/"<<p4.phi() << endl;
 
         //Dilepton stuff
         if (foundTag){
