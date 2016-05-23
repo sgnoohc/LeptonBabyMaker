@@ -685,7 +685,7 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     if (fabs(tas::mus_p4().at(j).eta()) > 2.4) continue;
     if (fabs(tas::mus_dxyPV().at(j)) > 0.02) continue;
     if (fabs(tas::mus_dzPV().at(j)) > 0.05) continue;
-    if (fabs(tas::mus_ip3d().at(i) / tas::mus_ip3derr().at(i)) > 4) continue;
+    //if (fabs(tas::mus_ip3d().at(j) / tas::mus_ip3derr().at(j)) > 4) continue;
     if (!isTightMuonPOG(j)) continue; 
     if (muRelIso03EA(j) > 0.2) continue;
     tag_p4 = tas::mus_p4().at(j);
@@ -732,8 +732,8 @@ bool babyMaker::checkElectronTag(unsigned int i, readMVA* v25nsMVAreader){
     if (i == j) continue;
     if (tas::els_p4().at(j).pt() < 20.0) continue;
     if (fabs(tas::els_etaSC().at(j)) > 2.5) continue;
-    if (!tas::els_passMediumId().at(j)) continue;
-    if (fabs(tas::els_ip3d().at(i) / tas::els_ip3derr().at(i)) > 4) continue;
+    if (!tas::els_passTightId().at(j)) continue;
+    //if (fabs(tas::els_ip3d().at(j) / tas::els_ip3derr().at(j)) > 4) continue;
 
     tag_p4 = tas::els_p4().at(j);
     if (verbose) cout << "Found a tag: pt/eta/phi "<<tag_p4.pt()<<"/"<<tag_p4.eta()<<"/"<<tag_p4.phi() << endl;
@@ -946,7 +946,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   
   //Add good run list
   //  set_goodrun_file("goodRunList/final2015_golden_25ns2p11fb.txt");
-  set_goodrun_file("goodRunList/DCSONLY_json_160516_snt.txt");
+  //set_goodrun_file("goodRunList/DCSONLY_json_160516_snt.txt");
+  set_goodrun_file("goodRunList/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
