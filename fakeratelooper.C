@@ -671,7 +671,7 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     if (fabs(tas::mus_p4().at(j).eta()) > 2.4) continue;
     if (fabs(tas::mus_dxyPV().at(j)) > 0.02) continue;
     if (fabs(tas::mus_dzPV().at(j)) > 0.05) continue;
-    if (fabs(tas::mus_ip3d().at(i) / tas::mus_ip3derr().at(i)) > 4) continue;
+    if (fabs(tas::mus_ip3d().at(j) / tas::mus_ip3derr().at(j)) > 4) continue;
     if (!isTightMuonPOG(j)) continue; 
     if (muRelIso03EA(j) > 0.2) continue;
     tag_p4 = tas::mus_p4().at(j);
@@ -716,7 +716,7 @@ bool babyMaker::checkElectronTag(unsigned int i, readMVA* v25nsMVAreader){
     if (tas::els_p4().at(j).pt() < 20.0) continue;
     if (fabs(tas::els_etaSC().at(j)) > 2.5) continue;
     if (!tas::els_passMediumId().at(j)) continue;
-    if (fabs(tas::els_ip3d().at(i) / tas::els_ip3derr().at(i)) > 4) continue;
+    if (fabs(tas::els_ip3d().at(j) / tas::els_ip3derr().at(j)) > 4) continue;
     tag_p4 = tas::els_p4().at(j);
     tag_charge = tas::els_charge().at(j); 
     tag_eSeed = tas::els_eSeed().at(j); 
