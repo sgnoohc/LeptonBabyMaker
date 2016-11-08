@@ -8,8 +8,10 @@
 bool verbose = 0;
 unsigned int evt_cut = 0;
 bool addPFCandidates = false; // Default is false
-bool addAnnulus = false; // Default is false
+bool checkIsPFTrueFalse = false; // Default is false (requires double loop on recocandidates and pfcandidates)
+bool addAnnulus = true; // Default is false
 bool recoLeptonsDownTo5GeV = false; // Default is false (meaning 10 GeV)
+bool recoLeptonsDownTo20GeV = true; // Default is false (meaning 1 GeV)
 bool onlySaveTagProbePairs = true; // Default is false
 bool applyJson = true;
 
@@ -58,6 +60,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("nvtx"              , &nvtx);
   BabyTree->Branch("rho"               , &rho);
   BabyTree->Branch("rho_neut_centr"    , &rho_neut_centr);
+  BabyTree->Branch("rho_calo"    , &rho_calo);
+  BabyTree->Branch("rho_calo_centr"    , &rho_calo_centr);
 
   //All leptons
   BabyTree->Branch("p4"                            , &p4);
@@ -149,7 +153,9 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_charge"                    , &tag_charge);
   BabyTree->Branch("tag_mc_motherid"               , &tag_mc_motherid);
   BabyTree->Branch("tag_eSeed"                     , &tag_eSeed);
-  BabyTree->Branch("tag_eSCraw"                    , &tag_eSCraw);
+  BabyTree->Branch("tag_eSCRaw"                    , &tag_eSCRaw);
+  BabyTree->Branch("tag_eSC"                       , &tag_eSC);
+  BabyTree->Branch("tag_ecalEnergy"                , &tag_ecalEnergy);
   BabyTree->Branch("tag_HLTLeadingLeg"             , &tag_HLTLeadingLeg);
   BabyTree->Branch("exp_innerlayers"               , &exp_innerlayers);
   BabyTree->Branch("exp_outerlayers"               , &exp_outerlayers);
@@ -201,6 +207,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("tag_HLT_IsoTkMu20_eta2p1"                                , &tag_HLT_IsoTkMu20_eta2p1);
   BabyTree->Branch("tag_HLT_IsoMu24_eta2p1"                                  , &tag_HLT_IsoMu24_eta2p1);
   BabyTree->Branch("tag_HLT_IsoTkMu24_eta2p1"                                , &tag_HLT_IsoTkMu24_eta2p1);
+  BabyTree->Branch("tag_HLT_IsoMu22"                                         , &tag_HLT_IsoMu22);
+  BabyTree->Branch("tag_HLT_IsoTkMu22"                                       , &tag_HLT_IsoTkMu22);
   BabyTree->Branch("tag_HLT_IsoMu24"                                         , &tag_HLT_IsoMu24);
   BabyTree->Branch("tag_HLT_IsoTkMu24"                                       , &tag_HLT_IsoTkMu24);
   BabyTree->Branch("tag_HLT_IsoMu27"                                         , &tag_HLT_IsoMu27);
@@ -224,6 +232,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("dPhiIn"               , &dPhiIn                  );
   BabyTree->Branch("hOverE"               , &hOverE                  );
   BabyTree->Branch("eSeed"                , &eSeed                   );
+  BabyTree->Branch("scSeedEta"            , &scSeedEta               );
   BabyTree->Branch("ecalEnergy"           , &ecalEnergy              );
   BabyTree->Branch("eOverPIn"             , &eOverPIn                );
   BabyTree->Branch("conv_vtx_flag"        , &conv_vtx_flag           );
@@ -243,9 +252,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("e1x5_full5x5"         , &e1x5_full5x5            );
   BabyTree->Branch("e5x5_full5x5"         , &e5x5_full5x5            );
   BabyTree->Branch("r9_full5x5"           , &r9_full5x5              );
+  BabyTree->Branch("tag_r9_full5x5"       , &tag_r9_full5x5              );
   BabyTree->Branch("etaSCwidth"           , &etaSCwidth              );
   BabyTree->Branch("phiSCwidth"           , &phiSCwidth              );
   BabyTree->Branch("eSCRaw"               , &eSCRaw                  );
+  BabyTree->Branch("eSC"                  , &eSC                     );
   BabyTree->Branch("eSCPresh"             , &eSCPresh                );
   BabyTree->Branch("ckf_chi2"             , &ckf_chi2                );
   BabyTree->Branch("ckf_ndof"             , &ckf_ndof                );
@@ -288,6 +299,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("HLT_Mu10_CentralPFJet30_BTagCSV0p54PF", &HLT_Mu10_CentralPFJet30_BTagCSV0p54PF);
   BabyTree->Branch("HLT_IsoMu24_eta2p1"                   , &HLT_IsoMu24_eta2p1);
   BabyTree->Branch("HLT_IsoTkMu24_eta2p1"                 , &HLT_IsoTkMu24_eta2p1);
+  BabyTree->Branch("HLT_IsoMu22"                          , &HLT_IsoMu22);
+  BabyTree->Branch("HLT_IsoTkMu22"                        , &HLT_IsoTkMu22);
   BabyTree->Branch("HLT_IsoMu24"                          , &HLT_IsoMu24);
   BabyTree->Branch("HLT_IsoTkMu24"                        , &HLT_IsoTkMu24);
   BabyTree->Branch("HLT_IsoMu27"                          , &HLT_IsoMu27);
@@ -383,6 +396,8 @@ void babyMaker::InitBabyNtuple(){
   nFOs_SS = -1;
   nvtx = -1;
   rho = -1;
+  rho_calo = -1;
+  rho_calo_centr = -1;
 
   InitLeptonBranches();
 
@@ -484,7 +499,9 @@ void babyMaker::InitLeptonBranches(){
   tag_charge = 0.;
   tag_mc_motherid = 0.;
   tag_eSeed = -1;
-  tag_eSCraw = -1;
+  tag_eSCRaw = -1;
+  tag_eSC = -1;
+  tag_ecalEnergy = -1;
   tag_HLTLeadingLeg = false;
   tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg = 0;
   tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg = 0;
@@ -520,6 +537,8 @@ void babyMaker::InitLeptonBranches(){
   tag_HLT_IsoTkMu20_eta2p1 = 0;
   tag_HLT_IsoMu24_eta2p1 = 0;
   tag_HLT_IsoTkMu24_eta2p1 = 0;
+  tag_HLT_IsoMu22 = 0;
+  tag_HLT_IsoTkMu22 = 0;
   tag_HLT_IsoMu24 = 0;
   tag_HLT_IsoTkMu24 = 0;
   tag_HLT_IsoMu27 = 0;
@@ -570,6 +589,9 @@ void babyMaker::InitLeptonBranches(){
   dPhiIn = -99;
   hOverE = -1;
   eSeed = -1;
+  eSC = -1;
+  eSCRaw = -1;
+  scSeedEta = -1;
   ecalEnergy = -1;
   eOverPIn = -1;
   conv_vtx_flag = 0;
@@ -591,9 +613,12 @@ void babyMaker::InitLeptonBranches(){
   e1x5_full5x5          = -1;
   e5x5_full5x5          = -1;
   r9_full5x5            = -1;
+  tag_r9_full5x5        = -1;
   etaSCwidth            = -1;
   phiSCwidth            = -1;
   eSCRaw                = -1;
+  eSC                   = -1;
+  ecalEnergy            = -1;  
   eSCPresh              = -1;
   ckf_chi2              = -1;
   ckf_ndof              = -1;
@@ -622,6 +647,8 @@ void babyMaker::InitLeptonBranches(){
   HLT_IsoTkMu20_eta2p1 = 0;
   HLT_IsoMu24_eta2p1 = 0;
   HLT_IsoTkMu24_eta2p1 = 0;
+  HLT_IsoMu22 = 0;
+  HLT_IsoTkMu22 = 0;
   HLT_IsoMu24 = 0;
   HLT_IsoTkMu24 = 0;
   HLT_IsoMu27 = 0;
@@ -706,6 +733,8 @@ bool babyMaker::checkMuonTag(unsigned int i, bool oldTag){
     setHLTBranch("HLT_IsoTkMu20_eta2p1_v",  tag_p4, tag_HLT_IsoTkMu20_eta2p1);
     setHLTBranch("HLT_IsoMu24_eta2p1_v"  ,  tag_p4, tag_HLT_IsoMu24_eta2p1  );
     setHLTBranch("HLT_IsoTkMu24_eta2p1_v",  tag_p4, tag_HLT_IsoTkMu24_eta2p1);
+    setHLTBranch("HLT_IsoMu22_v"         ,  tag_p4, tag_HLT_IsoMu22         );
+    setHLTBranch("HLT_IsoTkMu22_v"       ,  tag_p4, tag_HLT_IsoTkMu22       );
     setHLTBranch("HLT_IsoMu24_v"         ,  tag_p4, tag_HLT_IsoMu24         );
     setHLTBranch("HLT_IsoTkMu24_v"       ,  tag_p4, tag_HLT_IsoTkMu24       );
     setHLTBranch("HLT_IsoMu27_v"         ,  tag_p4, tag_HLT_IsoMu27         );
@@ -739,7 +768,10 @@ bool babyMaker::checkElectronTag(unsigned int i, readMVA* v25nsMVAreader){
     if (verbose) cout << "Found a tag: pt/eta/phi "<<tag_p4.pt()<<"/"<<tag_p4.eta()<<"/"<<tag_p4.phi() << endl;
     tag_charge = tas::els_charge().at(j); 
     tag_eSeed = tas::els_eSeed().at(j); 
-    tag_eSCraw = tas::els_eSCRaw().at(j);      
+    tag_eSCRaw = tas::els_eSCRaw().at(j);      
+    tag_eSC = tas::els_eSC().at(j);      
+    tag_ecalEnergy = tas::els_ecalEnergy().at(j);      
+    tag_r9_full5x5 = tas::els_r9_full5x5().at(j);
     if (v25nsMVAreader != 0) tag_mva_25ns = v25nsMVAreader->MVA(j);
     tag_RelIso03EA = eleRelIso03EA(j);
     tag_HLTLeadingLeg = (tas::els_HLT_Ele17_Ele8_Mass50_LeadingLeg().at(j) > 0 || tas::els_HLT_Ele20_SC4_Mass50_LeadingLeg().at(j) > 0);
@@ -893,6 +925,8 @@ void babyMaker::fillMuonTriggerBranches(LorentzVector &p4, int idx, bool oldTag)
   setHLTBranch("HLT_IsoTkMu20_eta2p1_v", p4, HLT_IsoTkMu20_eta2p1);
   setHLTBranch("HLT_IsoMu24_eta2p1_v"  , p4, HLT_IsoMu24_eta2p1  );
   setHLTBranch("HLT_IsoTkMu24_eta2p1_v", p4, HLT_IsoTkMu24_eta2p1);
+  setHLTBranch("HLT_IsoMu22_v"         , p4, HLT_IsoMu22         );
+  setHLTBranch("HLT_IsoTkMu22_v"       , p4, HLT_IsoTkMu22       );
   setHLTBranch("HLT_IsoMu24_v"         , p4, HLT_IsoMu24         );
   setHLTBranch("HLT_IsoTkMu24_v"       , p4, HLT_IsoTkMu24       );
   setHLTBranch("HLT_IsoMu27_v"         , p4, HLT_IsoMu27         );
@@ -947,7 +981,13 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //Add good run list
   //  set_goodrun_file("goodRunList/final2015_golden_25ns2p11fb.txt");
   //set_goodrun_file("goodRunList/DCSONLY_json_160516_snt.txt");
-  set_goodrun_file("goodRunList/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
+  //  set_goodrun_file("goodRunList/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
+  //  set_goodrun_file("goodRunList/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON_snt.txt");
+  //  set_goodrun_file("goodRunList/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON_snt.txt");
+  //  set_goodrun_file("goodRunList/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
+  //  set_goodrun_file("goodRunList/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2_snt.txt");
+  //  set_goodrun_file("goodRunList/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_snt.txt");
+  set_goodrun_file("goodRunList/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
@@ -1171,7 +1211,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
       
       rho = tas::evt_fixgridfastjet_all_rho();
       rho_neut_centr = tas::evt_fixgridfastjet_centralneutral_rho();
- 
+      rho_calo = tas::evt_fixgridfastjet_allcalo_rho();
+      rho_calo_centr = tas::evt_fixgridfastjet_centralcalo_rho();
+
       //Fill data vs. mc variables
       passes_met_filters = evt_isRealData ? passesMETfilter()           : 1;
       filt_hbhe          = evt_isRealData ? hbheNoiseFilter()           : 1;
@@ -1333,6 +1375,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         // Require pT > 10 GeV
 	float maxPt = 10.;
 	if (recoLeptonsDownTo5GeV) maxPt = 5.;
+	if (recoLeptonsDownTo20GeV) maxPt = 20.;
 	if (tas::mus_p4().at(i).pt()<=maxPt) continue;
 
         //Save the muon if we have a tag OR if it passes loose ID 
@@ -1457,7 +1500,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           reliso04 = muRelIsoCustomCone(i, 0.4, true, 0.5, false, true);
           annulus04 = reliso04 - miniiso;
 	}
-	if (addPFCandidates) {
+	if (addPFCandidates || checkIsPFTrueFalse) {
 	  int pfidx =  isPFmuon(pfmuP4, pfmuIsReco, i);
 	  if (pfidx != -1) {
 	    isPF = true;		  
@@ -1540,6 +1583,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         // Require pT > 10 GeV
 	float maxPt = 10.;
 	if (recoLeptonsDownTo5GeV) maxPt = 5.;
+	if (recoLeptonsDownTo20GeV) maxPt = 20.;
         if (tas::els_p4().at(i).pt() <= maxPt) continue; 
 
         //Save the electron if we have a tag OR if it passes loose ID 
@@ -1667,7 +1711,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         etaSCwidth             = tas::els_etaSCwidth().at(i);
         phiSCwidth             = tas::els_phiSCwidth().at(i);
         eSeed                  = tas::els_eSeed().at(i);
+        scSeedEta              = tas::els_scSeedEta().at(i);
         eSCRaw                 = tas::els_eSCRaw().at(i);
+        eSC                    = tas::els_eSC().at(i);
         eSCPresh               = tas::els_eSCPresh().at(i);
         ckf_chi2               = tas::els_ckf_chi2().at(i);
         ckf_ndof               = tas::els_ckf_ndof().at(i);
@@ -1684,7 +1730,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           reliso04 = elRelIsoCustomCone(i, 0.4, true, 0.0, false, true);
           annulus04 = reliso04 - miniiso;
 	}
-	if (addPFCandidates) {
+	if (addPFCandidates || checkIsPFTrueFalse) {
 	  int pfidx =  isPFelectron(pfelP4, pfelIsReco, i);
 	  if (pfidx != -1) {
 	    isPF = true;		  
@@ -1789,7 +1835,8 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
           if (pfelIsReco[i]) continue;
           InitLeptonBranches(); 
           // set the tag branches (-1 means we are happy if any reco electron is a tag)
-          checkElectronTag( -1 , 0);
+	  //          checkElectronTag( -1 , 0);
+          checkElectronTag( -1 , v25nsMVAreader);
           // now let's look at our electron
           int pfidx = pfelidx[i];
           p4 = pfelP4[i];

@@ -106,6 +106,8 @@ private:
   int nvtx;
   float rho;
   float rho_neut_centr;
+  float rho_calo;
+  float rho_calo_centr;
 
   //---both e and mu---//
   LorentzVector p4;
@@ -201,7 +203,10 @@ private:
   int tag_charge;
   int tag_mc_motherid;
   float tag_eSeed;
-  float tag_eSCraw;
+  float tag_eSCRaw;
+  float tag_eSC;
+  float tag_ecalEnergy;
+  float tag_r9_full5x5;
   bool tag_HLTLeadingLeg;
   float dilep_mass;
   bool isRandom;
@@ -248,6 +253,8 @@ private:
   int tag_HLT_IsoTkMu20_eta2p1;
   int tag_HLT_IsoMu24_eta2p1;
   int tag_HLT_IsoTkMu24_eta2p1;
+  int tag_HLT_IsoMu22;
+  int tag_HLT_IsoTkMu22;
   int tag_HLT_IsoMu24;
   int tag_HLT_IsoTkMu24;
   int tag_HLT_IsoMu27;
@@ -285,6 +292,7 @@ private:
   float dPhiIn;
   float hOverE;
   float eSeed;
+  float scSeedEta;
   float ecalEnergy;
   float eOverPIn;
   bool  conv_vtx_flag;
@@ -308,6 +316,7 @@ private:
   float etaSCwidth            ;
   float phiSCwidth            ;
   float eSCRaw                ;
+  float eSC                ;
   float eSCPresh              ;
   float ckf_chi2              ;
   int ckf_ndof              ;
@@ -355,6 +364,8 @@ private:
   int HLT_IsoTkMu20_eta2p1;
   int HLT_IsoMu24_eta2p1;
   int HLT_IsoTkMu24_eta2p1;
+  int HLT_IsoMu22;
+  int HLT_IsoTkMu22;
   int HLT_IsoMu24;
   int HLT_IsoTkMu24;
   int HLT_IsoMu27;
