@@ -338,56 +338,56 @@ Path /hadoop/cms/store/group/snt/run2_data/Run2016B_SingleMuon_MINIAOD_PromptRec
 
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleMuon_MINIAOD_23Sep2016-v3/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleMuon_MINIAOD_23Sep2016-v3/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016C_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016E_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016F_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleMuon_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleMuon_MINIAOD_PromptReco-v1/merged/V08-00-12/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleMuon_MINIAOD_PromptReco-v1/merged/V08-00-12/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleMuon_MINIAOD_PromptReco-v2/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleMuon_MINIAOD_PromptReco-v2/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleMuon
-/hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleMuon_MINIAOD_PromptReco-v3/merged/V08-00-15/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleMuon_MINIAOD_PromptReco-v3/merged/V08-00-15/
 
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleEG_MINIAOD_23Sep2016-v3/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016B_DoubleEG_MINIAOD_23Sep2016-v3/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016C_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016C_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016D_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016E_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016E_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016F_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016F_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleEG_MINIAOD_23Sep2016-v1/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleEG_MINIAOD_PromptReco-v1/merged/V08-00-12/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016G_DoubleEG_MINIAOD_PromptReco-v1/merged/V08-00-12/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleEG_MINIAOD_PromptReco-v2/merged/V08-00-14/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleEG_MINIAOD_PromptReco-v2/merged/V08-00-14/
 SAMPLE
 Name 2016DoubleEG
-/hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleEG_MINIAOD_PromptReco-v3/merged/V08-00-15/
+Path /hadoop/cms/store/group/snt/run2_data/Run2016H_DoubleEG_MINIAOD_PromptReco-v3/merged/V08-00-15/
