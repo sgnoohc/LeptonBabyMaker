@@ -2,7 +2,7 @@
 
 #samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, WJets, ALL
 #Choose the sample(s) you want here, separated by commmas
-sampleList_in=2015DDoubleEG,2015DDoubleMuon,QCD_Mu_Enriched,QCD_EM_Enriched,DY_madgraph,WJets
+sampleList_in=2016DoubleEG,2016DoubleMuon,DY_madgraph,WJets
 #sampleList_in=2015DSingleElV4,2015DSingleMuonV4,DY_madgraph
 #Choose the number of events (per file): 
 nEvents=-1
