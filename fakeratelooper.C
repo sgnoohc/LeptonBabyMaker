@@ -973,7 +973,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   cout << "Careful!! Path is " << path << endl;
 
   //Create and init MVA
-  createAndInitMVA("CORE");
+  createAndInitMVA("./CORE", true, false, 80); // Moriond
 
   readMVA* v25nsMVAreader = new readMVA();
   v25nsMVAreader->InitMVA("CORE",true); 
@@ -987,7 +987,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   //  set_goodrun_file("goodRunList/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
   //  set_goodrun_file("goodRunList/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2_snt.txt");
   //  set_goodrun_file("goodRunList/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_snt.txt");
-  set_goodrun_file("goodRunList/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T_snt.txt");
+  set_goodrun_file("goodRunList/goldenJson_2016rereco_36p46ifb.txt");
 
   //Make Baby Ntuple  
   MakeBabyNtuple( Form("%s.root", output_name) );
@@ -1020,26 +1020,26 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1;
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL1L2L3;
   std::vector<std::string> jetcorr_filenames_25ns_MC_pfL2L3;
-  jetcorr_filenames_25ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-  jetcorr_filenames_25ns_MC_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_MC_L2L3Residual_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1.push_back      ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL1L2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL2L3.push_back    ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL2L3.push_back    ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_MC_pfL2L3.push_back    ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_MC_L2L3Residual_AK4PFchs.txt");
 
   //JEC files -- 25 ns DATA
   std::vector<std::string> jetcorr_filenames_25ns_DATA_pfL1;
   std::vector<std::string> jetcorr_filenames_25ns_DATA_pfL1L2L3;
   std::vector<std::string> jetcorr_filenames_25ns_DATA_pfL2L3;
-  jetcorr_filenames_25ns_DATA_pfL1.push_back    ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
-  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1.push_back    ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL1L2L3.push_back("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+  jetcorr_filenames_25ns_DATA_pfL2L3.push_back  ("CORE/Tools/jetcorr/data/run2_25ns/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
 
   //Make JEC for each of these
   FactorizedJetCorrector *jet_corrector_50ns_MC_pfL1; 
@@ -1090,7 +1090,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
   while ( (currentFile = (TFile*)fileIter.Next()) ) { 
 
     bool isPromptReco = TString(currentFile->GetTitle()).Contains("PromptReco");
-    bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015");
+    bool isDataFromFileName = TString(currentFile->GetTitle()).Contains("Run2015") || TString(currentFile->GetTitle()).Contains("Run2016");
     if (isPromptReco) isDataFromFileName = true;
     else if (TString(currentFile->GetTitle()).Contains("DoubleMuon")) isDataFromFileName = true;
     else if (TString(currentFile->GetTitle()).Contains("DoubleEG")) isDataFromFileName = true;
