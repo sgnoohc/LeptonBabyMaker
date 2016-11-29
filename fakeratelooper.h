@@ -52,6 +52,7 @@ public:
   int  pfLepMotherID(int pfidx);
   int isPFmuon(vector<LorentzVector> &pfP4, vector<bool> &pfmuIsReco, int idx);
   int isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsReco, int idx);
+  void alternativeFilterMatch(LorentzVector &p4, const char* trigName, const char* filtName, int& HLTbranch);
   
 
 

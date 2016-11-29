@@ -272,7 +272,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   //Muons
   BabyTree->Branch("pid_PFMuon"             , &pid_PFMuon);
   BabyTree->Branch("gfit_chi2"              , &gfit_chi2);
-  BabyTree->Branch("gfit_ndof"              , &gfit_ndof);
+  // BabyTree->Branch("gfit_ndof"              , &gfit_ndof); // NOTE take out for now because of the int float conflict that Vince fixed
   BabyTree->Branch("gfit_validSTAHits"      , &gfit_validSTAHits);
   BabyTree->Branch("numberOfMatchedStations", &numberOfMatchedStations);
   BabyTree->Branch("validPixelHits"         , &validPixelHits);
@@ -569,7 +569,7 @@ void babyMaker::InitLeptonBranches(){
   //Muons
   pid_PFMuon = -1;
   gfit_chi2 = -1;
-  gfit_ndof = -1;
+  // gfit_ndof = -1;
   gfit_validSTAHits = -1;
   numberOfMatchedStations = -1;
   validPixelHits = -1;
@@ -845,23 +845,44 @@ int babyMaker::isPFelectron(vector<LorentzVector> &pfP4, vector<bool> &pfelIsRec
   return -1;
 }
 
+// NJA June 6, 2016: some triggers matching p4 to last path will match jet and not lepton, so explicitly check match here
+void babyMaker::alternativeFilterMatch(LorentzVector &p4, const char* trigName, const char* filtName, int& HLTbranch) {
+    if(abs(HLTbranch) == 0) return; // if we didn't previously see that we fired the trigger (1 or -1), give up and go home
+    float test = 0;
+    HLTbranch = matchToHLTFilter(trigName, filtName, p4, 0.2, &test);
+}
 void babyMaker::fillElectronTriggerBranches(LorentzVector &p4, int idx, bool oldTag){
 
   if (oldTag) idx=-1;
 
   //Single Electron Trigger
-  setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v" ,  (idx>=0 ? tas::els_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx)  : 0), HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
-  setHLTBranch("HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v" ,  p4, HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
+  setHLTBranch("HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
   setHLTBranch("HLT_Ele17_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele17_CaloIdM_TrackIdM_PFJet30);
-  setHLTBranch("HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
-  setHLTBranch("HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
-  setHLTBranch("HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
+  setHLTBranch("HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v",  p4, HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
   setHLTBranch("HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30);
-  setHLTBranch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
   setHLTBranch("HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v", p4, HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30);
-  setHLTBranch("HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
-  setHLTBranch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
-  setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  (idx>=0 ? tas::els_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg().at(idx) : 0), HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  setHLTBranch("HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v",  p4, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
+
+    // FIXME only because prescales are broken right now
+  alternativeFilterMatch(p4 , "HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v"        , "hltEle8CaloIdMGsfTrackIdMDphiFilter"  , HLT_Ele8_CaloIdM_TrackIdM_PFJet30 );
+  alternativeFilterMatch(p4 , "HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v"       , "hltEle12CaloIdMGsfTrackIdMDphiFilter" , HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele17_CaloIdM_TrackIdM_PFJet30_v"       , "hltEle17CaloIdMGsfTrackIdMDphiFilter" , HLT_Ele17_CaloIdM_TrackIdM_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v"       , "hltEle18CaloIdMGsfTrackIdMDphiFilter" , HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v"       , "hltEle23CaloIdMGsfTrackIdMDphiFilter" , HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v"       , "hltEle33CaloIdMGsfTrackIdMDphiFilter" , HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30_v"  , "hltEle8CaloIdLTrackIdLIsoVLTrackIsoFilter" , HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v" , "hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter" , HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v" , "hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter" , HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v" , "hltEle18CaloIdLTrackIdLIsoVLTrackIsoFilter" , HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v" , "hltEle23CaloIdLTrackIdLIsoVLTrackIsoFilter" , HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  alternativeFilterMatch(p4 , "HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v" , "hltEle33CaloIdLTrackIdLIsoVLTrackIsoFilter" , HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
+
   if (tas::evt_isRealData()) setHLTBranch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_v",  (idx>=0 ? tas::els_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_ElectronLeg().at(idx) : 0), HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF);
   else setHLTBranch("HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF_v",  (idx>=0 ? tas::els_HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF_ElectronLeg().at(idx) : 0), HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF);
   if (!(tas::evt_isRealData())) setHLTBranch("HLT_Ele27_eta2p1_WP75_Gsf_v",  p4, HLT_Ele27_eta2p1_WP75_Gsf);
@@ -1142,7 +1163,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
 
     // Get File Content
     if(nEventsDone >= nEventsToDo) continue;
-    TFile *file = new TFile( currentFile->GetTitle() );
+    TFile *file = TFile::Open( currentFile->GetTitle() );
     TTree *tree = (TTree*)file->Get("Events");
     cms3.Init(tree);
   
@@ -1483,7 +1504,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         //Other muon Id
         pid_PFMuon = tas::mus_pid_PFMuon().at(i);
         gfit_chi2 = tas::mus_gfit_chi2().at(i);
-        gfit_ndof = tas::mus_gfit_ndof().at(i);
+        // gfit_ndof = tas::mus_gfit_ndof().at(i);
         gfit_validSTAHits = tas::mus_gfit_validSTAHits().at(i);
         numberOfMatchedStations = tas::mus_numberOfMatchedStations().at(i);
         validPixelHits = tas::mus_validPixelHits().at(i);

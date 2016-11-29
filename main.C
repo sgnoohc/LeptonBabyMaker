@@ -37,9 +37,23 @@ vector<TString> load(const char *type, char *input){
   return output;
 }
 
+bool doesFileExist(TString fname, bool useXrootd) {
+  if(useXrootd) {
+    return system(Form("lcg-ls -b -D srmv2 \"srm://bsrm-3.t2.ucsd.edu:8443/srm/v2/server?SFN=%s\" > /dev/null", fname.Data())) == 0;
+  } else {
+    std::ifstream infile(fname.Data());
+    return infile.good();
+  }
+}
+
 int main(int argc, char **argv)
   try{
     TString sample = "";
+    bool useXrootd = true;
+    if (system("hostname | grep ucsd") == 0) {
+        std::cout << "Based on your hostname, you are on UCSD, so turning xrootd accessing off!" << std::endl;
+        useXrootd = false;
+    }
     babyMaker *mylooper = new babyMaker();
     TChain *result = new TChain("Events");
     char *input = "sample.dat";
@@ -71,9 +85,10 @@ int main(int argc, char **argv)
     else {
       file = atoi(argv[3]);
     }
-    const char* filename = (file == 0 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
+    // const char* filename = (file == 0 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
+    TString filename = TString(file == 0 ? "merged_ntuple_*.root" : Form("merged_ntuple_%i.root", file));
     cout<<"Running over files with names "<<filename<<endl;
-    const char* suffix = file == 0 ? "" : Form("_%i", file);
+    TString suffix = TString(file == 0 ? "" : Form("_%i", file));
 
     string dirpath = "./";  
     if (argc < 5) {
@@ -86,25 +101,30 @@ int main(int argc, char **argv)
     vector<TString> samplelist = load(sample.Data(), input);//new
     if(samplelist.size()==0) cout<<"Could not find files corresponding to sample "<<sample<<endl;
     for(unsigned int i = 0; i<samplelist.size(); ++i){
-      std::ifstream infile(samplelist[i].Data());
-      if (infile.good()) {
-	if(!(samplelist[i].Contains(".root"))) {
-	  samplelist[i] = samplelist[i] + filename;
-	  std::ifstream infile2(samplelist[i].Data());
-	  if (infile2.good()==0 && !(TString(filename).Contains("*"))) {
-	    cout << "Warning! File: " << samplelist[i] << " does not exist ab exist. Not added to files to be processed." << endl;
-	    continue;
-	  }
-	}
-	cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
-	result->Add(samplelist[i].Data());
+
+      if (doesFileExist(samplelist[i], useXrootd)) {
+        if(!(samplelist[i].Contains(".root"))) {
+          samplelist[i] = samplelist[i] + filename;
+          if (!doesFileExist(samplelist[i], useXrootd) && !(TString(filename).Contains("*"))) {
+            cout << "Warning! File: " << samplelist[i] << " does not exist. Not added to files to be processed." << endl;
+            continue;
+          }
+        }
+        cout << "Add sample " << samplelist[i] << " to files to be processed." << endl;
+        if(useXrootd) {
+          TString pfn = samplelist[i].ReplaceAll("/hadoop/cms", "root://cmsxrootd.fnal.gov/");
+          std::cout << pfn << std::endl;
+          result->Add(pfn);
+        } else {
+          result->Add(samplelist[i].Data());
+        }
       } else {
-	cout << "Warning! File: " << samplelist[i] << " does not exist ab exist. Not added to files to be processed." << endl;
+        cout << "Warning! File: " << samplelist[i] << " does not exist ab exist. Not added to files to be processed." << endl;
       }
     }
 
     mylooper->SetOutputPath(dirpath);
-    mylooper->looper(result, Form("%s%s", (char*) sample.Data(),suffix), nevents);
+    mylooper->looper(result, Form("%s%s", sample.Data(),suffix.Data()), nevents);
     return 0;
 
   }
