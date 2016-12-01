@@ -2,7 +2,7 @@
 
 #samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, WJets, ALL
 #Choose the sample(s) you want here, separated by commmas
-sampleList_in=2015DDoubleEG,2015DDoubleMuon,QCD_Mu_Enriched,QCD_EM_Enriched,DY_madgraph,WJets
+sampleList_in=2016DoubleEG,2016DoubleMuon,DY_madgraph,WJets
 #sampleList_in=2015DSingleElV4,2015DSingleMuonV4,DY_madgraph
 #Choose the number of events (per file): 
 nEvents=-1
@@ -160,36 +160,35 @@ rm voms_status.txt &>/dev/null
 rm temp.txt &>/dev/null
 rm fileNames.txt &>/dev/null
 
-#Merge, but check for zombies first
-nZombies=0
-if [ "$nSubmitted" == "0" ]
-then
-  #Check for zombies which should be deleted in copy_dir
-  echo "CHECKING FOR ZOMBIES"
-#  echo "NOT CHECKING FOR ZOMBIES"
-  for file in `/bin/ls $copy_dir/*.root`
-  do
-    root -l -b -q -n checkForZombies.C'("'$file'")'
-    if [ -e listOfZombies.txt ]; then
-      zombie=""
-      zombie=`tail listOfZombies.txt`
-      if [ ! -z $zombie ]; then
-	echo "  FOUND ZOMBIE!"
-	nZombies=$((nZombies+1))
-	echo "  DELETING FILE: $zombie"
-	rm -rf $zombie
-	echo "  JOB WILL BE RESUBMITTED"
-      fi
-      rm -rf listOfZombies.txt
-    fi
-  done
-
-#  if [ "$nZombies" == "0" ]; then
-#    . mergeAll.sh $copy_dir $sampleList_in
-#    sleep 120
-#    mv *.root $copy_dir/merged_files/
-#  fi
-fi
+# #Merge, but check for zombies first
+# nZombies=0
+# if [ "$nSubmitted" == "0" ]
+# then
+#   #Check for zombies which should be deleted in copy_dir
+#   echo "CHECKING FOR ZOMBIES"
+# #  echo "NOT CHECKING FOR ZOMBIES"
+#   for file in `/bin/ls $copy_dir/*.root`
+#   do
+#     root -l -b -q -n checkForZombies.C'("'$file'")'
+#     if [ -e listOfZombies.txt ]; then
+#       zombie=""
+#       zombie=`tail listOfZombies.txt`
+#       if [ ! -z $zombie ]; then
+# 	echo "  FOUND ZOMBIE!"
+# 	nZombies=$((nZombies+1))
+# 	echo "  DELETING FILE: $zombie"
+# 	rm -rf $zombie
+# 	echo "  JOB WILL BE RESUBMITTED"
+#       fi
+#       rm -rf listOfZombies.txt
+#     fi
+#   done
+# #  if [ "$nZombies" == "0" ]; then
+# #    . mergeAll.sh $copy_dir $sampleList_in
+# #    sleep 120
+# #    mv *.root $copy_dir/merged_files/
+# #  fi
+# fi
 
 #Return exit code
 if [ "$nSubmitted" == "0" ] && [ "$nZombies" == "0" ]

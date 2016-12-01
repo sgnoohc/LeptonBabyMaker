@@ -9,7 +9,7 @@ function run () {
 
 HADOOPDIR=/hadoop/cms/store/user/${USER}/condor/forCommissioning/
 #HADOOPDIR=/hadoop/cms/store/user/${USER}/condor/forSoftLeptons74X_1May16/
-OUTPUTDIR=/nfs-7/userdata/leptonTree/v1.07TP/
+OUTPUTDIR=/nfs-7/userdata/leptonTree/v1.13FR/
 
 mkdir -p $OUTPUTDIR
 chmod -R a+wrx $OUTPUTDIR
@@ -17,6 +17,10 @@ chmod -R a+wrx $OUTPUTDIR
 
 #run 2015DSingleEl76X
 #run DY_76X_HCALdebug
-run 2015DSingleElV4
-run 2015DSingleMuonV4
+# run 2015DSingleElV4
+# run 2015DSingleMuonV4
+# run DY_madgraph
+run 2016DoubleEG
+run 2016DoubleMuon
 run DY_madgraph
+run WJets
