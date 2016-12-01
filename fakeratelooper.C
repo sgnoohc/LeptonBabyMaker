@@ -9,10 +9,10 @@ bool verbose = 0;
 unsigned int evt_cut = 0;
 bool addPFCandidates = false; // Default is false
 bool checkIsPFTrueFalse = false; // Default is false (requires double loop on recocandidates and pfcandidates)
-bool addAnnulus = true; // Default is false
+bool addAnnulus = false; // Default is false
 bool recoLeptonsDownTo5GeV = false; // Default is false (meaning 10 GeV)
-bool recoLeptonsDownTo20GeV = true; // Default is false (meaning 1 GeV)
-bool onlySaveTagProbePairs = true; // Default is false
+bool recoLeptonsDownTo20GeV = false; // Default is false (meaning 1 GeV)
+bool onlySaveTagProbePairs = false; // Default is false
 bool applyJson = true;
 
 //Main functions
