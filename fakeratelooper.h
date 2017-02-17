@@ -208,7 +208,6 @@ private:
   float tag_eSC;
   float tag_ecalEnergy;
   float tag_r9_full5x5;
-  bool tag_HLTLeadingLeg;
   float dilep_mass;
   bool isRandom;
   float iso03sumPt;
@@ -218,72 +217,20 @@ private:
   int   exp_outerlayers;
 
   // -- tag HLT match -- // 
-  int tag_HLT_Ele25WP60_Ele8_Mass55_LeadingLeg;
-  int tag_HLT_Ele25WP60_SC4_Mass55_LeadingLeg;
-  int tag_HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int tag_HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_ElectronLeg;
-  int tag_HLT_Ele33_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int tag_HLT_Ele23_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int tag_HLT_Ele18_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int tag_HLT_Ele12_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
-  int tag_HLT_Ele8_CaloIdM_TrackIdM_PFJet30_ElectronLeg;
 
-  int tag_HLT_Ele27_eta2p1_WP75_Gsf;
-  int tag_HLT_Ele27_WP85_Gsf;
-  int tag_HLT_Ele27_eta2p1_WPLoose_Gsf;
-  int tag_HLT_Ele27_eta2p1_WPTight_Gsf;
-  int tag_HLT_Ele32_eta2p1_WP75_Gsf;
-  int tag_HLT_Ele32_eta2p1_WPLoose_Gsf;
-  int tag_HLT_Ele32_eta2p1_WPTight_Gsf;
-  int tag_HLT_Ele22_eta2p1_WPLoose_Gsf;
-  int tag_HLT_Ele22_eta2p1_WPTight_Gsf;
-  int tag_HLT_Ele25_eta2p1_WPTight_Gsf;
-  int tag_HLT_Ele23_WPLoose_Gsf;
-  int tag_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg;
-  int tag_HLT_Ele23_CaloIdL_TrackIdL_IsoVL;
-  int tag_HLT_Ele12_CaloIdL_TrackIdL_IsoVL;
-	
-  int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
-  int tag_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
-  int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
-  int tag_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
-  int tag_HLT_IsoMu20;
-  int tag_HLT_IsoTkMu20;
-  int tag_HLT_IsoTkMu20_eta2p1;
-  int tag_HLT_IsoMu24_eta2p1;
-  int tag_HLT_IsoTkMu24_eta2p1;
-  int tag_HLT_IsoMu22;
-  int tag_HLT_IsoTkMu22;
-  int tag_HLT_IsoMu24;
-  int tag_HLT_IsoTkMu24;
-  int tag_HLT_IsoMu27;
-  int tag_HLT_IsoTkMu27;
-  int tag_HLT_Mu8_TrkIsoVVL;
-  int tag_HLT_Mu17_TrkIsoVVL;
-  int tag_HLT_Mu8;
-  int tag_HLT_Mu17;
+  int tag_HLT_Ele27_eta2p1_WPTight_Gsf = 0;
+  int tag_HLT_Ele32_eta2p1_WPTight_Gsf = 0;
+  int tag_HLT_IsoMu24 = 0;
+  int tag_HLT_IsoTkMu24 = 0;
 
   // -- probe HLT match -- // 
 
-  int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
-  int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
-  int probe_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG2210;
-  int probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
-  int probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
-  int probe_HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG1510;
-  int probe_HLT_Ele23_CaloIdL_TrackIdL_IsoVL_L1EG20;
-  int probe_HLT_Ele12_CaloIdL_TrackIdL_IsoVL_L1EG10;
-  float probe_L1EG2210_pt;
-  float probe_L1EG1510_pt;
-  float probe_L1EG20_pt;
-  float probe_L1EG10_pt;
+
   
-  int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
-  int probe_HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
-  int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
-  int probe_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
+  int HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_TrailingLeg;
+  int HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_LeadingLeg;
+  int HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_TrailingLeg;
+  int HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_LeadingLeg;
 
   //---els---//
   float sigmaIEtaIEta_full5x5;
@@ -350,58 +297,44 @@ private:
   // the sign tells if the object matched one of the trigger legs (positive match, negative no match)
 
   //---single mu trigger---//
+  //Single Muon Trigger
   int HLT_Mu8_TrkIsoVVL;
   int HLT_Mu17_TrkIsoVVL;
-  int HLT_Mu24_TrkIsoVVL;
-  int HLT_Mu34_TrkIsoVVL;
   int HLT_Mu8;
   int HLT_Mu17;
-  int HLT_Mu24;
-  int HLT_Mu34;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p5PF;
   int HLT_Mu10_CentralPFJet30_BTagCSV0p54PF;
-  int HLT_IsoMu20;
-  int HLT_IsoTkMu20;
-  int HLT_IsoTkMu20_eta2p1;
-  int HLT_IsoMu24_eta2p1;
-  int HLT_IsoTkMu24_eta2p1;
-  int HLT_IsoMu22;
-  int HLT_IsoTkMu22;
   int HLT_IsoMu24;
   int HLT_IsoTkMu24;
-  int HLT_IsoMu27;
-  int HLT_IsoTkMu27;
-  int HLT_Mu45_eta2p1;
   int HLT_Mu50;
+  int HLT_Mu55;
+  int HLT_TkMu50;
   
   //---single el trigger---//
   int HLT_Ele8_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele12_CaloIdM_TrackIdM_PFJet30;
-  int HLT_Ele18_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele17_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele23_CaloIdM_TrackIdM_PFJet30;
-  int HLT_Ele33_CaloIdM_TrackIdM_PFJet30;
   int HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30;
-  int HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30;
-  int HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30;
   int HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p5PF;
   int HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF;
-  int HLT_Ele27_eta2p1_WP75_Gsf;//used in MC xxx
-  int HLT_Ele27_WP85_Gsf;//used in MC
-  int HLT_Ele27_eta2p1_WPLoose_Gsf;//used in data
-  int HLT_Ele27_eta2p1_WPTight_Gsf;//used in data
-  int HLT_Ele32_eta2p1_WP75_Gsf;//used in MC
-  int HLT_Ele32_eta2p1_WPLoose_Gsf;//used in data
-  int HLT_Ele32_eta2p1_WPTight_Gsf;//used in data
-  int HLT_Ele22_eta2p1_WPLoose_Gsf;//used in data
-  int HLT_Ele22_eta2p1_WPTight_Gsf;//used in data
-  int HLT_Ele25_eta2p1_WPTight_Gsf;//used in data
-  int HLT_Ele23_WPLoose_Gsf;//used in data
-  int HLT_Ele23_CaloIdL_TrackIdL_IsoVL;
-  int HLT_Ele12_CaloIdL_TrackIdL_IsoVL;
+  int HLT_Ele27_eta2p1_WPTight_Gsf;
+  int HLT_Ele32_eta2p1_WPTight_Gsf;
+  int HLT_Ele105_CaloIdVT_GsfTrkIdT;
+  int HLT_Ele115_CaloIdVT_GsfTrkIdT;
+
+
+  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
+  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
+  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1;
+  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
+  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg;
+  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg;
+  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1;
+  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL;
 
   //--- mu-el trigger---//
   int HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300;
@@ -415,12 +348,7 @@ private:
   int HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ;//xxx
   int HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ;//xxx
 
-  //--- double el trigger---//
-  int HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300;
-  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
-  int HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
-  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
-  int HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL;
+ 
     
 };
 
