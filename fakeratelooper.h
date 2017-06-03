@@ -178,6 +178,20 @@ private:
   bool passes_POG_looseID;
   bool passes_POG_mediumID;
   bool passes_POG_tightID;
+  //VVV bools
+  bool passes_VVV_cutbased_veto;
+  bool passes_VVV_cutbased_veto_noiso;
+  bool passes_VVV_cutbased_veto_noiso_noip;
+  bool passes_VVV_cutbased_fo;
+  bool passes_VVV_cutbased_fo_noiso;
+  bool passes_VVV_cutbased_tight;
+  bool passes_VVV_cutbased_tight_noiso;
+  bool passes_VVV_veto;
+  bool passes_VVV_veto_noiso;
+  bool passes_VVV_fo;
+  bool passes_VVV_fo_noiso;
+  bool passes_VVV_tight;
+  bool passes_VVV_tight_noiso;
   //
   float ip3d;
   float ip3derr;
