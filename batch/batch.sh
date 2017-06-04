@@ -2,10 +2,11 @@
 
 #samples are: QCD_Test, QCD_Mu_Enriched, QCD_EM_Enriched, QCD_non_Enriched, QCD_HT, TTBAR, DY, WJets, ALL
 #Choose the sample(s) you want here, separated by commmas
-sampleList_in=2016DoubleEG,2016DoubleMuon,DY_madgraph,WJets
+#sampleList_in=2016DoubleEG,2016DoubleMuon,DY_madgraph,WJets
+sampleList_in=DY_madgraph
 #sampleList_in=2015DSingleElV4,2015DSingleMuonV4,DY_madgraph
 #Choose the number of events (per file): 
-nEvents=-1
+nEvents=100000
 #Decide if you want lots of printouts telling you the status
 verbose="false"
 
@@ -144,7 +145,7 @@ do
     let "nSubmitted=$nSubmitted+1"
     
     #Then submit
-    cp condorFileTemplate condorFile
+    'cp' condorFileTemplate condorFile
     sed -i "s,ARG1,$sample,g" condorFile
     sed -i "s,ARG2,$nEvents,g" condorFile
     sed -i "s,ARG3,$number,g" condorFile

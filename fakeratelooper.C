@@ -132,14 +132,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("passes_VVV_cutbased_veto_noiso_noip" , &passes_VVV_cutbased_veto_noiso_noip);
   BabyTree->Branch("passes_VVV_cutbased_fo"              , &passes_VVV_cutbased_fo);
   BabyTree->Branch("passes_VVV_cutbased_fo_noiso"        , &passes_VVV_cutbased_fo_noiso);
-  BabyTree->Branch("passes_VVV_cutbased_tight"           , &passes_VVV_cutbased_tight);
   BabyTree->Branch("passes_VVV_cutbased_tight_noiso"     , &passes_VVV_cutbased_tight_noiso);
-  BabyTree->Branch("passes_VVV_veto"                     , &passes_VVV_veto);
-  BabyTree->Branch("passes_VVV_veto_noiso"               , &passes_VVV_veto_noiso);
-  BabyTree->Branch("passes_VVV_fo"                       , &passes_VVV_fo);
-  BabyTree->Branch("passes_VVV_fo_noiso"                 , &passes_VVV_fo_noiso);
-  BabyTree->Branch("passes_VVV_tight"                    , &passes_VVV_tight);
-  BabyTree->Branch("passes_VVV_tight_noiso"              , &passes_VVV_tight_noiso);
+  BabyTree->Branch("passes_VVV_cutbased_tight"           , &passes_VVV_cutbased_tight);
+  BabyTree->Branch("passes_VVV_MVAbased_tight_noiso"     , &passes_VVV_MVAbased_tight_noiso);
+  BabyTree->Branch("passes_VVV_MVAbased_tight"           , &passes_VVV_MVAbased_tight);
+  BabyTree->Branch("passes_VVV_baseline"                 , &passes_VVV_baseline);
   BabyTree->Branch("ip3d"                          , &ip3d);
   BabyTree->Branch("ip3derr"                       , &ip3derr);
   BabyTree->Branch("type"                          , &type);
@@ -420,14 +417,11 @@ void babyMaker::InitLeptonBranches(){
   passes_VVV_cutbased_veto_noiso_noip = 0;
   passes_VVV_cutbased_fo = 0;
   passes_VVV_cutbased_fo_noiso = 0;
-  passes_VVV_cutbased_tight = 0;
   passes_VVV_cutbased_tight_noiso = 0;
-  passes_VVV_veto = 0;
-  passes_VVV_veto_noiso = 0;
-  passes_VVV_fo = 0;
-  passes_VVV_fo_noiso = 0;
-  passes_VVV_tight = 0;
-  passes_VVV_tight_noiso = 0;
+  passes_VVV_cutbased_tight = 0;
+  passes_VVV_MVAbased_tight_noiso = 0;
+  passes_VVV_MVAbased_tight = 0;
+  passes_VVV_baseline = 0;
   type = -1;
   ip3d = -1;
   ip3derr = -1;
@@ -1437,12 +1431,14 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(muonID(i, HAD_loose_noiso_v3))        passes_HAD_loose_noiso_v3 = true;
 
         // Save VVV ID bools
-        if(muonID(i, VVV_veto))                  passes_VVV_veto = true;
-        if(muonID(i, VVV_veto_noiso))            passes_VVV_veto_noiso = true;
-        if(muonID(i, VVV_fo))                    passes_VVV_fo = true;
-        if(muonID(i, VVV_fo_noiso))              passes_VVV_fo_noiso = true;
-        if(muonID(i, VVV_tight))                 passes_VVV_tight = true;
-        if(muonID(i, VVV_tight_noiso))           passes_VVV_tight_noiso = true;
+        if(muonID(i, VVV_cutbased_veto))            passes_VVV_cutbased_veto = true;
+        if(muonID(i, VVV_cutbased_veto_noiso))      passes_VVV_cutbased_veto_noiso = true;
+        if(muonID(i, VVV_cutbased_veto_noiso_noip)) passes_VVV_cutbased_veto_noiso_noip = true;
+        if(muonID(i, VVV_cutbased_fo))              passes_VVV_cutbased_fo = true;
+        if(muonID(i, VVV_cutbased_fo_noiso))        passes_VVV_cutbased_fo_noiso = true;
+        if(muonID(i, VVV_cutbased_tight))           passes_VVV_cutbased_tight = true;
+        if(muonID(i, VVV_cutbased_tight_noiso))     passes_VVV_cutbased_tight_noiso = true;
+        if(muonID(i, VVV_baseline))                 passes_VVV_baseline = true;
 
         //Save POG ID bools
         if( isLooseMuonPOG(i) )                  passes_POG_looseID = true;
@@ -1700,6 +1696,7 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, HAD_veto_noiso_v3))            passes_HAD_veto_noiso_v3 = true;
         if(electronID(i, HAD_loose_v3))                 passes_HAD_loose_v3 = true;
         if(electronID(i, HAD_loose_noiso_v3))           passes_HAD_loose_noiso_v3 = true;
+	if (verbose) cout << "Done HAD IDs"<<endl;
         if(electronID(i, VVV_cutbased_veto))            passes_VVV_cutbased_veto = true;
         if(electronID(i, VVV_cutbased_veto_noiso))      passes_VVV_cutbased_veto_noiso = true;
         if(electronID(i, VVV_cutbased_veto_noiso_noip)) passes_VVV_cutbased_veto_noiso_noip = true;
@@ -1707,6 +1704,9 @@ int babyMaker::looper(TChain* chain, char* output_name, int nEvents){
         if(electronID(i, VVV_cutbased_fo_noiso))        passes_VVV_cutbased_fo_noiso = true;
         if(electronID(i, VVV_cutbased_tight))           passes_VVV_cutbased_tight = true;
         if(electronID(i, VVV_cutbased_tight_noiso))     passes_VVV_cutbased_tight_noiso = true;
+        if(electronID(i, VVV_MVAbased_tight_noiso))     passes_VVV_MVAbased_tight_noiso = true;
+        if(electronID(i, VVV_MVAbased_tight))           passes_VVV_MVAbased_tight = true;
+        if(electronID(i, VVV_baseline))                 passes_VVV_baseline = true;
 	if (verbose) cout << "Done VVV IDs"<<endl;
         elID::unsetCache();
 	if (verbose) cout << "Some MC properties"<<endl;

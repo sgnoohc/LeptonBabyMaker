@@ -186,12 +186,9 @@ private:
   bool passes_VVV_cutbased_fo_noiso;
   bool passes_VVV_cutbased_tight;
   bool passes_VVV_cutbased_tight_noiso;
-  bool passes_VVV_veto;
-  bool passes_VVV_veto_noiso;
-  bool passes_VVV_fo;
-  bool passes_VVV_fo_noiso;
-  bool passes_VVV_tight;
-  bool passes_VVV_tight_noiso;
+  bool passes_VVV_MVAbased_tight;
+  bool passes_VVV_MVAbased_tight_noiso;
+  bool passes_VVV_baseline;
   //
   float ip3d;
   float ip3derr;
